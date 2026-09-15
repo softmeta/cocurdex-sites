@@ -1,0 +1,17 @@
+{
+  "title": "文档",
+  "pages": [
+    "index",
+    "getting-started",
+    "---产品---",
+    "desktop",
+    "notes-and-issues",
+    "agents",
+    "skills",
+    "workflows",
+    "cli",
+    "providers-and-settings",
+    "---概念---",
+    "concepts"
+  ]
+}

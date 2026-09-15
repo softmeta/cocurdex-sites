@@ -1,0 +1,17 @@
+{
+  "title": "Docs",
+  "pages": [
+    "index",
+    "getting-started",
+    "---Product---",
+    "desktop",
+    "notes-and-issues",
+    "agents",
+    "skills",
+    "workflows",
+    "cli",
+    "providers-and-settings",
+    "---Concepts---",
+    "concepts"
+  ]
+}
