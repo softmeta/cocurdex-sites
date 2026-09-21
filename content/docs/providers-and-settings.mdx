@@ -27,7 +27,7 @@ cocurdex provider list
 cocurdex provider models <provider-id>
 ```
 
-External agent CLIs (`claude`, `codex`, `opencode`, `grok`) keep their own authentication — Codex account state under `~/.codex`, for example. Provider configs do not replace that; they give Pi and the desktop a shared model catalog.
+External agent CLIs (`claude`, `codex`, `opencode`, `cursor-agent`, `devin`, `grok`) keep their own authentication — Codex account state under `~/.codex`, for example. Provider configs do not replace that; they give Pi and the desktop a shared model catalog.
 
 ## MCP servers
 
@@ -40,7 +40,7 @@ External agent CLIs (`claude`, `codex`, `opencode`, `grok`) keep their own authe
 
 ## Network proxy
 
-**Settings → Environment** controls the app's outbound proxy:
+**Settings → Network** controls the app's outbound proxy:
 
 | Mode | Behavior |
 | --- | --- |
@@ -72,17 +72,24 @@ The same surface is scriptable via `cocurdex worktree settings` — see [CLI](/d
 
 ## Other settings
 
+Providers, MCP, Network, Git, and Worktrees are covered in the sections above. The table below lists the remaining Settings sidebar sections.
+
 | Section | Covers |
 | --- | --- |
 | **General** | Language, CLI launcher install (`cocurdex` on your `PATH`), notifications |
 | **Appearance** | Theme (system / dark / light — parity is a product requirement), fonts |
 | **Editor** | Editor fonts and behavior for the workspace code editor |
 | **Shortcuts** | Rebindable keyboard shortcuts; `null` override unbinds an action |
+| **Personalization** | Workspace personalization preferences |
 | **Skills** | Install/remove the `cocurdex-*` product skill pack |
-| **Agent roles** | Saved agent presets; see [Agents](/docs/agents/#agent-roles) |
-| **Workflows** | Default planner / implementer / reviewer bindings |
-| **Adapters** | Per-agent runtime detection and install hints |
-| **Archived** | Archived sessions |
+| **Roles** | Saved agent presets; see [Agents](/docs/agents/#agent-roles) |
+| **Teams** | Teammate templates and script-run options; see [Agents](/docs/agents/#agent-teams) |
+| **Adapters** | Per-agent runtime detection and install hints (including Cursor and Devin) |
+| **Projects** | Per-project options, including worktree setup/cleanup scripts |
+| **Archived sessions** | Archived sessions |
+| **About** / **Open source licenses** | App version and third-party notices |
+
+Workflow definitions and runs are driven from the [CLI](/docs/cli/#workflows). There is no **Settings → Workflows** sidebar entry in the current build.
 
 ## Related
 

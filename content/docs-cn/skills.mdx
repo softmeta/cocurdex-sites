@@ -17,15 +17,17 @@ cocurdex skills install --scope project
 cocurdex skills install --scope global
 ```
 
-| 范围 | 含义 |
-| --- | --- |
-| `project` | 安装到项目根目录下(`--root` 默认为 `cwd`) |
-| `global` | 安装到用户全局 skills 位置 |
+| 范围 | 含义 | 安装位置 |
+| --- | --- | --- |
+| `project` | 安装到项目根目录下(`--root` 默认为 `cwd`) | `<root>/.agents/skills`(主目录),以及 Claude 兼容的副本/链接 `<root>/.claude/skills` |
+| `global` | 安装到用户全局 skills 位置 | `~/.agents/skills` 与 `~/.claude/skills` |
 
-托管安装会写一个标记文件,以便 Cocurdex 更新或移除自己的 skill 包。如果同名 skills 已存在但**没有**该标记,安装会报告冲突——重命名或移除冲突目录后重试。
+托管安装会写入标记文件(`.agents/skills/.cocurdex-skills.json`),以便 Cocurdex 更新或移除自己的 skill 包。如果同名 skills 已存在但**没有**该标记,安装会报告冲突——重命名或移除冲突目录后重试。
 
 ```bash
 cocurdex skills remove --scope project
+# uninstall 是 remove 的别名
+cocurdex skills uninstall --scope project
 ```
 
 ## Skill 目录
@@ -41,6 +43,7 @@ cocurdex skills remove --scope project
 | `cocurdex-todo` | Issue 的别称语言(「todo」) |
 | `cocurdex-ticket` | Issue 的别称语言(「ticket」) |
 | `cocurdex-link` | 通过 Markdown 链接 / 反向链接关联笔记与 Issue |
+| `cocurdex-team` | 并行队友 Agent:何时用团队、如何简报成员、如何合并报告 |
 | `cocurdex-ship` | 干净地针对选定的 Issue 实现 |
 | `cocurdex-layout` | 解释应用私有的数据边界与 CLI 访问 |
 
@@ -55,6 +58,8 @@ cocurdex skills remove --scope project
   → /cocurdex-issue  (slice | create | refine | start)
   → /cocurdex-ship
 ```
+
+在 Issue 已经清晰、需要独立并行实现时,可插入 `/cocurdex-team`(或 `cocurdex team …`)。
 
 | 步骤 | Skill | 写入 |
 | --- | --- | --- |
@@ -88,6 +93,6 @@ Skills 不得编造 issue id,也不得通过手工编辑文件改写状态。
 
 ## 相关
 
-- [笔记与 Issue](/docs/notes-and-issues/)
-- [CLI](/docs/cli/)
-- [工作区与数据](/docs/concepts/workspaces-and-data/)
+- [笔记与 Issue](/zh-cn/docs/notes-and-issues/)
+- [CLI](/zh-cn/docs/cli/)
+- [工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)

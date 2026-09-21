@@ -34,7 +34,7 @@ cocurdex workflow create \
   --reviewer codex
 ```
 
-可选的模型覆盖:`--planner-model`、`--implementer-model`、`--reviewer-model`。要绑定保存好的 [Agent 角色](/docs/agents/#agent-角色)而非临时 Agent/模型组合,使用 `--planner-role`、`--implementer-role` 或 `--reviewer-role`。`--definition <id>` 可选择非默认的工作流定义。
+可选的模型覆盖:`--planner-model`、`--implementer-model`、`--reviewer-model`。要绑定保存好的 [Agent 角色](/zh-cn/docs/agents/#agent-角色)而非临时 Agent/模型组合,使用 `--planner-role`、`--implementer-role` 或 `--reviewer-role`。`--definition <id>` 可选择非默认的工作流定义;内置 id 为 `plan_execute_review`。
 
 ## 命令
 
@@ -89,8 +89,10 @@ cocurdex workflow tui --workspace . --prompt "..."
 
 `/cocurdex-ship` 这类 Skills 帮助 Agent 针对某个 **Issue** 实现。工作流是 **daemon 级**的多 Agent 流水线。两者可结合:skills 管产品知识纪律,工作流管多角色执行。
 
+通过 CLI 创建并监督运行。当前构建的设置侧边栏中没有 **设置 → 工作流** 入口。
+
 ## 相关
 
-- [Agent](/docs/agents/)
-- [CLI](/docs/cli/)
-- [桌面工作台](/docs/desktop/)
+- [Agent](/zh-cn/docs/agents/)
+- [CLI](/zh-cn/docs/cli/)
+- [桌面工作台](/zh-cn/docs/desktop/)

@@ -34,7 +34,7 @@ cocurdex workflow create \
   --reviewer codex
 ```
 
-Optional model overrides: `--planner-model`, `--implementer-model`, `--reviewer-model`. To bind a saved [agent role](/docs/agents/#agent-roles) instead of an ad-hoc agent/model pair, use `--planner-role`, `--implementer-role`, or `--reviewer-role`. `--definition <id>` selects a non-default workflow definition.
+Optional model overrides: `--planner-model`, `--implementer-model`, `--reviewer-model`. To bind a saved [agent role](/docs/agents/#agent-roles) instead of an ad-hoc agent/model pair, use `--planner-role`, `--implementer-role`, or `--reviewer-role`. `--definition <id>` selects a non-default workflow definition; the built-in id is `plan_execute_review`.
 
 ## Commands
 
@@ -88,6 +88,8 @@ Exact step ids depend on the workflow definition version. Prefer `workflow show`
 ## Relation to product skills
 
 Skills such as `/cocurdex-ship` help an agent implement against an **issue**. Workflows are a **daemon-level** multi-agent pipeline. Use both when it helps: skills for product knowledge discipline, workflows for multi-role execution.
+
+Create and supervise runs from the CLI. There is no **Settings → Workflows** sidebar entry in the current build.
 
 ## Related
 

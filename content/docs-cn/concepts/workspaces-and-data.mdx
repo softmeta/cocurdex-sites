@@ -33,14 +33,34 @@ cocurdex workspace list
 2. **CLI** 是自动化和 Agent 受支持的外部读写边界。
 3. Markdown 导入导出是**显式**的——不是第二个活数据库。
 4. 私有表结构和文件路径**不是**公开 API。
-5. 预发布期间,缺少当前应用标记 / schema 版本的数据库可能被**重建**而非迁移。
+5. 没有 Cocurdex 应用标记(`COCU`)的数据库会先移为 `.bak-<timestamp>` 再**重建**。已带标记的数据库在 schema 更旧时会**向前迁移**;由**更新** schema 写出的数据库会被本构建**拒绝**(从不降级或删除)。
+
+### 默认位置
+
+应用私有文件位于用户数据目录下(可用 `COCURDEX_USER_DATA_PATH` 覆盖):
+
+| 平台 | 默认用户数据目录 |
+| --- | --- |
+| macOS | `~/Library/Application Support/Cocurdex` |
+| Windows | `%APPDATA%\Cocurdex` |
+| Linux | `~/.config/cocurdex`(或 `$XDG_CONFIG_HOME/cocurdex`) |
+
+| 用户数据目录下的路径 | 作用 |
+| --- | --- |
+| `cocurdex.sqlite` | 笔记、Issue、会话、角色及相关产品状态 |
+| `daemon.sock` | Unix 域套接字(非 Windows) |
+| 命名管道 `\\.\pipe\cocurdex-daemon-<id>` | Windows daemon 管道(id 由解析后的用户数据路径派生) |
+| `daemon.json` | Daemon 元数据 |
+| `worktrees/` | 托管 git 工作树的默认根目录(除非在 **设置 → 工作树** 中另设) |
+
+打开需要迁移的数据库时会写入 `cocurdex.sqlite.pre-migration-<timestamp>` 快照,并保留最新的三个。
 
 ### 什么存在哪里
 
 | 数据 | 权威方 |
 | --- | --- |
 | 笔记、Issue、视图、标签、链接、FTS 索引 | Daemon + `cocurdex.sqlite` |
-| Agent 角色、工作树设置、会话记录 | Daemon + `cocurdex.sqlite` |
+| Agent 角色、团队、工作树设置、会话记录 | Daemon + `cocurdex.sqlite` |
 | 托管的 git 工作树 | 由 daemon 在配置的工作树根目录下创建 |
 | 项目源文件 | 磁盘上你的工作区目录 |
 | Agent provider 授权(如 Codex) | 该工具自己的配置(例如 `~/.codex` 下) |
@@ -87,7 +107,7 @@ cocurdex daemon status
 
 ## 相关
 
-- [笔记与 Issue](/docs/notes-and-issues/)
-- [CLI](/docs/cli/)
-- [Skills](/docs/skills/)
-- [桌面工作台](/docs/desktop/)
+- [笔记与 Issue](/zh-cn/docs/notes-and-issues/)
+- [CLI](/zh-cn/docs/cli/)
+- [Skills](/zh-cn/docs/skills/)
+- [桌面工作台](/zh-cn/docs/desktop/)

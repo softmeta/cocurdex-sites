@@ -26,9 +26,9 @@ This site is **user-facing product documentation**. Engineering ADRs, plans, and
 Cocurdex is built around a few durable ideas:
 
 1. **Workspace, not chat window** — sessions, chat, terminal, editor, and browser preview are peers. The transcript is one pane among several.
-2. **Parallel sessions** — run more than one agent without merging them into a single conversation history.
+2. **Parallel sessions** — run more than one agent without merging them into a single conversation history. Use **teams** when independent teammates should report to a lead session.
 3. **Honest state** — status stays specific: thinking, using tools, waiting for you, unread result.
-4. **Local-first product data** — notes and issues live in app-owned storage on your machine. The CLI is the supported external boundary; the SQLite file is not a public API.
+4. **Local-first product data** — notes and issues live in app-owned storage on your machine (`cocurdex.sqlite` under the platform user data directory). The CLI is the supported external boundary; the SQLite file is not a public API.
 5. **Desktop writes, cloud later** — a future team console may project selected org-scoped data. On-device work still goes through the desktop daemon.
 
 ## What you get
@@ -36,8 +36,8 @@ Cocurdex is built around a few durable ideas:
 | Surface | Role |
 | --- | --- |
 | **Desktop app** | Primary place to run agents, edit files, preview UI, and manage notes/issues |
-| **CLI (`cocurdex`)** | Open folders, manage notes/issues/search/skills/worktrees, drive sessions and workflows without opening SQLite yourself |
-| **Product skills** | Optional agent skills (`cocurdex-*`) for PRD → issue → ship style work against app-owned data |
+| **CLI (`cocurdex`)** | Open folders, manage notes/issues/search/skills/worktrees/teams, drive sessions and workflows without opening SQLite yourself |
+| **Product skills** | Optional agent skills (`cocurdex-*`) for PRD → issue → ship style work (and `/cocurdex-team` for parallel teammates) against app-owned data |
 
 ## Pre-release
 

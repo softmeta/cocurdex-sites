@@ -33,14 +33,34 @@ Important rules:
 2. The **CLI** is the supported external read/write boundary for automation and agents.  
 3. Markdown import/export is **explicit** — not a second live database.  
 4. Private table schemas and file paths are **not** a public API.  
-5. During pre-release, databases that lack the current application marker / schema version may be **recreated** rather than migrated.
+5. Databases without the Cocurdex application marker (`COCU`) are moved aside as `.bak-<timestamp>` and **recreated**. Databases that already carry the marker are **migrated** forward when the schema version is older; a database written by a **newer** schema than this build supports is **refused** (never downgraded or deleted).
+
+### Default locations
+
+App-owned files live under the user data directory (override with `COCURDEX_USER_DATA_PATH`):
+
+| Platform | Default user data directory |
+| --- | --- |
+| macOS | `~/Library/Application Support/Cocurdex` |
+| Windows | `%APPDATA%\Cocurdex` |
+| Linux | `~/.config/cocurdex` (or `$XDG_CONFIG_HOME/cocurdex`) |
+
+| Path under user data | Role |
+| --- | --- |
+| `cocurdex.sqlite` | Notes, issues, sessions, roles, and related product state |
+| `daemon.sock` | Unix domain socket (not Windows) |
+| Named pipe `\\.\pipe\cocurdex-daemon-<id>` | Windows daemon pipe (id derived from the resolved user data path) |
+| `daemon.json` | Daemon metadata |
+| `worktrees/` | Default root for managed git worktrees (unless Settings → Worktrees sets another root) |
+
+Opening a database that needs a migration writes a `cocurdex.sqlite.pre-migration-<timestamp>` snapshot and keeps the newest three.
 
 ### What lives where
 
 | Data | Authority |
 | --- | --- |
 | Notes, issues, views, tags, links, FTS indexes | Daemon + `cocurdex.sqlite` |
-| Agent roles, worktree settings, session records | Daemon + `cocurdex.sqlite` |
+| Agent roles, teams, worktree settings, session records | Daemon + `cocurdex.sqlite` |
 | Managed git worktrees | Created by the daemon under the configured worktree root |
 | Project source files | Your workspace directory on disk |
 | Agent provider auth (e.g. Codex) | That tool’s own config (for example under `~/.codex`) |

@@ -17,15 +17,17 @@ cocurdex skills install --scope project
 cocurdex skills install --scope global
 ```
 
-| Scope | Meaning |
-| --- | --- |
-| `project` | Install under the project root (`--root` defaults to `cwd`) |
-| `global` | Install into the user global skills location |
+| Scope | Meaning | Install locations |
+| --- | --- | --- |
+| `project` | Under the project root (`--root` defaults to `cwd`) | `<root>/.agents/skills` (primary) and a Claude-compatible copy/link under `<root>/.claude/skills` |
+| `global` | User-wide skills | `~/.agents/skills` and `~/.claude/skills` |
 
-Managed installs write a marker file so Cocurdex can update or remove its own pack. If skills already exist **without** that marker, install reports a conflict — rename or remove the conflicting folders and retry.
+Managed installs write a marker file (`.agents/skills/.cocurdex-skills.json`) so Cocurdex can update or remove its own pack. If skills already exist **without** that marker, install reports a conflict — rename or remove the conflicting folders and retry.
 
 ```bash
 cocurdex skills remove --scope project
+# uninstall is an alias of remove
+cocurdex skills uninstall --scope project
 ```
 
 ## Skill catalog
@@ -41,6 +43,7 @@ cocurdex skills remove --scope project
 | `cocurdex-todo` | Alias language for issues (“todo”) |
 | `cocurdex-ticket` | Alias language for issues (“ticket”) |
 | `cocurdex-link` | Link notes and issues via Markdown links / backlinks |
+| `cocurdex-team` | Parallel teammate agents: when a team helps, brief members, merge reports |
 | `cocurdex-ship` | Implement against a selected issue cleanly |
 | `cocurdex-layout` | Explain app-owned data boundaries and CLI access |
 
@@ -55,6 +58,8 @@ cocurdex skills remove --scope project
   → /cocurdex-issue  (slice | create | refine | start)
   → /cocurdex-ship
 ```
+
+For independent parallel implementation, insert `/cocurdex-team` (or `cocurdex team …`) after the issue is clear.
 
 | Step | Skill | Writes |
 | --- | --- | --- |
