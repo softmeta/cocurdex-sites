@@ -43,6 +43,14 @@ export function SiteShell({ locale, path, children }: SiteShellProps) {
             >
               {dict.nav.docs}
             </Link>
+            <a
+              href={site.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[0.9375rem] text-fd-muted-foreground no-underline hover:text-fd-foreground"
+            >
+              {dict.nav.github}
+            </a>
             <Link
               href={localizedPath(locale, "/download/")}
               className="rounded-md border border-fd-border bg-fd-card px-3 py-1.5 text-[0.9375rem] text-fd-foreground no-underline hover:border-fd-foreground/30"
@@ -81,6 +89,14 @@ export function SiteShell({ locale, path, children }: SiteShellProps) {
             >
               {dict.nav.download}
             </Link>
+            <a
+              href={site.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-fd-muted-foreground no-underline hover:text-fd-foreground"
+            >
+              {dict.nav.github}
+            </a>
             <Link
               href={localizedPath(locale, "/docs/getting-started/")}
               className="text-fd-muted-foreground no-underline hover:text-fd-foreground"

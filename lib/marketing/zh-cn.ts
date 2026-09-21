@@ -8,6 +8,7 @@ export const dict: MarketingDict = {
   nav: {
     docs: "文档",
     download: "下载",
+    github: "GitHub",
     primaryAria: "主导航",
     footerAria: "页脚",
   },
