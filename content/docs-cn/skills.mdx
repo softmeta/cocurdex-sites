@@ -22,7 +22,7 @@ cocurdex skills install --scope global
 | `project` | 安装到项目根目录下(`--root` 默认为 `cwd`) | `<root>/.agents/skills`(主目录),以及 Claude 兼容的副本/链接 `<root>/.claude/skills` |
 | `global` | 安装到用户全局 skills 位置 | `~/.agents/skills` 与 `~/.claude/skills` |
 
-托管安装会写入标记文件(`.cocurdex-skills.json`),以便 Cocurdex 更新或移除自己的 skill 包。如果同名 skills 已存在但**没有**该标记,安装会报告冲突——重命名或移除冲突目录后重试。
+托管安装会写入标记文件(`.agents/skills/.cocurdex-skills.json`),以便 Cocurdex 更新或移除自己的 skill 包。如果同名 skills 已存在但**没有**该标记,安装会报告冲突——重命名或移除冲突目录后重试。
 
 ```bash
 cocurdex skills remove --scope project

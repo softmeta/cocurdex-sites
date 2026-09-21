@@ -22,7 +22,7 @@ cocurdex skills install --scope global
 | `project` | Under the project root (`--root` defaults to `cwd`) | `<root>/.agents/skills` (primary) and a Claude-compatible copy/link under `<root>/.claude/skills` |
 | `global` | User-wide skills | `~/.agents/skills` and `~/.claude/skills` |
 
-Managed installs write a marker file (`.cocurdex-skills.json`) so Cocurdex can update or remove its own pack. If skills already exist **without** that marker, install reports a conflict — rename or remove the conflicting folders and retry.
+Managed installs write a marker file (`.agents/skills/.cocurdex-skills.json`) so Cocurdex can update or remove its own pack. If skills already exist **without** that marker, install reports a conflict — rename or remove the conflicting folders and retry.
 
 ```bash
 cocurdex skills remove --scope project
