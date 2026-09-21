@@ -51,7 +51,7 @@ cocurdex workspace list
 | `daemon.sock` | Unix 域套接字(非 Windows) |
 | 命名管道 `\\.\pipe\cocurdex-daemon-<id>` | Windows daemon 管道(id 由解析后的用户数据路径派生) |
 | `daemon.json` | Daemon 元数据 |
-| `worktrees/` | 托管 git 工作树的默认根目录(除非在 设置 → Worktrees 中另设) |
+| `worktrees/` | 托管 git 工作树的默认根目录(除非在 **设置 → 工作树** 中另设) |
 
 打开需要迁移的数据库时会写入 `cocurdex.sqlite.pre-migration-<timestamp>` 快照,并保留最新的三个。
 
