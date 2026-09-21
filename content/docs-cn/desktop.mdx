@@ -16,8 +16,9 @@ Cocurdex 以**原生桌面应用**(Electron)形态交付。目标是给多 Agent
 | **终端** | 集成 PTY,用于命令执行和 Agent 驱动的 shell 工作 |
 | **编辑器** | 不离开应用即可查看和编辑项目文件 |
 | **浏览器预览** | 审查 UI,可选设计模式批注 |
-| **工作树** | 为会话提供隔离检出的托管 git 工作树(新会话时可选择;清单位于 **Settings → Worktrees**) |
-| **笔记 / Issue** | 应用私有的产品数据(见[笔记与 Issue](/docs/notes-and-issues/)) |
+| **工作树** | 为会话提供隔离检出的托管 git 工作树(新会话时可选择;清单位于 **设置 → Worktrees**) |
+| **团队** | 主会话 + 队友会话的并行工作(**设置 → 团队**;会话团队面板) |
+| **笔记 / Issue** | 应用私有的产品数据(见[笔记与 Issue](/zh-cn/docs/notes-and-issues/)) |
 
 预发布期间具体布局可能变化，但产品模型保持多面板:没有任何一个面板应该独占产品——对话是并列的一员，不是整个应用。
 
@@ -42,7 +43,7 @@ Cocurdex 以**原生桌面应用**(Electron)形态交付。目标是给多 Agent
 | --- | --- |
 | **协作模式** | `default` 为正常工作;`plan` 为运行时支持的计划优先循环 |
 | **写入模式** | `read-only` 与 `native-write`——Agent 是否可以通过其常规工具修改工作区 |
-| **权限模式** | Agent 自动批准工具的激进程度(因 Agent 而异;见 [Agent](/docs/agents/)) |
+| **权限模式** | Agent 自动批准工具的激进程度(因 Agent 而异;见 [Agent](/zh-cn/docs/agents/)) |
 
 优先选择仍能完成任务的最窄模式。
 
@@ -74,11 +75,11 @@ Cocurdex 以**原生桌面应用**(Electron)形态交付。目标是给多 Agent
 
 本地产品数据(笔记、Issue、视图、标签、链接、搜索索引及相关状态)经由桌面 **daemon** 写入应用私有存储。公开网站和未来的团队控制台不会替代本机工作的这条路径。
 
-见[工作区与数据](/docs/concepts/workspaces-and-data/)。
+见[工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)。
 
 ## 相关
 
-- [快速上手](/docs/getting-started/)
-- [Agent](/docs/agents/)
-- [笔记与 Issue](/docs/notes-and-issues/)
-- [CLI](/docs/cli/)
+- [快速上手](/zh-cn/docs/getting-started/)
+- [Agent](/zh-cn/docs/agents/)
+- [笔记与 Issue](/zh-cn/docs/notes-and-issues/)
+- [CLI](/zh-cn/docs/cli/)

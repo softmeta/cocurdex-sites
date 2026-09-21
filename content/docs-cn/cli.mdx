@@ -1,6 +1,6 @@
 ---
 title: CLI
-description: cocurdex CLI 参考——打开桌面应用,管理笔记、Issue、会话、provider、skills 与工作流。
+description: cocurdex CLI 参考——打开桌面应用,管理笔记、Issue、会话、团队、provider、skills 与工作流。
 ---
 
 **`cocurdex` CLI** 是应用私有产品数据和 daemon 操作受支持的命令行边界。外部工具和 Agent 应该使用 CLI,而不是读取私有数据库文件。
@@ -9,7 +9,7 @@ description: cocurdex CLI 参考——打开桌面应用,管理笔记、Issue、
 
 ## 安装
 
-当 CLI 随桌面应用打包时,从 **Settings → CLI** 安装启动器,让 `cocurdex` 出现在 `PATH` 上。
+当 CLI 随桌面应用打包时,从 **设置 → 通用**(CLI 分组)安装启动器,让 `cocurdex` 出现在 `PATH` 上。
 
 ```bash
 cocurdex --version
@@ -111,7 +111,7 @@ cocurdex skills install --scope project|global [--root <path>] [--json]
 cocurdex skills remove --scope project|global [--root <path>] [--json]
 ```
 
-`--root` 在 project 范围下默认为当前工作目录。`cocurdex skill` 也可作为别名。见 [Skills](/docs/skills/)。
+`--root` 在 project 范围下默认为当前工作目录。`cocurdex skill` 是 `skills` 的别名;`uninstall` 是 `remove` 的别名。见 [Skills](/zh-cn/docs/skills/)。
 
 ## Daemon 与工作区
 
@@ -141,19 +141,51 @@ cocurdex session create --workspace <id|path> --agent <agent> --provider <provid
 cocurdex session tui [session-id]
 cocurdex session tui --workspace <id|path> --agent <agent> --provider <provider> --model <model>
 cocurdex session send <session-id> <prompt>
+cocurdex session peers <session-id>
+cocurdex session send-peer <from-session-id> <to-session-id> <message>
+cocurdex session peer-inbound <session-id> deliver|refuse
 cocurdex session stop <session-id>
 ```
 
 | Flag | 必填场景 | 含义 |
 | --- | --- | --- |
 | `--workspace` | create / tui 创建 | 工作区 id 或文件系统路径 |
-| `--agent` | create / tui 创建 | Agent id(`claude-agent`、`codex`、`opencode`、`grok-build`、`pi`) |
+| `--agent` | create / tui 创建 | Agent id(`claude-agent`、`codex`、`opencode`、`cursor`、`devin`、`grok-build`、`pi`) |
 | `--provider` | create / tui 创建 | `provider list` 中的 provider 配置 id |
 | `--model` | create / tui 创建 | `provider models` 中的模型 id |
 
 不带 flags 的 `session tui` 附着到最近的非归档会话。它不支持 `--json`。
 
-Agent id 与权限见 [Agent](/docs/agents/)。
+同伴命令可列出会话队友、在会话间发送消息,以及投递或拒绝入站同伴流量。
+
+Agent id 与权限见 [Agent](/zh-cn/docs/agents/)。
+
+## 团队
+
+协调主会话与队友会话(可选工作树隔离)。完整产品模型见 [Agent](/zh-cn/docs/agents/#agent-团队)。
+
+```bash
+cocurdex team get --lead <session-id> [--json]
+cocurdex team spawn --lead <session-id> --name <name> --prompt <prompt> \
+  [--role <role-id>] [--agent <agent>] [--worktree]
+cocurdex team stop --team <team-id>
+cocurdex team stop-member --team <team-id> --session <session-id>
+cocurdex team roles [--json]
+cocurdex team templates [--json]
+cocurdex team spawn-template --lead <session-id> --template <template-id> [--prompt <prompt>]
+```
+
+## 脚本运行
+
+由请求方会话驱动的、daemon 掌管的脚本化多 Agent 运行:
+
+```bash
+cocurdex script-run list [--session <requester-session-id>] [--workspace <workspace-id>] [--json]
+cocurdex script-run get --run <run-id> [--json]
+cocurdex script-run create --session <requester-session-id> --name <name> --file <script.js>
+cocurdex script-run start --run <run-id> [--max-agents <n>]
+cocurdex script-run cancel --run <run-id>
+```
 
 ## Provider
 
@@ -172,7 +204,7 @@ cocurdex role list [--json]
 
 ## 工作流
 
-daemon 掌管的多步骤运行(计划 → 实现 → 评审 风格)。完整说明见[工作流](/docs/workflows/)。
+daemon 掌管的多步骤运行(计划 → 实现 → 评审 风格)。完整说明见[工作流](/zh-cn/docs/workflows/)。
 
 ```bash
 cocurdex workflow list
@@ -190,7 +222,7 @@ cocurdex workflow approve|reject <run-id> [--reason <text>] [--step <step-id>]
 cocurdex workflow cancel <run-id>
 ```
 
-不带 flags 时的默认角色 Agent:planner `codex`,implementer `grok-build`,reviewer `codex`。`--<role>-role` flag 绑定一个保存好的 [Agent 角色](#agent-角色)而非临时 Agent/模型组合;该角色的权限画像必须与工作流角色的要求匹配。
+不带 flags 时的默认角色 Agent:planner `codex`,implementer `grok-build`,reviewer `codex`。`--<role>-role` flag 绑定一个保存好的 [Agent 角色](#agent-角色)而非临时 Agent/模型组合;该角色的权限画像必须与工作流角色的要求匹配。内置定义 id 为 `plan_execute_review`。
 
 ## CLI 不是什么
 
@@ -205,8 +237,8 @@ cocurdex workflow cancel <run-id>
 
 ## 相关
 
-- [笔记与 Issue](/docs/notes-and-issues/)
-- [Agent](/docs/agents/)
-- [Skills](/docs/skills/)
-- [工作流](/docs/workflows/)
-- [工作区与数据](/docs/concepts/workspaces-and-data/)
+- [笔记与 Issue](/zh-cn/docs/notes-and-issues/)
+- [Agent](/zh-cn/docs/agents/)
+- [Skills](/zh-cn/docs/skills/)
+- [工作流](/zh-cn/docs/workflows/)
+- [工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)

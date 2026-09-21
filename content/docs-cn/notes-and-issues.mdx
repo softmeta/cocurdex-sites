@@ -3,7 +3,7 @@ title: 笔记与 Issue
 description: Cocurdex 中应用私有的笔记、Issue、看板视图、搜索与反向链接。
 ---
 
-笔记和 Issue 是 Cocurdex 中的一等**产品记录**。它们存放在应用私有存储(`cocurdex.sqlite`)中，而不是在仓库里隐式双写一棵 Markdown 树。
+笔记和 Issue 是 Cocurdex 中的一等**产品记录**。它们存放在应用私有存储(`cocurdex.sqlite`，位于各平台用户数据目录下——见[工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/))中，而不是在仓库里隐式双写一棵 Markdown 树。
 
 ## 为什么应用私有
 
@@ -102,7 +102,7 @@ cocurdex search "release" --kind issue --workspace <workspace-id>
 
 ## 与 Agent 协作
 
-产品 Skills(`/cocurdex-note`、`/cocurdex-issue` 等)调用同一套 CLI,因此 Agent 不需要打开 SQLite。见 [Skills](/docs/skills/)。
+产品 Skills(`/cocurdex-note`、`/cocurdex-issue` 等)调用同一套 CLI,因此 Agent 不需要打开 SQLite。见 [Skills](/zh-cn/docs/skills/)。
 
 产品工作的推荐循环:
 
@@ -121,6 +121,6 @@ PRD 和 spec 默认存为**私有笔记**。要发布到仓库中需要明确的
 
 ## 相关
 
-- [工作区与数据](/docs/concepts/workspaces-and-data/)
-- [CLI](/docs/cli/)
-- [Skills](/docs/skills/)
+- [工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)
+- [CLI](/zh-cn/docs/cli/)
+- [Skills](/zh-cn/docs/skills/)
