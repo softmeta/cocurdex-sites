@@ -7,7 +7,7 @@ Cocurdex 在一个工作区里协调**多个 Agent 会话**。预发布期间运
 
 ## 心智模型
 
-- 每个会话都有明确的**状态**和推导出的**注意力**状态(见[桌面工作台](/docs/desktop/))。
+- 每个会话都有明确的**状态**和推导出的**注意力**状态(见[桌面工作台](/zh-cn/docs/desktop/))。
 - 你可以运行**多个**会话,而不必合并成一条对话记录。
 - 权限、提问和计划批准会浮现在 UI 中,而不是静默发生。
 - 优先选择仍能完成任务的最**窄**权限和写入模式。
@@ -19,6 +19,8 @@ Cocurdex 在一个工作区里协调**多个 Agent 会话**。预发布期间运
 | `claude-agent` | Claude Agent | 外部 `claude` CLI | 计划模式、引导、本地写入 |
 | `codex` | Codex | 外部 `codex` CLI | 计划模式、引导、本地写入;授权经由 Codex 自身 |
 | `opencode` | OpenCode | 外部 `opencode` CLI | 计划模式、流式输出;不支持引导 |
+| `cursor` | Cursor | 外部 `cursor-agent` CLI(ACP) | 仅本地写入;无计划/权限模式或引导 |
+| `devin` | Devin | 外部 `devin` CLI(ACP) | 仅本地写入;无计划/权限模式或引导 |
 | `grok-build` | Grok Build | 外部 `grok` CLI(ACP 传输) | 计划模式、经 ACP 引导;仅本地写入 |
 | `pi` | Pi | 内置 | 默认偏只读;无独立权限模式 |
 
@@ -30,6 +32,8 @@ Cocurdex 在一个工作区里协调**多个 Agent 会话**。预发布期间运
 | --- | --- |
 | 你已经在用 Claude Code / Claude CLI | `claude-agent` |
 | 你已经在用 OpenAI Codex | `codex` |
+| 你已经在用 Cursor Agent | `cursor` |
+| 你已经在用 Devin CLI | `devin` |
 | 你想要偏 Grok 的实现 | `grok-build` |
 | 你在别处使用 OpenCode | `opencode` |
 | 不需要本地工作区写入的轻量对话轮次 | `pi`(Pi) |
@@ -94,6 +98,10 @@ Cocurdex 会尽可能复用你已有的 provider 配置(例如 `~/.codex` 下的
 
 没有独立的权限模式列表;写入模式为 **read-only**。
 
+### Cursor 与 Devin
+
+没有独立的权限模式或协作模式列表。写入模式仅为 **native-write**;不支持引导。运行时选项(例如模型)在已安装 CLI 经 ACP 暴露时可用。
+
 当 Agent 请求特权操作时,Cocurdex 会浮现一张权限卡片(可能附带路径/操作细节)。在会话 UI 或 CLI 的 `session tui` 中处理。
 
 ## 协作与写入模式
@@ -107,13 +115,13 @@ Cocurdex 会尽可能复用你已有的 provider 配置(例如 `~/.codex` 下的
 
 ## Agent 角色
 
-**Agent 角色**是保存好的预设:Agent + provider/模型 + 权限模式 + 协作与推理轴,外加可选的指令和 skills。在 **Settings → Agent roles** 中管理角色(或从会话 UI 把当前会话配置保存为角色),并从 CLI 列出:
+**Agent 角色**是保存好的预设:Agent + provider/模型 + 权限模式 + 协作与推理轴,外加可选的指令和 skills。在 **设置 → 角色** 中管理角色(或从会话 UI 把当前会话配置保存为角色),并从 CLI 列出:
 
 ```bash
 cocurdex role list
 ```
 
-角色可以通过 `--planner-role`、`--implementer-role` 和 `--reviewer-role` 绑定[工作流](/docs/workflows/)的 planner / implementer / reviewer 槽位。只有当角色的权限画像与工作流角色要求匹配时才能绑定:planner 和 reviewer 需要只读画像,implementer 需要工作区写入画像,dangerous 级权限模式完全不能绑定。
+角色可以通过 `--planner-role`、`--implementer-role` 和 `--reviewer-role` 绑定[工作流](/zh-cn/docs/workflows/)的 planner / implementer / reviewer 槽位。只有当角色的权限画像与工作流角色要求匹配时才能绑定:planner 和 reviewer 需要只读画像,implementer 需要工作区写入画像,dangerous 级权限模式完全不能绑定。
 
 ## 会话内控制
 
@@ -139,9 +147,20 @@ cocurdex session stop <session-id>
 
 标题保持简短,状态保持可见。只在有注意力需求时切换——不要为了「省一个会话位」把不相关的工作塞进同一条对话记录。
 
+## Agent 团队
+
+对于由一个主会话统筹的独立并行工作,Cocurdex 支持 **Agent 团队**:
+
+- 在 **设置 → 团队** 中配置默认值与模板。
+- 从会话团队面板或 CLI(`cocurdex team …`)派生队友。
+- 可选地用托管 git 工作树隔离队友(spawn 时加 `--worktree`)。
+- 会话可向同伴发消息(`session send-peer`),并接受或拒绝入站同伴消息。
+
+产品 skill `/cocurdex-team` 说明何时适合用团队、如何简报队友、如何合并报告。见 [Skills](/zh-cn/docs/skills/) 与 [CLI](/zh-cn/docs/cli/#teams)。
+
 ## 相关
 
-- [桌面工作台](/docs/desktop/)
-- [工作流](/docs/workflows/)
-- [Skills](/docs/skills/)
-- [CLI](/docs/cli/)
+- [桌面工作台](/zh-cn/docs/desktop/)
+- [工作流](/zh-cn/docs/workflows/)
+- [Skills](/zh-cn/docs/skills/)
+- [CLI](/zh-cn/docs/cli/)

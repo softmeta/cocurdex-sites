@@ -12,7 +12,7 @@ description: 安装 Cocurdex、打开工作区、配置 Agent 运行时，并运
 | **macOS** | Apple silicon 与 Intel |
 | **Windows** | x64(未签名的 NSIS 安装包) |
 | **Linux** | x64 AppImage |
-| **Agent 运行时** | 至少一个你已在使用的受支持 Agent CLI 或 provider(见 [Agent](/docs/agents/)) |
+| **Agent 运行时** | 至少一个你已在使用的受支持 Agent CLI 或 provider(见 [Agent](/zh-cn/docs/agents/)) |
 | **磁盘 / 项目** | 磁盘上的一个项目目录，供 Agent 和编辑器用作工作区根目录 |
 
 ## 安装
@@ -25,14 +25,14 @@ description: 安装 Cocurdex、打开工作区、配置 Agent 运行时，并运
 
 ### 把 CLI 放到 PATH 上
 
-安装后，打开 **Settings → CLI**(或等效的首次启动步骤),让 `cocurdex` 启动器在终端可用。
+安装后，打开 **设置 → 通用**(CLI 分组)——或等效的首次启动步骤,让 `cocurdex` 启动器在终端可用。
 
 ```bash
 cocurdex --version
 cocurdex --help
 ```
 
-如果二进制找不到桌面应用，请先从 Dock/应用程序打开一次 Cocurdex，或将 `COCURDEX_ELECTRON` 设为应用可执行文件。见 [CLI](/docs/cli/)。
+如果二进制找不到桌面应用，请先从 Dock/应用程序打开一次 Cocurdex，或将 `COCURDEX_ELECTRON` 设为应用可执行文件。见 [CLI](/zh-cn/docs/cli/)。
 
 ## 打开工作区
 
@@ -65,11 +65,11 @@ cocurdex workspace list
 
 在第一次有效运行之前:
 
-1. 安装你想用的 Agent CLI(例如 `claude`、`codex`、`opencode` 或 `grok`),**或**在只需要无本地写入的对话式工作时使用内置的 **Pi**(`pi`)运行时。
+1. 安装你想用的 Agent CLI(例如 `claude`、`codex`、`opencode`、`cursor-agent`、`devin` 或 `grok`),**或**在只需要无本地写入的对话式工作时使用内置的 **Pi**(`pi`)运行时。
 2. 完成该工具自身的授权(API key、ChatGPT 登录等)。Cocurdex 会尽可能复用你已有的 provider 配置。
 3. 在桌面应用中创建会话，选择 **Agent + provider + 模型**。
 
-受支持的 Agent id 与权限模式见 [Agent](/docs/agents/)。
+受支持的 Agent id 与权限模式见 [Agent](/zh-cn/docs/agents/)。
 
 从 CLI 查看 provider 配置(daemon 必须已运行——打开桌面应用即会启动):
 
@@ -127,7 +127,7 @@ cocurdex issue create --title "Ship getting-started docs" --status backlog
 cocurdex search "getting-started"
 ```
 
-详见[笔记与 Issue](/docs/notes-and-issues/)和[工作区与数据](/docs/concepts/workspaces-and-data/)。
+详见[笔记与 Issue](/zh-cn/docs/notes-and-issues/)和[工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)。
 
 ## 可选:产品 Skills
 
@@ -140,7 +140,7 @@ cocurdex skills install --scope project
 cocurdex skills install --scope global
 ```
 
-见 [Skills](/docs/skills/)。
+见 [Skills](/zh-cn/docs/skills/)。
 
 ## 检查清单
 
@@ -152,7 +152,7 @@ cocurdex skills install --scope global
 
 ## 接下来
 
-- [桌面工作台](/docs/desktop/)——面板、注意力、快捷键
-- [Agent](/docs/agents/)——运行时、权限、计划模式
-- [CLI](/docs/cli/)——完整命令面
-- [工作流](/docs/workflows/)——计划 → 实现 → 评审 的运行
+- [桌面工作台](/zh-cn/docs/desktop/)——面板、注意力、快捷键
+- [Agent](/zh-cn/docs/agents/)——运行时、权限、计划模式
+- [CLI](/zh-cn/docs/cli/)——完整命令面
+- [工作流](/zh-cn/docs/workflows/)——计划 → 实现 → 评审 的运行
