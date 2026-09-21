@@ -33,6 +33,6 @@ export function baseOptions(locale: SiteLocale): BaseLayoutProps {
         url: localizedPath(locale, "/download/"),
       },
     ],
-    githubUrl: "https://github.com/softmeta/cocurdex",
+    githubUrl: site.githubUrl,
   };
 }

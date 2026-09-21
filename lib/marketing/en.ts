@@ -8,6 +8,7 @@ export const dict = {
   nav: {
     docs: "Docs",
     download: "Download",
+    github: "GitHub",
     primaryAria: "Primary",
     footerAria: "Footer",
   },
