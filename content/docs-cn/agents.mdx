@@ -151,10 +151,11 @@ cocurdex session stop <session-id>
 
 对于由一个主会话统筹的独立并行工作,Cocurdex 支持 **Agent 团队**:
 
-- 在 **设置 → 团队** 中配置默认值与模板。
+- 在 **设置 → 团队** 中管理队友模板(以及脚本运行相关选项)。
 - 从会话团队面板或 CLI(`cocurdex team …`)派生队友。
 - 可选地用托管 git 工作树隔离队友(spawn 时加 `--worktree`)。
 - 会话可向同伴发消息(`session send-peer`),并接受或拒绝入站同伴消息。
+- `opencode` 不能加入团队(lead 与队友均不支持)。
 
 产品 skill `/cocurdex-team` 说明何时适合用团队、如何简报队友、如何合并报告。见 [Skills](/zh-cn/docs/skills/) 与 [CLI](/zh-cn/docs/cli/#teams)。
 
