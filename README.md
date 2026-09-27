@@ -6,7 +6,7 @@ at [cocurdex.com](https://cocurdex.com) (static, SEO-first).
 ## Stack
 
 - [Next.js](https://nextjs.org/) 16 App Router, `output: "export"` → `out/`
-- [Fumadocs](https://fumadocs.dev/) (`fumadocs-ui` + `fumadocs-mdx`) for `/docs/*`, `neutral` theme; zh-CN UI strings via `@fumadocs/language`
+- [Fumadocs](https://fumadocs.dev/) (`fumadocs-ui` + `fumadocs-mdx`) for `/docs/*`, custom theme tokens in `styles/globals.css` (Geist fonts, Cocurdex teal); zh-CN UI strings via `@fumadocs/language`
 - Tailwind CSS 4 (`@tailwindcss/postcss`), sitemap via `app/sitemap.ts`
 
 ## Scripts

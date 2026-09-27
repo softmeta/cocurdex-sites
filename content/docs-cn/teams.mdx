@@ -1,0 +1,138 @@
+---
+title: 团队与编排
+description: Agent 团队、会话间消息和脚本编排——Cocurdex 中的 Agent 如何在你的掌控下协调其他 Agent。
+---
+
+一个会话就是一个 Agent 的一段对话。当任务宽到值得拆分时，Cocurdex 为 Agent 提供三种由 daemon 托管的方式来协调其他 Agent：
+
+| 原语 | 形态 | 适用场景 |
+| --- | --- | --- |
+| [Agent 团队](#agent-团队) | 一个主会话 + 若干具名队友，共享一份任务清单 | 同一目标下彼此独立、可并行的切片 |
+| [会话间消息](#会话间消息) | 任意主会话可以给另一个会话发消息 | 在你已开着的会话之间交接 |
+| [脚本编排](#脚本编排) | 一段沙箱中的 JavaScript，把工作分发给子 Agent | 大量同构单元：按文件、按模块、按 Issue |
+
+这些能力以 **Cocurdex Agent 工具**（daemon 为每个会话挂载的本地 MCP 服务）的形式提供给 Agent，也可以通过桌面 UI 和 [CLI](/zh-cn/docs/cli/) 使用。状态是持久化的：运行、团队和任务在应用重启后依然保留。
+
+<Callout title="工具可用范围">
+只有**主会话**可以派生团队或提出脚本编排。队友可以使用共享任务清单和消息工具。脚本编排启动的子 Agent 不获得任何协调工具。
+</Callout>
+
+## Agent 团队
+
+**团队**归属于一个**主会话（lead）**。主会话派生**队友**——并行运行的独立 Agent 会话——并通过共享任务清单协调它们。
+
+- 每个队友每轮的最终回复会自动送回主会话。
+- 队友之间、队友与主会话之间可以互发消息。
+- 队友可以运行在自己的[托管工作树](/zh-cn/docs/cli/#工作树)中，并行编辑互不干扰。
+- 队友可以使用已保存的 [Agent 角色](/zh-cn/docs/agents/)或指定 Agent id；默认继承主会话的 Agent。
+
+### 共享任务清单
+
+团队任务就是团队专属视图上的普通 [Issue](/zh-cn/docs/notes-and-issues/)，所以也能被搜索、出现在看板上。
+
+| 规则 | 行为 |
+| --- | --- |
+| 前置依赖 | 任务可以列出 `blockedBy` 任务 id；前置任务完成前，任何人都不能开始它 |
+| 归属 | 认领任务（`doing`）时只能分配给一个会话 |
+| 证据 | 把任务移到 `review` 必须附带证据：运行过的命令与结果，或需要检查的文件 |
+| 签收 | 只有**另一个**会话——通常是主会话或审阅者——可以把已审阅任务移到 `done` |
+
+### 团队模板
+
+在 **设置 → 团队** 中定义可复用的团队：为每个队友命名、选择已保存的角色、写好固定提示词。主会话 Agent 可以一次性派生整个模板，你也可以在 CLI 中执行。
+
+```bash
+cocurdex team templates
+cocurdex team spawn-template --lead <session-id> --template <template-id> [--prompt "<给团队的任务>"]
+```
+
+### 通过 CLI
+
+```bash
+cocurdex team get --lead <session-id>
+cocurdex team spawn --lead <session-id> --name reviewer --prompt "审阅 auth 相关改动" \
+  [--role <role-id>] [--agent codex] [--worktree]
+cocurdex team roles
+cocurdex team stop-member --team <team-id> --session <session-id>
+cocurdex team stop --team <team-id>
+```
+
+队友名是小写 slug（`a-z`、`0-9`、`-`）。桌面端会在主会话中显示团队：每个成员的状态（启动中、运行中、空闲、错误、已停止）、队友需要输入时的回复框，以及**全部停止**。
+
+可选的 [`/cocurdex-team`](/zh-cn/docs/skills/) skill 会教主会话 Agent 判断何时真的需要团队、如何给队友下达简报、如何合并它们的报告。
+
+## 会话间消息
+
+主会话之间可以通过会话 id 互发消息。接收方空闲时，消息作为新一轮开始；否则排在当前一轮之后。
+
+```bash
+cocurdex session peers <session-id>
+cocurdex session send-peer <from-session-id> <to-session-id> "API 契约已合并，rebase 后继续"
+cocurdex session peer-inbound <session-id> deliver|refuse
+```
+
+| 保护机制 | 行为 |
+| --- | --- |
+| 入站策略 | `refuse` 让会话拒收其他会话的消息；`deliver`（默认）接收 |
+| 循环上限 | 两个会话在没有用户输入的情况下往来 **12** 次后，投递返回 `loop_limit`，Agent 会被要求停止并向你总结 |
+
+## 脚本编排
+
+**脚本编排（Script run）** 让 Agent 用代码描述一次扇出。Agent 提出一段简短的 JavaScript，**你审阅并批准**之后它才会运行。运行结束后，结果以消息形式送回发起的会话。
+
+脚本是带顶层 `await` 和 `return` 的普通 JavaScript，运行在沙箱中：不能导入模块，不能访问文件系统、网络或 shell——真正干活的只有子 Agent。
+
+| 函数 | 行为 |
+| --- | --- |
+| `agent(prompt, options?)` | 以全新上下文运行一个子 Agent；返回其最终回复，失败或取消时为 `null` |
+| `parallel(tasks)` | 并发执行一组函数，按顺序返回结果 |
+| `pipeline(items, fn)` | 对每个元素并发调用 `fn(item)`，按元素顺序返回结果 |
+| `log(...values)` | 记录一条进度信息 |
+
+`agent()` 选项：`label`；`agentRoleId`（使用已保存角色，而不是继承发起会话的 Agent、模型和权限）；`worktree: true`（隔离文件编辑）；`schema`（JSON Schema——回复会被解析和校验，失败自动重试）。
+
+```js
+const modules = await agent("以 JSON 数组列出 packages/ 下的包路径", {
+  schema: { type: "array", items: { type: "string" } },
+});
+
+const reports = await pipeline(modules, (dir) =>
+  agent(`为 ${dir} 补齐缺失的单元测试，用一行话总结。`, {
+    label: dir,
+    worktree: true,
+  }),
+);
+
+return reports;
+```
+
+### 限制
+
+| 限制 | 值 |
+| --- | --- |
+| 每次运行的 Agent 数 | 批准时设定（默认 **5**，硬上限 1000） |
+| 并发子 Agent | 16 |
+| `parallel` / `pipeline` 列表长度 | 4096 |
+| Schema 重试次数 | 默认 3 |
+
+运行状态依次为 `draft`（等待批准）→ `running` → `completed`、`failed`、`cancelled` 或 `interrupted`。桌面端的**脚本运行**面板会显示每个子 Agent 的状态，并提供取消操作。
+
+```bash
+cocurdex script-run list [--session <session-id>] [--workspace <workspace-id>]
+cocurdex script-run get --run <run-id>
+cocurdex script-run create --session <session-id> --name <kebab-name> --file script.js
+cocurdex script-run start --run <run-id> [--max-agents <n>]
+cocurdex script-run cancel --run <run-id>
+```
+
+## 如何选择
+
+- **同一功能的两三个独立切片** → 团队；凡是会改文件的队友都开工作树。
+- **几十个近乎相同的单元** → 脚本编排，配合 `schema` 让结果结构化返回。
+- **两个已在运行的会话需要同步** → 会话间消息。
+
+## 相关
+
+- [Agent](/zh-cn/docs/agents/)
+- [CLI](/zh-cn/docs/cli/)
+- [Skills](/zh-cn/docs/skills/)

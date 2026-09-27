@@ -1,44 +1,44 @@
 ---
 title: Cocurdex documentation
-description: Product docs for the Cocurdex multi-agent desktop workspace, CLI, agents, notes, and issues.
+description: Product docs for the Cocurdex multi-agent desktop workspace — sessions, agents, teams, notes, issues, and the CLI.
 ---
 
-Cocurdex is a **desktop-first multi-agent development workspace**. It puts chat, integrated terminal, editor, and browser preview in one shell so you can run several AI agents without losing track of which session needs attention.
+Cocurdex is a **desktop-first multi-agent development workspace**. Chat, integrated terminal, editor, and browser preview share one shell, so you can run several AI coding agents without losing track of which session needs you.
 
-This site is **user-facing product documentation**. Engineering ADRs, plans, and research notes live in the monorepo `docs/` tree and are not published here by default.
-
-## Start here
-
-| Goal | Page |
-| --- | --- |
-| Install and open a first session | [Getting started](/docs/getting-started/) |
-| Understand the multi-pane shell | [Desktop workspace](/docs/desktop/) |
-| Notes, issues, and the board | [Notes and issues](/docs/notes-and-issues/) |
-| Agent runtimes and permissions | [Agents](/docs/agents/) |
-| Product skills for agents | [Skills](/docs/skills/) |
-| Multi-step plan → implement → review | [Workflows](/docs/workflows/) |
-| Script notes, issues, sessions | [CLI](/docs/cli/) |
-| Providers, MCP, proxy, git | [Providers and settings](/docs/providers-and-settings/) |
-| What is stored locally and why | [Workspaces and data](/docs/concepts/workspaces-and-data/) |
+<Cards>
+  <Card title="Getting started" href="/docs/getting-started/" description="Install, open a workspace, connect an agent, run a first session." />
+  <Card title="Desktop workspace" href="/docs/desktop/" description="Panes, session attention states, shortcuts, and design mode." />
+  <Card title="Agents" href="/docs/agents/" description="Claude, Codex, Cursor, Devin, Grok Build, OpenCode, and Pi — permissions and capabilities." />
+  <Card title="Teams and orchestration" href="/docs/teams/" description="Agent teams, peer messaging, and approved script runs that fan work out to subagents." />
+  <Card title="Notes and issues" href="/docs/notes-and-issues/" description="App-owned notes, issues, board views, search, and backlinks." />
+  <Card title="CLI" href="/docs/cli/" description="Script notes, issues, sessions, teams, and worktrees with --json." />
+</Cards>
 
 ## Mental model
-
-Cocurdex is built around a few durable ideas:
 
 1. **Workspace, not chat window** — sessions, chat, terminal, editor, and browser preview are peers. The transcript is one pane among several.
 2. **Parallel sessions** — run more than one agent without merging them into a single conversation history.
 3. **Honest state** — status stays specific: thinking, using tools, waiting for you, unread result.
-4. **Local-first product data** — notes and issues live in app-owned storage on your machine. The CLI is the supported external boundary; the SQLite file is not a public API.
-5. **Desktop writes, cloud later** — a future team console may project selected org-scoped data. On-device work still goes through the desktop daemon.
+4. **Agents coordinate agents, under your control** — teams and script runs are durable, daemon-owned, and gated by your approval.
+5. **Local-first product data** — notes and issues live in app-owned storage on your machine. The CLI is the supported external boundary; the SQLite file is not a public API.
 
 ## What you get
 
 | Surface | Role |
 | --- | --- |
-| **Desktop app** | Primary place to run agents, edit files, preview UI, and manage notes/issues |
-| **CLI (`cocurdex`)** | Open folders, manage notes/issues/search/skills/worktrees, drive sessions and workflows without opening SQLite yourself |
-| **Product skills** | Optional agent skills (`cocurdex-*`) for PRD → issue → ship style work against app-owned data |
+| **Desktop app** | Primary place to run agents, edit files, preview UI, and manage notes and issues |
+| **Daemon** | Local process that owns the database, sessions, teams, and script runs |
+| **CLI (`cocurdex`)** | Open folders; manage notes, issues, search, skills, and worktrees; drive sessions and teams |
+| **Product skills** | Optional agent skills (`cocurdex-*`) for PRD → issue → ship work against app-owned data |
 
-## Pre-release
+## All pages
 
-APIs, installers, and docs are still moving. Prefer current pages on this site over third-party writeups. Public builds cover **macOS** (Apple silicon and Intel), **Windows** x64, and **Linux** x64.
+| Goal | Page |
+| --- | --- |
+| Product skills for agents | [Skills](/docs/skills/) |
+| Providers, MCP, proxy, git, diagnostics | [Providers and settings](/docs/providers-and-settings/) |
+| What is stored locally and why | [Workspaces and data](/docs/concepts/workspaces-and-data/) |
+
+<Callout title="Pre-release">
+APIs, installers, and docs are still moving. Public builds cover **macOS** (Apple silicon and Intel), **Windows** x64, and **Linux** x64. If something here disagrees with the app, the app wins — please [open an issue](https://github.com/softmeta/cocurdex/issues).
+</Callout>

@@ -18,6 +18,8 @@ Typical peers in the shell:
 | **Browser preview** | Review UI with optional design-mode annotation |
 | **Worktrees** | Managed git worktrees for isolated session work (picker on new sessions; inventory under **Settings → Worktrees**) |
 | **Notes / issues** | App-owned product data (see [Notes and issues](/docs/notes-and-issues/)) |
+| **Team panel** | Teammates of the current lead session, their status, and replies (see [Teams](/docs/teams/)) |
+| **Script runs** | Proposed scripts awaiting approval and running subagents (see [Script runs](/docs/teams/#script-runs)) |
 
 Exact layout can change during pre-release; the product model stays multi-pane. No single pane should monopolize the product — chat is a peer, not the whole app.
 
@@ -61,6 +63,10 @@ Defaults are VS Code / Cursor-adjacent where that helps muscle memory. **Primary
 | Toggle browser design mode | `Primary+Shift+D` |
 
 Send-key behavior for chat (Enter vs Primary+Enter for multiline) is configurable in settings.
+
+## Approvals in one place
+
+Everything that needs you surfaces inside the session that asked for it: tool permission cards, agent questions, plan reviews, script-run proposals (with **Show script**, an agent limit, **Run** and **Discard**), and teammates that need input. Nothing runs in the background without a visible state.
 
 ## Themes
 

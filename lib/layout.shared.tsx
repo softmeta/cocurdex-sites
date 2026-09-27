@@ -21,7 +21,7 @@ export function baseOptions(locale: SiteLocale): BaseLayoutProps {
       title: (
         <>
           {/* biome-ignore lint/performance/noImgElement: static export, small svg logo */}
-          <img src="/cocurdex-icon.svg" alt="" width={24} height={24} />
+          <img src="/cocurdex-mark.svg" alt="" width={22} height={19} />
           {site.name}
         </>
       ),
@@ -33,6 +33,6 @@ export function baseOptions(locale: SiteLocale): BaseLayoutProps {
         url: localizedPath(locale, "/download/"),
       },
     ],
-    githubUrl: "https://github.com/softmeta/cocurdex",
+    githubUrl: site.github,
   };
 }

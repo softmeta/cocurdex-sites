@@ -1,0 +1,138 @@
+---
+title: Teams and orchestration
+description: Agent teams, session-to-session messaging, and script runs — how Cocurdex agents coordinate other agents under your control.
+---
+
+A single session is one agent in one conversation. When a task is wide enough to split, Cocurdex gives agents three daemon-owned ways to coordinate other agents:
+
+| Primitive | Shape | Best for |
+| --- | --- | --- |
+| [Agent teams](#agent-teams) | A lead session plus named teammates sharing one task list | Parallel, independent slices of one goal |
+| [Peer messaging](#peer-messaging) | Any main session can message another | Hand-offs between sessions you already run |
+| [Script runs](#script-runs) | A sandboxed JavaScript script that fans work out to subagents | Many similar units: per-file, per-module, per-issue |
+
+All of them are exposed to agents as **Cocurdex agent tools** (a local MCP server the daemon attaches to each session) and to you through the desktop UI and the [CLI](/docs/cli/). State is durable: runs, teams, and tasks survive app restarts.
+
+<Callout title="Tool availability">
+Only **main** sessions can spawn teams or propose script runs. Teammates get the shared task list and messaging tools. Subagents started by a script run get no coordination tools at all.
+</Callout>
+
+## Agent teams
+
+A **team** belongs to a **lead** session. The lead spawns **teammates** — separate agent sessions that run in parallel — and coordinates them through a shared task list.
+
+- Each teammate's final reply of every turn is delivered back to the lead automatically.
+- Teammates can message the lead or each other.
+- A teammate can run in its own [managed worktree](/docs/cli/#worktrees) so parallel edits never share a dirty checkout.
+- A teammate uses a saved [agent role](/docs/agents/#agent-roles) or an agent id; by default it inherits the lead's agent.
+
+### Shared task list
+
+Team tasks are ordinary [issues](/docs/notes-and-issues/) on a team-scoped view, so they show up in search and on the board.
+
+| Rule | Behavior |
+| --- | --- |
+| Prerequisites | A task can list `blockedBy` task ids; nobody can start it until they are done |
+| Ownership | Claiming a task (`doing`) assigns it to exactly one session |
+| Evidence | Moving a task to `review` requires evidence: commands run and results, or files to inspect |
+| Sign-off | Only a *different* session — usually the lead or a reviewer — may move a reviewed task to `done` |
+
+### Team templates
+
+Define reusable teams under **Settings → Teams**: name each teammate, pick a saved role, and give it a standing prompt. A lead agent can spawn the whole template at once, or you can do it from the CLI.
+
+```bash
+cocurdex team templates
+cocurdex team spawn-template --lead <session-id> --template <template-id> [--prompt "<task for the team>"]
+```
+
+### From the CLI
+
+```bash
+cocurdex team get --lead <session-id>
+cocurdex team spawn --lead <session-id> --name reviewer --prompt "Review the auth changes" \
+  [--role <role-id>] [--agent codex] [--worktree]
+cocurdex team roles
+cocurdex team stop-member --team <team-id> --session <session-id>
+cocurdex team stop --team <team-id>
+```
+
+Teammate names are lowercase slugs (`a-z`, `0-9`, `-`). The desktop shows the team in the lead session with each member's status (Starting, Running, Idle, Error, Stopped), a reply box when a teammate needs input, and **Stop all**.
+
+The optional [`/cocurdex-team`](/docs/skills/) skill teaches a lead agent when a team actually helps, how to brief teammates, and how to merge their reports.
+
+## Peer messaging
+
+Main sessions can message each other by session id. A message is delivered as a new turn when the receiver is idle, or queued after its current turn.
+
+```bash
+cocurdex session peers <session-id>
+cocurdex session send-peer <from-session-id> <to-session-id> "API contract is merged; rebase and continue"
+cocurdex session peer-inbound <session-id> deliver|refuse
+```
+
+| Guard | Behavior |
+| --- | --- |
+| Inbound policy | `refuse` makes a session reject peer messages; `deliver` (default) accepts them |
+| Loop limit | After **12** exchanges between two sessions without user input, delivery returns `loop_limit` and the agents are told to stop and summarize for you |
+
+## Script runs
+
+A **script run** lets an agent describe a fan-out as code. The agent proposes a short JavaScript script; **you review it and approve it** before anything runs. The result is delivered back to the requesting session as a message when the run finishes.
+
+The script body is plain JavaScript with top-level `await` and `return`. It runs in a sandbox with no module imports, filesystem, network, or shell — only subagents do real work.
+
+| Function | Behavior |
+| --- | --- |
+| `agent(prompt, options?)` | Runs one subagent with a fresh context; resolves to its final reply, or `null` if it failed or was cancelled |
+| `parallel(tasks)` | Runs an array of functions concurrently; results in order |
+| `pipeline(items, fn)` | Calls `fn(item)` for every item concurrently; results in item order |
+| `log(...values)` | Records a progress message |
+
+`agent()` options: `label`, `agentRoleId` (use a saved role instead of inheriting the requester's agent, model, and permissions), `worktree: true` (isolate file edits), and `schema` (a JSON Schema — the reply is parsed and validated, with retries).
+
+```js
+const modules = await agent("List the packages under packages/ as a JSON array of paths", {
+  schema: { type: "array", items: { type: "string" } },
+});
+
+const reports = await pipeline(modules, (dir) =>
+  agent(`Add missing unit tests in ${dir}. Reply with a one-line summary.`, {
+    label: dir,
+    worktree: true,
+  }),
+);
+
+return reports;
+```
+
+### Limits
+
+| Limit | Value |
+| --- | --- |
+| Agents per run | Set when you approve (default **5**, hard cap 1000) |
+| Concurrent subagents | 16 |
+| Items per `parallel` / `pipeline` list | 4096 |
+| Schema retries | 3 by default |
+
+Run status moves through `draft` (awaiting approval) → `running` → `completed`, `failed`, `cancelled`, or `interrupted`. The desktop shows a **Script runs** panel with each subagent's state and a Cancel action.
+
+```bash
+cocurdex script-run list [--session <session-id>] [--workspace <workspace-id>]
+cocurdex script-run get --run <run-id>
+cocurdex script-run create --session <session-id> --name <kebab-name> --file script.js
+cocurdex script-run start --run <run-id> [--max-agents <n>]
+cocurdex script-run cancel --run <run-id>
+```
+
+## Choosing a primitive
+
+- **Two or three independent slices** of one feature → a team, with worktrees for anything that edits files.
+- **Dozens of near-identical units** → a script run with a `schema` so results come back structured.
+- **Two sessions you already run need to sync** → peer messaging.
+
+## Related
+
+- [Agents](/docs/agents/)
+- [CLI](/docs/cli/)
+- [Skills](/docs/skills/)

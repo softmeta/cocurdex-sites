@@ -19,7 +19,7 @@ Markdown 之后仍可用于**显式**导入导出。在此之前，请把 CLI �
 
 ## 笔记
 
-笔记支持:
+笔记支持：
 
 - 层级**文件夹**与笔记页
 - Markdown 正文
@@ -43,7 +43,7 @@ cocurdex note tags
 cocurdex note delete <id>
 ```
 
-创建文件夹:
+创建文件夹：
 
 ```bash
 cocurdex note create --title "PRDs" --folder
@@ -51,7 +51,7 @@ cocurdex note create --title "PRDs" --folder
 
 ## Issue
 
-Issue 是产品中的 **todo / ticket / 看板卡片**模型。叫法不同，存储是同一个池:
+Issue 是产品中的 **todo / ticket / 看板卡片**模型。叫法不同，存储是同一个池：
 
 | 你说 | 同一模型 |
 | --- | --- |
@@ -59,7 +59,7 @@ Issue 是产品中的 **todo / ticket / 看板卡片**模型。叫法不同，�
 | todo | issue |
 | ticket | issue |
 
-### 默认看板列(状态)
+### 默认看板列（状态）
 
 | Id | 标题 |
 | --- | --- |
@@ -80,7 +80,7 @@ Issue 是产品中的 **todo / ticket / 看板卡片**模型。叫法不同，�
 
 ### 视图
 
-内置视图 id 是 **`project`**。视图可以按**状态**或**优先级**分组，布局可以是**看板**或**列表**。列表视图以及创建/移动操作都经由 daemon(桌面 UI 或 CLI)——不要手工编造 issue id。
+内置视图 id 是 **`project`**。视图可以按**状态**或**优先级**分组，布局可以是**看板**或**列表**。列表视图以及创建/移动操作都经由 daemon（桌面 UI 或 CLI）——不要手工编造 issue id。
 
 ```bash
 cocurdex issue views
@@ -102,9 +102,9 @@ cocurdex search "release" --kind issue --workspace <workspace-id>
 
 ## 与 Agent 协作
 
-产品 Skills(`/cocurdex-note`、`/cocurdex-issue` 等)调用同一套 CLI,因此 Agent 不需要打开 SQLite。见 [Skills](/docs/skills/)。
+产品 Skills(`/cocurdex-note`、`/cocurdex-issue` 等)调用同一套 CLI,因此 Agent 不需要打开 SQLite。见 [Skills](/zh-cn/docs/skills/)。
 
-产品工作的推荐循环:
+产品工作的推荐循环：
 
 ```text
 /cocurdex-grill  →  /cocurdex-prd  →  /cocurdex-spec?  →  /cocurdex-issue  →  /cocurdex-ship
@@ -121,6 +121,6 @@ PRD 和 spec 默认存为**私有笔记**。要发布到仓库中需要明确的
 
 ## 相关
 
-- [工作区与数据](/docs/concepts/workspaces-and-data/)
-- [CLI](/docs/cli/)
-- [Skills](/docs/skills/)
+- [工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)
+- [CLI](/zh-cn/docs/cli/)
+- [Skills](/zh-cn/docs/skills/)

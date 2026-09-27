@@ -10,9 +10,9 @@ description: 安装 Cocurdex、打开工作区、配置 Agent 运行时，并运
 | 项目 | 说明 |
 | --- | --- |
 | **macOS** | Apple silicon 与 Intel |
-| **Windows** | x64(未签名的 NSIS 安装包) |
+| **Windows** | x64（未签名的 NSIS 安装包） |
 | **Linux** | x64 AppImage |
-| **Agent 运行时** | 至少一个你已在使用的受支持 Agent CLI 或 provider(见 [Agent](/docs/agents/)) |
+| **Agent 运行时** | 至少一个你已在使用的受支持 Agent CLI 或 provider（见 [Agent](/zh-cn/docs/agents/)） |
 | **磁盘 / 项目** | 磁盘上的一个项目目录，供 Agent 和编辑器用作工作区根目录 |
 
 ## 安装
@@ -21,18 +21,18 @@ description: 安装 Cocurdex、打开工作区、配置 Agent 运行时，并运
 
 1. 从[下载](/zh-cn/download/)页获取对应平台的构建。
 2. 安装并打开 **Cocurdex**。
-3. 完成首次启动引导(主题、CLI 启动器、按需授予的权限)。
+3. 完成首次启动引导（主题、CLI 启动器、按需授予的权限）。
 
 ### 把 CLI 放到 PATH 上
 
-安装后，打开 **Settings → CLI**(或等效的首次启动步骤),让 `cocurdex` 启动器在终端可用。
+安装后，打开 **设置 → 常规 → Shell 命令** 并点击**安装**，让 `cocurdex` 启动器在终端可用。
 
 ```bash
 cocurdex --version
 cocurdex --help
 ```
 
-如果二进制找不到桌面应用，请先从 Dock/应用程序打开一次 Cocurdex，或将 `COCURDEX_ELECTRON` 设为应用可执行文件。见 [CLI](/docs/cli/)。
+如果二进制找不到桌面应用，请先从 Dock/应用程序打开一次 Cocurdex，或将 `COCURDEX_ELECTRON` 设为应用可执行文件。见 [CLI](/zh-cn/docs/cli/)。
 
 ## 打开工作区
 
@@ -44,7 +44,7 @@ cocurdex --help
 2. 打开或创建一个指向项目根目录的工作区。
 3. 确认工作台中会话/对话与终端、编辑器并列呈现。
 
-**从终端**(VS Code 风格)
+**从终端**（VS Code 风格）
 
 ```bash
 # 打开应用
@@ -55,7 +55,7 @@ cocurdex .
 cocurdex open /path/to/project
 ```
 
-列出已知工作区:
+列出已知工作区：
 
 ```bash
 cocurdex workspace list
@@ -63,37 +63,37 @@ cocurdex workspace list
 
 ## 准备一个 Agent
 
-在第一次有效运行之前:
+在第一次有效运行之前：
 
-1. 安装你想用的 Agent CLI(例如 `claude`、`codex`、`opencode` 或 `grok`),**或**在只需要无本地写入的对话式工作时使用内置的 **Pi**(`pi`)运行时。
-2. 完成该工具自身的授权(API key、ChatGPT 登录等)。Cocurdex 会尽可能复用你已有的 provider 配置。
+1. 安装你想用的 Agent CLI——`claude`、`codex`、`cursor-agent`、`devin`、`grok` 或 `opencode`——**或**在只需要无本地写入的对话式工作时，配合 [Provider 配置](/zh-cn/docs/providers-and-settings/)使用内置的 **Pi**（`pi`）运行时。
+2. 完成该工具自身的授权（API key、ChatGPT 登录等）。Cocurdex 会尽可能复用你已有的 provider 配置。
 3. 在桌面应用中创建会话，选择 **Agent + provider + 模型**。
 
-受支持的 Agent id 与权限模式见 [Agent](/docs/agents/)。
+受支持的 Agent id 与权限模式见 [Agent](/zh-cn/docs/agents/)。
 
-从 CLI 查看 provider 配置(daemon 必须已运行——打开桌面应用即会启动):
+从 CLI 查看 provider 配置（daemon 必须已运行——打开桌面应用即会启动）：
 
 ```bash
 cocurdex provider list
 cocurdex provider models <provider-id>
 ```
 
-## 第一个会话(桌面端)
+## 第一个会话（桌面端）
 
 1. 从桌面工作台发起一个**新会话**。
 2. 选择一个你已完成授权的 Agent 运行时和模型。
 3. 保持**终端**和**编辑器**可用——Agent 的工作往往不止于对话流。
-4. 先发一个小而具体的任务(例如「列出顶层结构并总结入口点」)。
-5. 观察会话状态:
+4. 先发一个小而具体的任务（例如「列出顶层结构并总结入口点」）。
+5. 观察会话状态：
    - **工作中 / 思考中 / 使用工具**——Agent 正在忙
    - **待批准 / 等待输入**——需要你处理
    - **就绪 / 已完成**——检查结果，然后继续或开始另一个会话
 
 在信任任务之前，优先使用更窄的权限模式。提权或「完全访问」模式是为重度用法准备的，风险有意偏高。
 
-## 第一个会话(CLI TUI)
+## 第一个会话（CLI TUI）
 
-在 daemon 可用时(桌面已打开或 daemon 可达):
+在 daemon 可用时（桌面已打开或 daemon 可达）：
 
 ```bash
 cocurdex session tui \
@@ -103,7 +103,7 @@ cocurdex session tui \
   --model <model-id>
 ```
 
-或者先创建会话，再发送消息:
+或者先创建会话，再发送消息：
 
 ```bash
 cocurdex session create \
@@ -119,7 +119,7 @@ cocurdex session stop <session-id>
 
 ## 五分钟上手产品数据
 
-笔记和 Issue 是**应用私有**的，而不是仓库里的第二棵 Markdown 树:
+笔记和 Issue 是**应用私有**的，而不是仓库里的第二棵 Markdown 树：
 
 ```bash
 cocurdex note create --title "Kickoff notes" --body "Goals for this week"
@@ -127,11 +127,11 @@ cocurdex issue create --title "Ship getting-started docs" --status backlog
 cocurdex search "getting-started"
 ```
 
-详见[笔记与 Issue](/docs/notes-and-issues/)和[工作区与数据](/docs/concepts/workspaces-and-data/)。
+详见[笔记与 Issue](/zh-cn/docs/notes-and-issues/)和[工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)。
 
-## 可选:产品 Skills
+## 可选：产品 Skills
 
-安装命名空间化的产品 Skills,让 Agent 可以对同一数据面执行 `/cocurdex-*` 流程(grill → PRD → issue → ship):
+安装命名空间化的产品 Skills,让 Agent 可以对同一数据面执行 `/cocurdex-*` 流程（grill → PRD → issue → ship）：
 
 ```bash
 cocurdex skills list
@@ -140,7 +140,16 @@ cocurdex skills install --scope project
 cocurdex skills install --scope global
 ```
 
-见 [Skills](/docs/skills/)。
+见 [Skills](/zh-cn/docs/skills/)。
+
+## 排障
+
+| 现象 | 尝试 |
+| --- | --- |
+| 某个 Agent 显示不可用 | 安装并登录它的 CLI，然后查看 **设置 → 适配器** |
+| CLI 数据命令失败 | 打开桌面应用以启动 daemon；运行 `cocurdex daemon status` |
+| 笔记、Issue 或 Agent 无响应 | **设置 → 常规** 中**重启** daemon |
+| 其他问题 | **帮助 → 导出诊断日志…**，把文件附到 [GitHub Issue](https://github.com/softmeta/cocurdex/issues)，或到 [Discord](https://discord.gg/JuRyyv5bv) 提问 |
 
 ## 检查清单
 
@@ -148,11 +157,11 @@ cocurdex skills install --scope global
 - [ ] 至少一个 Agent 运行时已安装并完成授权
 - [ ] 能创建会话，并在运行期间看到如实的状态
 - [ ] 终端里 `cocurdex --help` 可用
-- [ ] 你知道笔记/Issue 存在哪里(应用私有存储，而非仓库里散落的文件)
+- [ ] 你知道笔记/Issue 存在哪里（应用私有存储，而非仓库里散落的文件）
 
 ## 接下来
 
-- [桌面工作台](/docs/desktop/)——面板、注意力、快捷键
-- [Agent](/docs/agents/)——运行时、权限、计划模式
-- [CLI](/docs/cli/)——完整命令面
-- [工作流](/docs/workflows/)——计划 → 实现 → 评审 的运行
+- [桌面工作台](/zh-cn/docs/desktop/)——面板、注意力、快捷键
+- [Agent](/zh-cn/docs/agents/)——运行时、权限、计划模式
+- [CLI](/zh-cn/docs/cli/)——完整命令面
+- [团队与编排](/zh-cn/docs/teams/)——Agent 团队与脚本编排
