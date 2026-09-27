@@ -47,17 +47,26 @@ async function detectBuildId(): Promise<string> {
   return detectBuildIdFromUserAgent();
 }
 
-const primaryButton =
-  "inline-flex min-h-10 items-center justify-center rounded-md bg-fd-foreground px-4 py-2 font-medium text-[0.9375rem] text-fd-background no-underline hover:opacity-90";
-const secondaryButton =
-  "inline-flex min-h-10 items-center justify-center rounded-md border border-fd-border bg-fd-card px-4 py-2 font-medium text-[0.9375rem] text-fd-foreground no-underline hover:border-fd-foreground/30";
-
 interface DownloadBuildsProps {
   builds: readonly { id: BuildId; href: string }[];
   labels: Record<BuildId, { label: string; note: string }>;
+  recommendedLabel: string;
+  actionLabel: string;
 }
 
-export function DownloadBuilds({ builds, labels }: DownloadBuildsProps) {
+const fileExt: Record<BuildId, string> = {
+  "mac-arm64": ".dmg",
+  "mac-x64": ".dmg",
+  "win-x64": ".exe",
+  "linux-x64": ".AppImage",
+};
+
+export function DownloadBuilds({
+  builds,
+  labels,
+  recommendedLabel,
+  actionLabel,
+}: DownloadBuildsProps) {
   const [recommended, setRecommended] = useState<BuildId>(builds[0].id);
 
   useMountEffect(() => {
@@ -69,22 +78,45 @@ export function DownloadBuilds({ builds, labels }: DownloadBuildsProps) {
   });
 
   return (
-    <ul className="mt-7 grid list-none gap-4 p-0">
-      {builds.map((build) => (
-        <li key={build.id} className="grid justify-items-start gap-1.5">
-          <a
-            href={build.href}
-            className={
-              build.id === recommended ? primaryButton : secondaryButton
-            }
-          >
-            {labels[build.id].label}
-          </a>
-          <p className="m-0 text-fd-muted-foreground text-sm">
-            {labels[build.id].note}
-          </p>
-        </li>
-      ))}
+    <ul className="m-0 grid list-none gap-4 p-0 sm:grid-cols-2">
+      {builds.map((build) => {
+        const isRecommended = build.id === recommended;
+        return (
+          <li key={build.id}>
+            <a
+              href={build.href}
+              className={`group grid h-full gap-4 rounded-xl border bg-fd-card p-5 text-fd-foreground no-underline transition-colors focus-visible:outline-2 focus-visible:outline-fd-ring focus-visible:outline-offset-2 ${
+                isRecommended
+                  ? "border-fd-primary/60 ring-1 ring-fd-primary/30"
+                  : "border-fd-border hover:border-fd-foreground/30"
+              }`}
+            >
+              <span className="flex items-center justify-between gap-3">
+                <span className="font-mono text-[0.6875rem] text-fd-muted-foreground uppercase tracking-[0.12em]">
+                  {build.id}
+                  {fileExt[build.id]}
+                </span>
+                {isRecommended && (
+                  <span className="rounded-full bg-fd-primary px-2 py-0.5 text-[0.6875rem] text-fd-primary-foreground">
+                    {recommendedLabel}
+                  </span>
+                )}
+              </span>
+              <span className="grid gap-1">
+                <span className="font-semibold text-lg tracking-tight">
+                  {labels[build.id].label}
+                </span>
+                <span className="text-fd-muted-foreground text-sm">
+                  {labels[build.id].note}
+                </span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-fd-primary text-sm">
+                ↓ <span className="group-hover:underline">{actionLabel}</span>
+              </span>
+            </a>
+          </li>
+        );
+      })}
     </ul>
   );
 }

@@ -14,101 +14,157 @@ export const dict = {
   footer: {
     tagline: "Pre-release.",
     gettingStarted: "Getting started",
+    license: "Source-available under FSL-1.1-ALv2.",
+    product: "Product",
+    resources: "Resources",
+    community: "Community",
+    cli: "CLI reference",
+    agents: "Agents",
+    releases: "Releases",
   },
   home: {
-    eyebrow: "Desktop workspace",
-    heading: "Multi-agent development without the context switch tax",
-    lede: "Run several AI coding agents in parallel. Chat, terminal, editor, and browser preview stay in one shell — so you always know which session needs you next.",
+    badge: "Pre-release · macOS · Windows · Linux",
+    heading: "Run a fleet of coding agents.",
+    headingAccent: "Keep every one of them legible.",
+    lede: "Cocurdex is a desktop workspace for multi-agent development. Chat, terminal, editor, and browser preview share one shell — and every session tells you honestly whether it is working, waiting, or done.",
     downloadCta: "Download",
-    docsCta: "Documentation",
-    featuresHeading: "Built for long sessions",
+    docsCta: "Read the docs",
+    mock: {
+      title: "cocurdex — web-app",
+      sessionsLabel: "Sessions",
+      sessions: [
+        {
+          name: "auth-refactor",
+          agent: "claude-agent",
+          state: "wait",
+          label: "Needs approval",
+        },
+        {
+          name: "fix-flaky-e2e",
+          agent: "codex",
+          state: "busy",
+          label: "Using tools",
+        },
+        {
+          name: "pricing-page",
+          agent: "cursor",
+          state: "busy",
+          label: "Thinking",
+        },
+        {
+          name: "api-review",
+          agent: "grok-build",
+          state: "done",
+          label: "Unread result",
+        },
+        { name: "release-notes", agent: "pi", state: "idle", label: "Ready" },
+      ],
+      chatTitle: "auth-refactor",
+      userMsg:
+        "Move session tokens to httpOnly cookies and update the middleware.",
+      agentMsg: "Plan ready: 3 files, 1 migration. Edits need your approval.",
+      permission: "Edit src/middleware.ts",
+      allow: "Allow",
+      deny: "Deny",
+      terminalTitle: "Terminal",
+    },
+    statesHeading: "Honest state, across every session",
+    statesIntro:
+      "Cocurdex combines runtime and attention into one primary signal, so a glance at the sidebar tells you where you are needed.",
+    states: [
+      {
+        state: "wait",
+        title: "Needs you",
+        body: "Permission, question, or plan review pending.",
+      },
+      {
+        state: "busy",
+        title: "Busy",
+        body: "Thinking, using tools, connecting.",
+      },
+      {
+        state: "done",
+        title: "Result",
+        body: "Finished with an unread result.",
+      },
+      {
+        state: "idle",
+        title: "Idle",
+        body: "Settled and ready for the next prompt.",
+      },
+    ],
+    featuresHeading: "A workspace, not a chat window",
     featuresIntro:
-      "Cocurdex is for developers who juggle agents across features, fixes, and design loops — not for scrolling a single chat forever.",
+      "Built for developers who juggle agents across features, fixes, and design loops — for hours, across projects.",
     features: [
       {
         title: "Parallel sessions",
-        body: "Keep multiple agent runs visible. Status stays honest: thinking, using tools, waiting for you.",
+        body: "Run many agents side by side without merging transcripts. Each keeps its own status, permissions, and history.",
+        tag: "sessions",
       },
       {
-        title: "Workspace, not chat window",
-        body: "Terminal (PTY), editor, and browser preview sit beside chat as peers — not buried behind a transcript.",
+        title: "Every pane is a peer",
+        body: "Integrated PTY terminal, code editor, and browser preview with design-mode annotation sit beside chat — not behind it.",
+        tag: "shell",
       },
       {
         title: "Keyboard-first",
-        body: "Command palette and shortcuts for primary actions. Mouse stays idiomatic; power users are not second-class.",
+        body: "Rebindable shortcuts for every primary action. ⌘P quick open, ⌘J chat dock, ⌘⇧D design mode.",
+        tag: "keys",
       },
       {
-        title: "Local-first product data",
-        body: "Notes and issues live in app-owned storage on your machine. Cloud team surfaces come later without rewriting that boundary.",
+        title: "Local-first data",
+        body: "Notes, issues, and search live in app-owned storage on your machine. No account required.",
+        tag: "data",
       },
     ],
-    agentsHeading: "Bring your own agent",
+    agentsHeading: "Bring the agents you already use",
     agentsIntro:
-      "Cocurdex orchestrates the agent CLIs you already have installed — plus a built-in runtime — and keeps status, permissions, and plans legible in one shell.",
-    agentColumns: ["Agent", "Runtime", "Plan mode", "Steering", "Permissions"],
-    agentRows: [
-      {
-        name: "Claude Agent",
-        runtime: "claude CLI",
-        plan: "Yes",
-        steering: "Yes",
-        permissions: "default · accept-edits · auto · bypass",
-      },
-      {
-        name: "Codex",
-        runtime: "codex CLI",
-        plan: "Yes",
-        steering: "Yes",
-        permissions: "read-only · auto · full-access",
-      },
-      {
-        name: "OpenCode",
-        runtime: "opencode CLI",
-        plan: "Yes",
-        steering: "No",
-        permissions: "ask · allow · deny",
-      },
-      {
-        name: "Grok Build",
-        runtime: "grok CLI over ACP",
-        plan: "Yes",
-        steering: "Yes",
-        permissions: "ask · auto · always-approve",
-      },
-      {
-        name: "Pi",
-        runtime: "Built in",
-        plan: "—",
-        steering: "Yes",
-        permissions: "read-only",
-      },
+      "Cocurdex drives the agent CLIs you have installed and authenticated. It does not resell model access.",
+    agents: [
+      { name: "Claude Agent", cmd: "claude", tags: ["plan", "steer"] },
+      { name: "Codex", cmd: "codex", tags: ["plan", "steer"] },
+      { name: "Cursor", cmd: "cursor-agent acp", tags: ["ACP"] },
+      { name: "Devin", cmd: "devin acp", tags: ["ACP"] },
+      { name: "Grok Build", cmd: "grok", tags: ["plan", "steer", "ACP"] },
+      { name: "OpenCode", cmd: "opencode", tags: ["plan"] },
+      { name: "Pi", cmd: "built in", tags: ["steer", "MCP"] },
     ],
-    agentsMore: "Full permission modes and capabilities",
-    capabilitiesHeading: "More than sessions",
-    capabilitiesIntro:
-      "The workspace around the agents: isolated checkouts, a scriptable CLI, and an optional product skill pack.",
-    capabilities: [
+    agentsMore: "Permission modes and capabilities →",
+    orchestrationHeading: "Orchestration, owned by the daemon",
+    orchestrationIntro:
+      "Past one session, agents need structure. Cocurdex gives them durable primitives that survive restarts and stay under your approval.",
+    orchestration: [
+      {
+        title: "Agent teams",
+        body: "A lead session spawns teammates that share a task list with prerequisites and review evidence. Save teams as templates.",
+        href: "/docs/teams/",
+        code: "cocurdex team spawn-template \\\n  --lead <session> --template reviewers",
+      },
+      {
+        title: "Script runs",
+        body: "An agent proposes a sandboxed script that fans work out to subagents. You approve it and cap the agent count.",
+        href: "/docs/teams/#script-runs",
+        code: 'const files = await agent(\n  "list modules", { schema })\nawait pipeline(files, (f) =>\n  agent("add tests for " + f))',
+      },
       {
         title: "Managed worktrees",
-        body: "Give each session its own git checkout. Fetch-before-create, setup and cleanup scripts, and a tracked inventory — parallel agents never share a dirty working tree.",
+        body: "Isolated git checkouts per session with fetch-before-create and per-project setup and cleanup scripts.",
         href: "/docs/cli/#worktrees",
-      },
-      {
-        title: "A real CLI",
-        body: "cocurdex opens folders, manages notes, issues, skills, and worktrees, and drives sessions and workflows — with --json where scripts need it. Agents use it instead of touching the database.",
-        href: "/docs/cli/",
-      },
-      {
-        title: "Product skills",
-        body: "An optional cocurdex-* skill pack teaches agents the grill → PRD → issue → ship loop against the same app-owned data plane.",
-        href: "/docs/skills/",
+        code: "cocurdex worktree create \\\n  --workspace . --branch feat/cookies",
       },
     ],
-    startHeading: "Start here",
-    startBody:
-      "Pre-release builds are available for macOS, Windows, and Linux.",
+    cliHeading: "A real CLI for scripts and agents",
+    cliIntro:
+      "Everything app-owned goes through the daemon. Agents and scripts use cocurdex — with --json — instead of touching the database.",
+    cliMore: "CLI reference →",
+    skillsTitle: "Product skills",
+    skillsBody:
+      "An optional cocurdex-* skill pack teaches agents the grill → PRD → issue → ship loop against the same data.",
+    ctaHeading: "Stop tab-hopping between agents.",
+    ctaBody:
+      "Pre-release builds for macOS, Windows, and Linux. No account required.",
     gettingStarted: "Getting started",
-    desktopOverview: "Desktop overview",
   },
   download: {
     pageTitle: "Download",
@@ -117,7 +173,8 @@ export const dict = {
     eyebrow: "Pre-release",
     heading: "Download Cocurdex",
     intro:
-      "Pre-release builds for macOS, Windows, and Linux. APIs and workflows may change between versions.",
+      "Pre-release builds for macOS, Windows, and Linux. APIs and behavior may change between versions.",
+    recommended: "Recommended for this device",
     builds: {
       "mac-arm64": {
         label: "macOS Apple silicon",
@@ -137,10 +194,26 @@ export const dict = {
       },
     } satisfies Record<BuildId, { label: string; note: string }>,
     releaseNotes: "Release notes",
+    afterHeading: "After you install",
+    steps: [
+      {
+        title: "Install an agent CLI",
+        body: "Authenticate at least one: claude, codex, cursor-agent, devin, grok, or opencode.",
+      },
+      {
+        title: "Add the CLI launcher",
+        body: "Settings → General → Shell command puts cocurdex on your PATH.",
+      },
+      {
+        title: "Open a project",
+        body: "Run cocurdex . in any repository, then start a session.",
+      },
+    ],
     installNote:
       "On macOS, open the DMG and drag Cocurdex to Applications. Every public macOS build is signed with Developer ID and notarized by Apple. Windows installers are unsigned.",
-    readDocs: "Read the docs",
-    backHome: "Back to home",
+    sourceHeading: "Run from source",
+    sourceBody: "Node.js 24 and pnpm required.",
+    readDocs: "Getting started guide",
   },
 };
 

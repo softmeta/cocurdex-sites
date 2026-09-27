@@ -18,11 +18,15 @@ Cocurdex coordinates **multiple agent sessions** in one workspace. Runtimes and 
 | --- | --- | --- | --- |
 | `claude-agent` | Claude Agent | External `claude` CLI | Plan mode, steering, native write |
 | `codex` | Codex | External `codex` CLI | Plan mode, steering, native write; auth via Codex itself |
+| `cursor` | Cursor | External `cursor-agent acp` (ACP) | Streaming, native write; no plan mode or steering; login via Cursor |
+| `devin` | Devin | External `devin acp` (ACP) | Streaming, native write; no plan mode or steering; login via Devin |
+| `grok-build` | Grok Build | External `grok` CLI (ACP) | Plan mode, steering over ACP; native write only |
 | `opencode` | OpenCode | External `opencode` CLI | Plan mode, streaming; steering not supported |
-| `grok-build` | Grok Build | External `grok` CLI (ACP transport) | Plan mode, steering over ACP; native write only |
-| `pi` | Pi | Built-in | Read-oriented default; no separate permission modes |
+| `pi` | Pi | Built-in | Uses your [provider configs](/docs/providers-and-settings/) and [MCP servers](/docs/providers-and-settings/#mcp-servers); read-only write mode |
 
-External agents must be installed and authenticated on your machine. If a CLI is missing, the agent shows as unavailable until you install it.
+External agents must be installed and authenticated on your machine. If a CLI is missing, the agent shows as unavailable until you install it — **Settings → Adapters** shows what was detected and how to install the rest.
+
+**ACP** agents (Cursor, Devin, Grok Build) speak the [Agent Client Protocol](https://agentclientprotocol.com). Cocurdex reads their model catalog and session modes from the agent itself, so the choices you see track the installed CLI version.
 
 ### Choosing a runtime
 
@@ -32,6 +36,8 @@ External agents must be installed and authenticated on your machine. If a CLI is
 | You already use OpenAI Codex | `codex` |
 | You want Grok-oriented implementation | `grok-build` |
 | You use OpenCode elsewhere | `opencode` |
+| You have a Cursor subscription | `cursor` |
+| You use Devin | `devin` |
 | Lightweight chat-style turn without native workspace write | `pi` (Pi) |
 
 ## Providers and models
@@ -61,7 +67,7 @@ Permission modes are **agent-specific**. Risk levels:
 | --- | --- |
 | `claude-default` | normal |
 | `claude-accept-edits` | elevated |
-| `claude-auto` | elevated — offered when the installed Claude CLI supports auto mode |
+| `claude-auto` | elevated — offered when the installed Claude CLI supports auto mode; not available on Haiku models |
 | `claude-bypass-permissions` | dangerous |
 
 When the collaboration mode is `plan`, the session uses `claude-plan` (plan only, no edits or commands). Switching back to `default` restores `claude-default`.
@@ -90,6 +96,10 @@ When the collaboration mode is `plan`, the session uses `claude-plan` (plan only
 | `opencode-allow` | elevated |
 | `opencode-deny` | normal |
 
+### Cursor and Devin
+
+No Cocurdex-side permission-mode list. Tool approval follows the agent's own ACP permission requests, which surface as permission cards like any other agent.
+
 ### Built-in Pi (`pi`)
 
 No separate permission-mode list; write mode is **read-only**.
@@ -107,13 +117,29 @@ Not every agent supports every combination. For example, Grok Build focuses on n
 
 ## Agent roles
 
-An **agent role** is a saved preset: agent + provider/model + permission mode + collaboration and reasoning axes, plus optional instructions and skills. Manage roles under **Settings → Agent roles** (or save the current session's setup as a role from the session UI), and list them from the CLI:
+An **agent role** is a saved preset: agent + provider/model + permission mode + collaboration and reasoning axes, plus optional instructions and skills. Manage roles under **Settings → Roles** (or save the current session's setup as a role from the session UI), and list them from the CLI:
 
 ```bash
 cocurdex role list
 ```
 
-Roles can bind [workflow](/docs/workflows/) planner / implementer / reviewer slots via `--planner-role`, `--implementer-role`, and `--reviewer-role`. A role binds only when its permission profile matches what the workflow role requires: planner and reviewer need a read-only profile, implementer needs workspace write, and dangerous permission modes cannot bind at all.
+Apply a role when you start a session, or give one to a [teammate](/docs/teams/#agent-teams) or a [script-run subagent](/docs/teams/#script-runs).
+
+## Cocurdex agent tools
+
+Every session gets a local MCP tool server from the daemon. Tools are grouped and only offered where they make sense:
+
+| Group | Tools | Offered to |
+| --- | --- | --- |
+| `team` | `spawn_teammate`, `spawn_template`, `list_roles`, `list_templates`, `stop_member`, `stop` | Main sessions (team leads) |
+| `team` | `task_create`, `task_list`, `task_update` | Main sessions and teammates |
+| `messaging` | `list_agents`, `send_message` | Main sessions and teammates |
+| `script_run` | `propose` | Main sessions |
+| `settings` | `list`, `get`, `set`, `propose` | Main sessions (also powers the [settings assistant](/docs/providers-and-settings/#settings-assistant)) |
+
+Subagents started by a script run get none of these tools.
+
+See [Teams and orchestration](/docs/teams/) for what they do.
 
 ## In-session controls
 
@@ -142,6 +168,6 @@ Keep titles short and status visible. Switch only when attention demands it — 
 ## Related
 
 - [Desktop workspace](/docs/desktop/)  
-- [Workflows](/docs/workflows/)  
+- [Teams and orchestration](/docs/teams/)  
 - [Skills](/docs/skills/)  
 - [CLI](/docs/cli/)  

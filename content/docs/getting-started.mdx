@@ -25,7 +25,7 @@ This guide gets you from install to a useful first agent session.
 
 ### CLI on your PATH
 
-After install, open **Settings → CLI** (or the equivalent first-run step) so the `cocurdex` launcher is available in the terminal.
+After install, open **Settings → General → Shell command** and click **Install** so the `cocurdex` launcher is available in the terminal.
 
 ```bash
 cocurdex --version
@@ -65,7 +65,7 @@ cocurdex workspace list
 
 Before the first useful run:
 
-1. Install the agent CLI you want (for example `claude`, `codex`, `opencode`, or `grok`), **or** use the built-in **Pi** (`pi`) runtime when you only need chat-style work without native write.
+1. Install the agent CLI you want — `claude`, `codex`, `cursor-agent`, `devin`, `grok`, or `opencode` — **or** use the built-in **Pi** (`pi`) runtime with a [provider config](/docs/providers-and-settings/) when you only need chat-style work without native write.
 2. Complete that tool’s own auth (API key, ChatGPT login, etc.). Cocurdex prefers reusing your existing provider setup where possible.
 3. In the desktop app, create a session and pick **agent + provider + model**.
 
@@ -142,6 +142,15 @@ cocurdex skills install --scope global
 
 See [Skills](/docs/skills/).
 
+## Troubleshooting
+
+| Symptom | Try |
+| --- | --- |
+| An agent shows as unavailable | Install and log in to its CLI, then check **Settings → Adapters** |
+| CLI data commands fail | Open the desktop app so the daemon starts; `cocurdex daemon status` |
+| Notes, issues, or agents stop responding | **Settings → General → Restart** the daemon |
+| Anything else | **Help → Export Diagnostics…** and attach the file to a [GitHub issue](https://github.com/softmeta/cocurdex/issues), or ask on [Discord](https://discord.gg/JuRyyv5bv) |
+
 ## Checklist
 
 - [ ] App opens and a workspace points at the right project root  
@@ -155,4 +164,4 @@ See [Skills](/docs/skills/).
 - [Desktop workspace](/docs/desktop/) — panes, attention, shortcuts  
 - [Agents](/docs/agents/) — runtimes, permissions, plan mode  
 - [CLI](/docs/cli/) — full command surface  
-- [Workflows](/docs/workflows/) — plan → implement → review runs  
+- [Teams and orchestration](/docs/teams/) — agent teams and script runs  
