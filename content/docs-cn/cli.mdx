@@ -1,33 +1,33 @@
 ---
 title: CLI
-description: cocurdex CLI 参考——打开桌面应用,管理笔记、Issue、会话、provider、skills 与工作流。
+description: cocurdex CLI 参考——打开桌面应用，管理笔记、Issue、会话、provider 与 skills。
 ---
 
 **`cocurdex` CLI** 是应用私有产品数据和 daemon 操作受支持的命令行边界。外部工具和 Agent 应该使用 CLI,而不是读取私有数据库文件。
 
-大多数数据和会话命令需要**桌面 daemon**(通常在打开桌面应用时启动)。
+大多数数据和会话命令需要**桌面 daemon**（通常在打开桌面应用时启动）。
 
 ## 安装
 
-当 CLI 随桌面应用打包时,从 **Settings → CLI** 安装启动器,让 `cocurdex` 出现在 `PATH` 上。
+当 CLI 随桌面应用打包时，从 **设置 → 常规 → Shell 命令** 安装启动器，让 `cocurdex` 出现在 `PATH` 上。
 
 ```bash
 cocurdex --version
 cocurdex --help
 ```
 
-在 monorepo 开发中,使用 workspace 里的 CLI 包(`apps/cli`)。
+在 monorepo 开发中，使用 workspace 里的 CLI 包(`apps/cli`)。
 
 ### 找到桌面二进制
 
-打开流程需要 Cocurdex / Electron 二进制。解析顺序包括:
+打开流程需要 Cocurdex / Electron 二进制。解析顺序包括：
 
 1. `COCURDEX_ELECTRON` 环境变量
 2. 正运行在 Electron / 打包应用内
 3. monorepo 下开发用的 `node_modules/electron`
 4. 常见 macOS 安装路径(`/Applications/Cocurdex.app/...`)
 
-解析失败时,先打开一次桌面应用并安装 CLI 启动器,或设置 `COCURDEX_ELECTRON`。
+解析失败时，先打开一次桌面应用并安装 CLI 启动器，或设置 `COCURDEX_ELECTRON`。
 
 ## 全局 flags
 
@@ -39,7 +39,7 @@ cocurdex --help
 
 ## 打开桌面应用
 
-VS Code 风格的文件夹打开:
+VS Code 风格的文件夹打开：
 
 ```bash
 cocurdex                 # 打开应用
@@ -63,12 +63,12 @@ cocurdex note tags [note-id] [--json]
 | Flag | 含义 |
 | --- | --- |
 | `--title` | 创建时必填 |
-| `--body` | Markdown 正文(非文件夹时,在创建后应用) |
+| `--body` | Markdown 正文（非文件夹时，在创建后应用） |
 | `--folder` | 创建文件夹节点而非笔记 |
 | `--parent` | 父级笔记/文件夹 id |
 | `--workspace` | 可选的工作区关联 |
 
-更新在底层使用乐观并发(revision)——始终优先用 CLI/桌面端,而非编辑 SQLite。
+更新在底层使用乐观并发（revision）——始终优先用 CLI/桌面端，而非编辑 SQLite。
 
 ## Issue
 
@@ -83,10 +83,10 @@ cocurdex issue delete <id> [--view <id>] [--json]
 cocurdex issue views [--json]
 ```
 
-默认**状态**列:`backlog`、`doing`、`review`、`done`。
-默认**优先级**列:`urgent`、`high`、`medium`、`low`、`none`。
+默认**状态**列：`backlog`、`doing`、`review`、`done`。
+默认**优先级**列：`urgent`、`high`、`medium`、`low`、`none`。
 
-示例:
+示例：
 
 ```bash
 cocurdex issue create --title "Fix download page" --status backlog --priority high
@@ -102,7 +102,7 @@ cocurdex search <query> [--kind note|issue] [--workspace <id>] [--json]
 
 ## Skills
 
-产品 skills 以 `cocurdex-*` 命名空间隔离。安装是**手动**的(非自动)。
+产品 skills 以 `cocurdex-*` 命名空间隔离。安装是**手动**的（非自动）。
 
 ```bash
 cocurdex skills list [--json]
@@ -111,7 +111,7 @@ cocurdex skills install --scope project|global [--root <path>] [--json]
 cocurdex skills remove --scope project|global [--root <path>] [--json]
 ```
 
-`--root` 在 project 范围下默认为当前工作目录。`cocurdex skill` 也可作为别名。见 [Skills](/docs/skills/)。
+`--root` 在 project 范围下默认为当前工作目录。`cocurdex skill` 也可作为别名。见 [Skills](/zh-cn/docs/skills/)。
 
 ## Daemon 与工作区
 
@@ -131,7 +131,7 @@ cocurdex worktree create --workspace <id|path> --branch <name> [--start-point <r
 cocurdex worktree remove --workspace <id|path> --path <worktree-path> [--json]
 ```
 
-不带 flags 的 `worktree settings` 打印当前设置;传 `--root` 和/或 `--fetch`/`--no-fetch` 则更新。`--root` 设置 Cocurdex 创建托管工作树的目录(置空则恢复默认位置);`--fetch` 控制创建工作树之前是否先 fetch 仓库。
+不带 flags 的 `worktree settings` 打印当前设置；传 `--root` 和/或 `--fetch`/`--no-fetch` 则更新。`--root` 设置 Cocurdex 创建托管工作树的目录（置空则恢复默认位置）；`--fetch` 控制创建工作树之前是否先 fetch 仓库。
 
 ## 会话
 
@@ -141,19 +141,60 @@ cocurdex session create --workspace <id|path> --agent <agent> --provider <provid
 cocurdex session tui [session-id]
 cocurdex session tui --workspace <id|path> --agent <agent> --provider <provider> --model <model>
 cocurdex session send <session-id> <prompt>
+cocurdex session peers <session-id>
+cocurdex session send-peer <from-session-id> <to-session-id> <message>
+cocurdex session peer-inbound <session-id> deliver|refuse
 cocurdex session stop <session-id>
 ```
 
 | Flag | 必填场景 | 含义 |
 | --- | --- | --- |
 | `--workspace` | create / tui 创建 | 工作区 id 或文件系统路径 |
-| `--agent` | create / tui 创建 | Agent id(`claude-agent`、`codex`、`opencode`、`grok-build`、`pi`) |
+| `--agent` | create / tui 创建 | Agent id（`claude-agent`、`codex`、`cursor`、`devin`、`grok-build`、`opencode`、`pi`） |
 | `--provider` | create / tui 创建 | `provider list` 中的 provider 配置 id |
 | `--model` | create / tui 创建 | `provider models` 中的模型 id |
 
 不带 flags 的 `session tui` 附着到最近的非归档会话。它不支持 `--json`。
 
-Agent id 与权限见 [Agent](/docs/agents/)。
+`peers` 列出某会话可以发消息的会话；`send-peer` 把消息作为新一轮投递（或排在当前一轮之后）；`peer-inbound refuse` 让会话拒收其他会话的消息。见[会话间消息](/zh-cn/docs/teams/#会话间消息)。
+
+Agent id 与权限见 [Agent](/zh-cn/docs/agents/)。
+
+## 团队
+
+一个主会话及其队友。完整模型见 [Agent 团队](/zh-cn/docs/teams/#agent-团队)。
+
+```bash
+cocurdex team get --lead <session-id> [--json]
+cocurdex team spawn --lead <session-id> --name <name> --prompt <prompt> [--role <role-id>] [--agent <agent>] [--worktree]
+cocurdex team stop --team <team-id>
+cocurdex team stop-member --team <team-id> --session <session-id>
+cocurdex team roles [--json]
+cocurdex team templates [--json]
+cocurdex team spawn-template --lead <session-id> --template <template-id> [--prompt <prompt>]
+```
+
+| Flag | 含义 |
+| --- | --- |
+| `--lead` | 拥有该团队的主会话 |
+| `--name` | 队友名称，小写 slug |
+| `--role` | 队友使用的已保存 Agent 角色 |
+| `--agent` | 不使用角色时的 Agent id，默认与主会话相同 |
+| `--worktree` | 让队友运行在独立的托管 git 工作树中 |
+
+## 脚本编排
+
+经批准后分发给子 Agent 的 JavaScript 扇出。完整模型见[脚本编排](/zh-cn/docs/teams/#脚本编排)。
+
+```bash
+cocurdex script-run list [--session <requester-session-id>] [--workspace <workspace-id>] [--json]
+cocurdex script-run get --run <run-id> [--json]
+cocurdex script-run create --session <requester-session-id> --name <name> --file <script.js>
+cocurdex script-run start --run <run-id> [--max-agents <n>]
+cocurdex script-run cancel --run <run-id>
+```
+
+`create` 创建一个归属于发起会话的 `draft` 运行；`start` 批准并以给定的 Agent 上限（正整数）运行。结果会送回发起会话。
 
 ## Provider
 
@@ -164,49 +205,27 @@ cocurdex provider models <provider>
 
 ## Agent 角色
 
-保存好的 Agent 预设(Agent + provider/模型 + 权限 + 推理轴),也可以绑定工作流角色。在桌面 UI 中管理;从 CLI 列出:
+保存好的 Agent 预设（Agent + provider/模型 + 权限 + 推理轴），也可以分配给队友或脚本编排的子 Agent。在桌面 UI 中管理；从 CLI 列出：
 
 ```bash
 cocurdex role list [--json]
 ```
 
-## 工作流
-
-daemon 掌管的多步骤运行(计划 → 实现 → 评审 风格)。完整说明见[工作流](/docs/workflows/)。
-
-```bash
-cocurdex workflow list
-cocurdex workflow definitions
-cocurdex workflow create --workspace <id|path> --prompt <prompt> \
-  [--definition <id>] \
-  [--planner <agent>] [--implementer <agent>] [--reviewer <agent>] \
-  [--planner-model <model>] [--implementer-model <model>] [--reviewer-model <model>] \
-  [--planner-role <id>] [--implementer-role <id>] [--reviewer-role <id>]
-cocurdex workflow tui [run-id]
-cocurdex workflow tui --workspace <id|path> --prompt <prompt> [...]
-cocurdex workflow show|get <run-id>
-cocurdex workflow start <run-id>
-cocurdex workflow approve|reject <run-id> [--reason <text>] [--step <step-id>]
-cocurdex workflow cancel <run-id>
-```
-
-不带 flags 时的默认角色 Agent:planner `codex`,implementer `grok-build`,reviewer `codex`。`--<role>-role` flag 绑定一个保存好的 [Agent 角色](#agent-角色)而非临时 Agent/模型组合;该角色的权限画像必须与工作流角色的要求匹配。
-
 ## CLI 不是什么
 
 - 第二份事实源——本地数据库仍由桌面 daemon 掌管
 - 多面板桌面工作台的完整替代品
-- 云端团队管理工具(那会是独立的 console + API)
+- 云端团队管理工具（那会是独立的 console + API）
 - 打开 `cocurdex.sqlite` 或私有 schema 路径的许可证
 
 ## 安全
 
-不要把脚本指向 `cocurdex.sqlite` 或私有 schema 路径。它们是实现细节,预发布期间可能在没有兼容性承诺的情况下变化。优先使用 `--json` 输出和 CLI 返回的稳定 id。
+不要把脚本指向 `cocurdex.sqlite` 或私有 schema 路径。它们是实现细节，预发布期间可能在没有兼容性承诺的情况下变化。优先使用 `--json` 输出和 CLI 返回的稳定 id。
 
 ## 相关
 
-- [笔记与 Issue](/docs/notes-and-issues/)
-- [Agent](/docs/agents/)
-- [Skills](/docs/skills/)
-- [工作流](/docs/workflows/)
-- [工作区与数据](/docs/concepts/workspaces-and-data/)
+- [笔记与 Issue](/zh-cn/docs/notes-and-issues/)
+- [Agent](/zh-cn/docs/agents/)
+- [团队与编排](/zh-cn/docs/teams/)
+- [Skills](/zh-cn/docs/skills/)
+- [工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)

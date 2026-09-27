@@ -2,6 +2,8 @@
 export const site = {
   name: "Cocurdex",
   url: "https://cocurdex.com",
+  github: "https://github.com/softmeta/cocurdex",
+  discord: "https://discord.gg/JuRyyv5bv",
 } as const;
 
 const githubLatestDownload = (fileName: string) =>
