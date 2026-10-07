@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "next dev --port 4321",
     "build": "next build",
+    "check:links": "node scripts/check-links.mjs",
     "postinstall": "fumadocs-mdx",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --passWithNoTests",
