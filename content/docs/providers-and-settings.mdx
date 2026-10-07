@@ -83,6 +83,12 @@ The settings screen has an **assistant** dock: a chat session with the `settings
 
 Any main agent session can use the same tools; the optional [`/cocurdex-settings`](/docs/skills/) skill teaches agents to use them well.
 
+## App updates
+
+**Settings → About** shows the installed version and **Check for updates**. Choose the **Stable** or **Test** update channel; Test builds can be unstable, and switching back to Stable may install an older version.
+
+After an update downloads, an **Update available** card offers **Update and Restart**, **Later**, and **View release notes**. Automatic updates only work in the packaged app.
+
 ## Diagnostics
 
 **Settings → Diagnostics** (or **Help → Export Diagnostics…**) bundles sanitized app logs and runtime info into a file you can attach to a GitHub issue. Turn on **Verbose diagnostics** to record more detail while you reproduce a problem; logs stay sanitized either way.
@@ -107,7 +113,8 @@ Any main agent session can use the same tools; the optional [`/cocurdex-settings
 | **Git** | Commit-message model (above) |
 | **Worktrees** / **Workspaces** | Managed worktree root and inventory; per-workspace scripts and actions (above) |
 | **Archived sessions** | Browse sessions you archived |
-| **Open source licenses** / **About** | Third-party licenses and version information |
+| **Open source licenses** | Third-party licenses |
+| **About** | Version, update check and channel; see [App updates](#app-updates) |
 | **Diagnostics** | Export diagnostics, verbose logging |
 
 ## Related
