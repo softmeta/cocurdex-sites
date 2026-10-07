@@ -33,19 +33,30 @@ Important rules:
 2. The **CLI** is the supported external read/write boundary for automation and agents.  
 3. Markdown import/export is **explicit** — not a second live database.  
 4. Private table schemas and file paths are **not** a public API.  
-5. During pre-release, databases that lack the current application marker / schema version may be **recreated** rather than migrated.
+5. Upgrades **migrate** the database forward and keep your data. Before a migration, Cocurdex writes a `cocurdex.sqlite.pre-migration-<timestamp>` snapshot next to it and keeps the newest three.
+6. A database written by a **newer** app version is refused, never downgraded. Only a file that is not a Cocurdex database is replaced, and it is first moved aside as a `.bak-<timestamp>` file.
 
 ### What lives where
 
 | Data | Authority |
 | --- | --- |
 | Notes, issues, views, tags, links, FTS indexes | Daemon + `cocurdex.sqlite` |
-| Agent roles, worktree settings, session records | Daemon + `cocurdex.sqlite` |
+| Agent roles, team tasks, worktree settings, session records | Daemon + `cocurdex.sqlite` |
+| Installed ACP Registry agents | Recorded in app settings; downloaded binaries live in the app's data directory |
 | Managed git worktrees | Created by the daemon under the configured worktree root |
 | Project source files | Your workspace directory on disk |
 | Agent provider auth (e.g. Codex) | That tool’s own config (for example under `~/.codex`) |
 | Product skill files (optional) | Project or global skills directories after install |
-| Engineering docs in a monorepo (`docs/adr`, …) | Your repo — not auto-published to the marketing site |
+
+### Data directory
+
+| Platform | Default location |
+| --- | --- |
+| macOS | `~/Library/Application Support/Cocurdex` |
+| Windows | `%APPDATA%\Cocurdex` |
+| Linux | `$XDG_CONFIG_HOME/Cocurdex` (default `~/.config/Cocurdex`) |
+
+This location stays the same across releases, so updates keep reading your existing data.
 
 ## Why this exists
 
@@ -57,7 +68,7 @@ The daemon:
 
 - Owns the DB connection  
 - Serves desktop and CLI over documented RPC contracts  
-- Runs sessions, teams, and script runs  
+- Runs sessions, teams, script runs, and worktree setup  
 
 ```bash
 cocurdex daemon status
@@ -76,7 +87,7 @@ A future team console and cloud API will expose **organization-scoped projection
 | Future `app.` console | Team visibility / light collaboration |
 | Future `api.` | Identity, orgs, sync contracts |
 
-Local and cloud boundaries for contributors are documented in monorepo ADRs; end-user behavior for sync will appear here as features ship.
+End-user behavior for sync will appear here as features ship.
 
 ## Safety checklist
 

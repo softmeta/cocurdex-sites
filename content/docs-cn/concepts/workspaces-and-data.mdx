@@ -33,19 +33,30 @@ cocurdex workspace list
 2. **CLI** 是自动化和 Agent 受支持的外部读写边界。
 3. Markdown 导入导出是**显式**的——不是第二个活数据库。
 4. 私有表结构和文件路径**不是**公开 API。
-5. 预发布期间，缺少当前应用标记 / schema 版本的数据库可能被**重建**而非迁移。
+5. 升级时数据库会**向前迁移**并保留你的数据。迁移前，Cocurdex 会在旁边写一份 `cocurdex.sqlite.pre-migration-<timestamp>` 快照，并保留最近三份。
+6. 由**更新**版本应用写入的数据库会被拒绝打开，绝不降级。只有不是 Cocurdex 数据库的文件才会被替换，并且会先另存为 `.bak-<timestamp>` 文件。
 
 ### 什么存在哪里
 
 | 数据 | 权威方 |
 | --- | --- |
 | 笔记、Issue、视图、标签、链接、FTS 索引 | Daemon + `cocurdex.sqlite` |
-| Agent 角色、工作树设置、会话记录 | Daemon + `cocurdex.sqlite` |
+| Agent 角色、团队任务、工作树设置、会话记录 | Daemon + `cocurdex.sqlite` |
+| 已安装的 ACP Registry Agent | 记录在应用设置中；下载的二进制位于应用数据目录 |
 | 托管的 git 工作树 | 由 daemon 在配置的工作树根目录下创建 |
 | 项目源文件 | 磁盘上你的工作区目录 |
 | Agent provider 授权（如 Codex） | 该工具自己的配置(例如 `~/.codex` 下) |
 | 产品 skill 文件（可选） | 安装后的项目或全局 skills 目录 |
-| monorepo 中的工程文档(`docs/adr` 等) | 你的仓库——不会自动发布到营销站 |
+
+### 数据目录
+
+| 平台 | 默认位置 |
+| --- | --- |
+| macOS | `~/Library/Application Support/Cocurdex` |
+| Windows | `%APPDATA%\Cocurdex` |
+| Linux | `$XDG_CONFIG_HOME/Cocurdex`(默认 `~/.config/Cocurdex`) |
+
+这个位置在各版本之间保持不变，升级后仍会读取你已有的数据。
 
 ## 为什么这样设计
 
@@ -57,7 +68,7 @@ Daemon 负责：
 
 - 掌管数据库连接
 - 通过文档化的 RPC 契约为桌面端和 CLI 服务
-- 运行会话、团队与脚本编排
+- 运行会话、团队、脚本编排和工作树 setup
 
 ```bash
 cocurdex daemon status
@@ -76,7 +87,7 @@ cocurdex daemon status
 | 未来的 `app.` 控制台 | 团队可见性 / 轻量协作 |
 | 未来的 `api.` | 身份、组织、同步契约 |
 
-面向贡献者的本地与云端边界记录在 monorepo ADR 中；同步的最终用户行为会随功能上线出现在这里。
+同步的最终用户行为会随功能上线出现在这里。
 
 ## 安全检查清单
 

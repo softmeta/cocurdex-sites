@@ -31,6 +31,8 @@ Markdown 之后仍可用于**显式**导入导出。在此之前，请把 CLI �
 
 使用桌面应用中的笔记面板浏览、编辑和链接笔记。保持稳定的笔记标题和链接，这样 Agent 和人之后能找到同一条记录。
 
+在 [PDF 阅读器](/zh-cn/docs/desktop/#pdf-阅读器)里看文档时，选中文字并选择**加入笔记**，即可把它摘录进笔记。
+
 ### CLI
 
 ```bash
@@ -102,15 +104,17 @@ cocurdex search "release" --kind issue --workspace <workspace-id>
 
 ## 与 Agent 协作
 
+直接在输入框里把 Issue 或笔记交给 Agent:**+ → Issue** 或 **+ → 笔记** 会把它作为标签附加上去，Agent 在提示词里就能拿到完整的标题和正文。在对话记录里点击该标签即可打开对应记录。
+
 产品 Skills(`/cocurdex-note`、`/cocurdex-issue` 等)调用同一套 CLI,因此 Agent 不需要打开 SQLite。见 [Skills](/zh-cn/docs/skills/)。
 
 产品工作的推荐循环：
 
 ```text
-/cocurdex-grill  →  /cocurdex-prd  →  /cocurdex-spec?  →  /cocurdex-issue  →  /cocurdex-ship
+/cocurdex-note(PRD 或 spec)  →  /cocurdex-issue  →  /cocurdex-ship
 ```
 
-PRD 和 spec 默认存为**私有笔记**。要发布到仓库中需要明确的用户请求——绝不要认为「打开工作区」就等于「把产品文档写进仓库」。
+PRD 和 spec 就是普通笔记，默认存为**私有笔记**。要发布到仓库中需要明确的用户请求——绝不要认为「打开工作区」就等于「把产品文档写进仓库」。
 
 ## 不要做的事
 

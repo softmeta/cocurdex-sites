@@ -11,7 +11,7 @@ This guide gets you from install to a useful first agent session.
 | --- | --- |
 | **macOS** | Apple silicon and Intel |
 | **Windows** | x64 (unsigned NSIS installer) |
-| **Linux** | x64 AppImage |
+| **Linux** | x64 AppImage or `.deb` |
 | **Agent runtime** | At least one supported agent CLI or provider you already use (see [Agents](/docs/agents/)) |
 | **Disk / project** | A project directory on disk that agents and the editor can use as the workspace root |
 
@@ -65,7 +65,7 @@ cocurdex workspace list
 
 Before the first useful run:
 
-1. Install the agent CLI you want — `claude`, `codex`, `cursor-agent`, `devin`, `grok`, or `opencode` — **or** use the built-in **Pi** (`pi`) runtime with a [provider config](/docs/providers-and-settings/) when you only need chat-style work without native write.
+1. Install the agent CLI you want — `claude`, `codex`, or `opencode` — or add an agent such as Cursor, Devin, or Grok Build from **Settings → Agent CLIs → Add from ACP Registry**. If `cursor-agent`, `devin`, or `grok` is already on your `PATH`, Cocurdex picks it up automatically. You can also use the built-in **Pi** (`pi`) runtime with a [provider config](/docs/providers-and-settings/) when you only need chat-style work without native write.
 2. Complete that tool’s own auth (API key, ChatGPT login, etc.). Cocurdex prefers reusing your existing provider setup where possible.
 3. In the desktop app, create a session and pick **agent + provider + model**.
 
@@ -81,7 +81,7 @@ cocurdex provider models <provider-id>
 ## First session (desktop)
 
 1. Start a **new session** from the desktop shell.
-2. Choose an agent runtime and model you already authorize.
+2. Choose an agent runtime and model you already authorize. Tick **Worktree** if the session should work in an isolated checkout.
 3. Keep **terminal** and **editor** available — agent work often spans more than the chat stream.
 4. Send a small, concrete task first (for example “list the top-level layout and summarize entry points”).
 5. Watch session status:
@@ -131,7 +131,7 @@ Details: [Notes and issues](/docs/notes-and-issues/) and [Workspaces and data](/
 
 ## Optional: product skills
 
-Install namespaced product skills so agents can run `/cocurdex-*` flows (grill → PRD → issue → ship) against the same data plane:
+Install namespaced product skills so agents can run `/cocurdex-*` flows (note → issue → ship) against the same data plane:
 
 ```bash
 cocurdex skills list
@@ -146,7 +146,8 @@ See [Skills](/docs/skills/).
 
 | Symptom | Try |
 | --- | --- |
-| An agent shows as unavailable | Install and log in to its CLI, then check **Settings → Adapters** |
+| An agent shows as unavailable | Install and log in to its CLI, then check **Settings → Agent CLIs** (it also flags versions that need an update) |
+| An agent says it needs you to sign in | Choose **Sign in to …** from the composer's model menu, then send again |
 | CLI data commands fail | Open the desktop app so the daemon starts; `cocurdex daemon status` |
 | Notes, issues, or agents stop responding | **Settings → General → Restart** the daemon |
 | Anything else | **Help → Export Diagnostics…** and attach the file to a [GitHub issue](https://github.com/softmeta/cocurdex/issues), or ask on [Discord](https://discord.gg/JuRyyv5bv) |
