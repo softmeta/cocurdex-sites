@@ -104,7 +104,7 @@ export const dict = {
       },
       {
         title: "Every pane is a peer",
-        body: "Integrated PTY terminal, code editor, PDF reader, and browser preview sit beside chat — not behind it. Annotate a page in Design Mode and send it straight to the agent.",
+        body: "Integrated PTY terminal, code editor, PDF reader, and browser preview sit beside chat — not behind it. Review Git diffs by turn, branch, or commit, and undo a turn; annotate a page in Design Mode and send it straight to the agent.",
         tag: "shell",
       },
       {
