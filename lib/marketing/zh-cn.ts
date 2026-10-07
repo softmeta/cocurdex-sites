@@ -135,13 +135,13 @@ export const dict: MarketingDict = {
       {
         title: "脚本编排",
         body: "Agent 提出一段沙箱脚本，把工作分发给子 Agent。你批准后运行，并限定 Agent 数量上限。",
-        href: "/docs/teams/#script-runs",
+        href: "/docs/teams/#脚本编排",
         code: 'const files = await agent(\n  "list modules", { schema })\nawait pipeline(files, (f) =>\n  agent("add tests for " + f))',
       },
       {
         title: "托管工作树",
         body: "新建会话时勾选 Worktree 即得独立检出。setup 脚本在后台运行，移除检出时执行 cleanup。",
-        href: "/docs/cli/#worktrees",
+        href: "/docs/cli/#工作树",
         code: "cocurdex worktree create \\\n  --workspace . --branch feat/cookies",
       },
     ],
