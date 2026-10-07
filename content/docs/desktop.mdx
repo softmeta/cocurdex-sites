@@ -1,6 +1,6 @@
 ---
 title: Desktop workspace
-description: How the Cocurdex desktop shell organizes sessions, chat, the composer, worktrees, terminal, editor, browser preview, PDF reader, and keyboard shortcuts.
+description: How the Cocurdex desktop shell organizes sessions, chat, Git review, worktrees, terminal, editor, browser preview, PDF reader, and keyboard shortcuts.
 ---
 
 Cocurdex ships as a **native desktop app** (Electron). The goal is a single workspace for multi-agent coding — not a thin browser wrapper around one chat thread.
@@ -15,6 +15,7 @@ Typical peers in the shell:
 | **Chat** | Steer the active agent; one pane among several |
 | **Terminal** | Integrated PTY for commands and agent-driven shell work |
 | **Editor** | Inspect and edit project files without leaving the app |
+| **Git** | Diff, stage, and commit workspace changes; review what each agent turn changed |
 | **Browser preview** | Tabbed preview of your dev server; Design Mode annotations go straight to chat |
 | **PDF reader** | Read PDFs from the file tree with outline, thumbnails, search, bookmarks, and highlights |
 | **Worktrees** | Managed git worktrees for isolated session work (**Worktree** checkbox on new sessions; inventory under **Settings → Worktrees**) |
@@ -62,6 +63,24 @@ Tick **Worktree** on the new-session composer and Cocurdex creates an isolated c
 - The workspace's **setup script** runs in the background. The composer does not block; the first turn waits for setup so its changes are not attributed to the agent, and progress shows as a **Prepare worktree** row. Stop abandons the wait without killing the script; a failed setup is reported once and the next send continues without it.
 - Workspace **actions** (for example *Dev server*) appear in the session's **…** menu and run in a new terminal tab.
 - Removing a worktree runs the **cleanup script**, and deletes the app-created branch when it has already been merged.
+
+## Reviewing changes
+
+After a turn that changed files finishes, its transcript shows an **Edited N files** card with each file marked added, modified, deleted, or renamed. **Review** opens the turn in the Git panel, either for the whole turn or an individual file. **Undo** restores files to their pre-turn state; it is blocked if a file changed after the turn, unavailable when a file exceeds the checkpoint size or quota, and disabled while the turn is still streaming.
+
+Open the **Git** tab in the right panel's view switcher. The **Diff source** menu defaults to **Uncommitted** and also offers **Staged**, **Unstaged**, **Committed** (choose a commit), **Branch** (compare source and target branches), and **Turn** (a session turn's captured snapshot). A turn snapshot can expire.
+
+Stage, unstage, and discard actions are available per file or for all files only in the live **Uncommitted**, **Staged**, and **Unstaged** scopes. Discard cannot be undone. The panel supports split or unified diffs, line wrapping, showing the full file, tree or list file views, and filtering changed files. If the workspace is not in a Git repository, the panel says so.
+
+The commit popover offers **Commit** and **Commit and push**. Leave the message blank or choose **Generate commit message** to have the model selected in [Settings → Git](/docs/providers-and-settings/#git) write it.
+
+## Panes and windows
+
+- A session pane's **Split session** menu offers **Split Right**, **Split Down**, **Close Pane**, and **Close All**.
+- **Open in a separate window** moves chat into its own window; **Move back to main window** returns it. The editor panel must be open to detach chat.
+- The terminal supports multiple tabs with **New terminal**, **Find in terminal**, and **Restart**.
+- Use **Search files** in the editor's file tree. Its context menu offers **Add to Chat**, **Reveal in Finder** (where file-manager support is available), **Copy Path**, and **Copy Relative Path**.
+- For workspaces with several folders, **Edit workspace** manages **Source folders** with **Add folder**, **Make primary**, and **Remove folder**. Drop a folder onto the window to open it as a workspace.
 
 ## Collaboration and write modes
 
