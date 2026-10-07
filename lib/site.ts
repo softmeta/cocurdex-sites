@@ -27,6 +27,10 @@ export const desktopDownloads = [
     id: "linux-x64",
     href: githubLatestDownload("Cocurdex-linux-x64.AppImage"),
   },
+  {
+    id: "linux-x64-deb",
+    href: githubLatestDownload("Cocurdex-linux-x64.deb"),
+  },
 ] as const;
 
 export type BuildId = (typeof desktopDownloads)[number]["id"];

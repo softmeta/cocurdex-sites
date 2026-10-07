@@ -1,6 +1,6 @@
 ---
 title: Agent
-description: Agent 运行时、权限、协作模式，以及 Cocurdex 如何让多会话工作清晰可读。
+description: 内置 Agent、ACP Registry Agent、权限、协作模式，以及 Cocurdex 如何让多会话工作清晰可读。
 ---
 
 Cocurdex 在一个工作区里协调**多个 Agent 会话**。预发布期间运行时和 provider 仍在演进；本页描述产品模型和当前可用的 Agent。
@@ -14,19 +14,47 @@ Cocurdex 在一个工作区里协调**多个 Agent 会话**。预发布期间运
 
 ## 支持的 Agent
 
+Cocurdex 内置四个 Agent，并可以添加 [ACP Registry](#acp-registry-agent) 上发布的任意编码 Agent。
+
 | Id(`--agent`) | UI 名称 | 运行时 | 说明 |
 | --- | --- | --- | --- |
-| `claude-agent` | Claude Agent | 外部 `claude` CLI | 计划模式、引导、本地写入 |
+| `claude-agent` | Claude Agent | 外部 `claude` CLI(2.0.0 及以上) | 计划模式、引导、本地写入 |
 | `codex` | Codex | 外部 `codex` CLI | 计划模式、引导、本地写入；授权经由 Codex 自身 |
-| `cursor` | Cursor | 外部 `cursor-agent acp`（ACP） | 流式输出、本地写入；无计划模式与引导；通过 Cursor 登录 |
-| `devin` | Devin | 外部 `devin acp`（ACP） | 流式输出、本地写入；无计划模式与引导；通过 Devin 登录 |
-| `grok-build` | Grok Build | 外部 `grok` CLI（ACP 传输） | 计划模式、经 ACP 引导；仅本地写入 |
-| `opencode` | OpenCode | 外部 `opencode` CLI | 计划模式、流式输出；不支持引导 |
+| `opencode` | OpenCode | 外部 `opencode` CLI(2.0.20 及以上) | 通过 OpenCode 原生 plan agent 提供计划模式、流式输出；不支持引导 |
 | `pi` | Pi | 内置 | 使用你的 [Provider 配置](/zh-cn/docs/providers-and-settings/)和 [MCP 服务器](/zh-cn/docs/providers-and-settings/#mcp-服务器)；只读写入模式 |
+| `acp:<registry-id>` | Registry 中的名称 | 你安装的任意 [ACP Registry Agent](#acp-registry-agent) | 本地写入；计划模式与引导取决于具体 Agent |
 
-外部 Agent 必须在你的机器上安装并完成授权。缺少某个 CLI 时，该 Agent 会显示为不可用，直到你安装它——**设置 → 适配器** 会显示探测结果以及其余 Agent 的安装方法。
+常用的 Registry Agent：
 
-**ACP** Agent（Cursor、Devin、Grok Build）使用 [Agent Client Protocol](https://agentclientprotocol.com)。Cocurdex 从 Agent 自身读取模型目录和会话模式，因此你看到的选项会跟随已安装 CLI 的版本。
+| Id(`--agent`) | UI 名称 | 启动命令 | 说明 |
+| --- | --- | --- | --- |
+| `acp:cursor` | Cursor | `cursor-agent acp` | 流式输出、本地写入；通过 Cursor 登录 |
+| `acp:devin` | Devin | `devin acp` | 流式输出、本地写入；通过 Devin 登录 |
+| `acp:grok-build` | Grok Build | `grok agent stdio` | 计划模式、引导、本地写入；显示套餐用量 |
+
+外部 Agent 必须在你的机器上安装并完成授权。**设置 → Agent CLI** 会显示每个 Agent 探测到的版本和状态（**可用**、**未安装**、**需要升级**）、可复制的安装命令和文档链接。低于最低版本的 Agent 仍可使用，但在更新前部分能力可能无法工作。
+
+<Callout title="从旧版本升级">
+Cursor、Devin 和 Grok Build 过去是内置 Agent，id 为 `cursor`、`devin`、`grok-build`。现在它们通过 ACP Registry 运行，id 变为 `acp:cursor`、`acp:devin`、`acp:grok-build`。已有会话和角色会自动迁移；如果脚本里用旧 id 传 `--agent`，请一并更新。
+</Callout>
+
+### ACP Registry Agent
+
+[ACP](https://agentclientprotocol.com) Agent 使用 Agent Client Protocol。Cocurdex 从 Agent 自身读取模型目录和会话模式，因此你看到的选项会跟随已安装的版本。
+
+添加方法：打开 **设置 → Agent CLI → 从 ACP Registry 添加**，搜索官方 Registry，点击**安装**。执行前 Cocurdex 会先展示安装计划：
+
+| 分发方式 | 安装时做什么 |
+| --- | --- |
+| **二进制** | 把对应平台的压缩包下载到应用数据目录；Registry 提供校验和时会校验 |
+| **npx** / **uvx** | 运行一次包管理器，把固定版本的包缓存到本地；之后启动直接复用缓存 |
+| **本地 CLI** | 不下载任何内容——直接运行在 `PATH` 上找到的 CLI |
+
+Registry Agent 属于第三方代码：安装前请先查看它的源码和许可证。**移除**可以再次卸载。
+
+- 如果 `cursor-agent`、`devin` 或 `grok` 已在 `PATH` 上，Cocurdex 首次启动时会自动接管它们。
+- **使用自己的命令**可以注册 Registry 未收录的 Agent（或自定义构建）：先自行安装，再填写可执行文件名或绝对路径，以及进入 ACP 模式所需的参数。
+- ACP Agent 进程意外退出时，下一轮会重新拉起它并恢复同一个 provider 会话。
 
 ### 如何选择运行时
 
@@ -34,10 +62,11 @@ Cocurdex 在一个工作区里协调**多个 Agent 会话**。预发布期间运
 | --- | --- |
 | 你已经在用 Claude Code / Claude CLI | `claude-agent` |
 | 你已经在用 OpenAI Codex | `codex` |
-| 你想要偏 Grok 的实现 | `grok-build` |
 | 你在别处使用 OpenCode | `opencode` |
-| 你有 Cursor 订阅 | `cursor` |
-| 你在用 Devin | `devin` |
+| 你有 Cursor 订阅 | `acp:cursor` |
+| 你在用 Devin | `acp:devin` |
+| 你想要偏 Grok 的实现 | `acp:grok-build` |
+| ACP Registry 上的其他 Agent | `acp:<registry-id>` |
 | 不需要本地工作区写入的轻量对话轮次 | `pi`(Pi) |
 
 ## Provider 与模型
@@ -80,7 +109,7 @@ Cocurdex 会尽可能复用你已有的 provider 配置(例如 `~/.codex` 下的
 | `codex-auto` | elevated |
 | `codex-full-access` | dangerous |
 
-### Grok Build
+### Grok Build(`acp:grok-build`)
 
 | 模式 id | 风险 |
 | --- | --- |
@@ -96,9 +125,9 @@ Cocurdex 会尽可能复用你已有的 provider 配置(例如 `~/.codex` 下的
 | `opencode-allow` | elevated |
 | `opencode-deny` | normal |
 
-### Cursor 与 Devin
+### 其他 ACP Registry Agent
 
-Cocurdex 侧没有独立的权限模式列表。工具审批遵循 Agent 自身的 ACP 权限请求，和其他 Agent 一样以权限卡片呈现。
+Cursor、Devin 及其他 Registry Agent 在 Cocurdex 侧没有独立的权限模式列表。工具审批遵循 Agent 自身的 ACP 权限请求，和其他 Agent 一样以权限卡片呈现。
 
 ### 内置 Pi(`pi`)
 
@@ -113,11 +142,13 @@ Cocurdex 侧没有独立的权限模式列表。工具审批遵循 Agent 自身�
 | **协作模式** | `default`、`plan` | 运行时支持计划优先循环时的计划模式 |
 | **写入模式** | `read-only`、`native-write` | 工具是否可以修改工作区 |
 
-不是每个 Agent 都支持每种组合。例如 Grok Build 专注于本地写入；内置 `pi` 偏只读。
+不是每个 Agent 都支持每种组合。ACP Registry Agent(包括 Grok Build)只支持本地写入；内置 `pi` 只读。
 
 ## Agent 角色
 
-**Agent 角色**是保存好的预设：Agent + provider/模型 + 权限模式 + 协作与推理轴，外加可选的指令和 skills。在 **设置 → 角色** 中管理角色（或从会话 UI 把当前会话配置保存为角色），并从 CLI 列出：
+**Agent 角色**是保存好的预设：Agent + provider/模型 + 权限模式 + 协作与推理轴，外加可选的指令和 skills。每个角色还有一个**头像**（彩色底上的 emoji 或首字母，并带有 Agent 图标角标）和可选的**描述**，说明它擅长什么——团队 lead 挑选队友时会参考描述。
+
+在输入框中保存角色：在新会话里打开模型菜单，选择**保存为角色**。在 **设置 → 角色** 中编辑或删除，并从 CLI 列出：
 
 ```bash
 cocurdex role list
@@ -137,7 +168,7 @@ daemon 为每个会话挂载一个本地 MCP 工具服务。工具按组划分�
 | `script_run` | `propose` | 主会话 |
 | `settings` | `list`、`get`、`set`、`propose` | 主会话（也驱动[设置助手](/zh-cn/docs/providers-and-settings/#设置助手)） |
 
-脚本编排启动的子 Agent 不获得以上任何工具。具体用法见[团队与编排](/zh-cn/docs/teams/)。
+脚本编排启动的子 Agent 不获得以上任何工具。能够委派工作的会话还会收到指引：同一 provider、只要结果的工作用 Agent 自带的原生子 Agent；需要其他 provider、已保存角色、独立工作树或任务依赖时，用 Cocurdex 团队或脚本编排。具体用法见[团队与编排](/zh-cn/docs/teams/)。
 
 ## 会话内控制
 

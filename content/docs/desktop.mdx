@@ -1,6 +1,6 @@
 ---
 title: Desktop workspace
-description: How the Cocurdex desktop shell organizes sessions, chat, terminal, editor, browser preview, and keyboard shortcuts.
+description: How the Cocurdex desktop shell organizes sessions, chat, the composer, worktrees, terminal, editor, browser preview, PDF reader, and keyboard shortcuts.
 ---
 
 Cocurdex ships as a **native desktop app** (Electron). The goal is a single workspace for multi-agent coding — not a thin browser wrapper around one chat thread.
@@ -15,11 +15,14 @@ Typical peers in the shell:
 | **Chat** | Steer the active agent; one pane among several |
 | **Terminal** | Integrated PTY for commands and agent-driven shell work |
 | **Editor** | Inspect and edit project files without leaving the app |
-| **Browser preview** | Review UI with optional design-mode annotation |
-| **Worktrees** | Managed git worktrees for isolated session work (picker on new sessions; inventory under **Settings → Worktrees**) |
+| **Browser preview** | Tabbed preview of your dev server; Design Mode annotations go straight to chat |
+| **PDF reader** | Read PDFs from the file tree with outline, thumbnails, search, bookmarks, and highlights |
+| **Worktrees** | Managed git worktrees for isolated session work (**Worktree** checkbox on new sessions; inventory under **Settings → Worktrees**) |
 | **Notes / issues** | App-owned product data (see [Notes and issues](/docs/notes-and-issues/)) |
 | **Team panel** | Teammates of the current lead session, their status, and replies (see [Teams](/docs/teams/)) |
 | **Script runs** | Proposed scripts awaiting approval and running subagents (see [Script runs](/docs/teams/#script-runs)) |
+
+The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. On Windows and Linux the window uses themed native window controls in the title bar.
 
 Exact layout can change during pre-release; the product model stays multi-pane. No single pane should monopolize the product — chat is a peer, not the whole app.
 
@@ -35,6 +38,30 @@ You can run **more than one** session without merging transcripts. The shell der
 | Idle | Ready | Available for a new prompt |
 
 Underlying session status values include `idle`, `running`, `error`, and `exited`. UI copy stays neutral (“Thinking”, “Using tools”, “Ready for follow-up”) rather than anthropomorphic flourish.
+
+## Composer
+
+The composer starts every session and every follow-up:
+
+| Input | Does |
+| --- | --- |
+| `/` | Pick a skill or an agent-advertised slash command |
+| `@` | Mention workspace files as context |
+| **+ → Skill / Issue / Note** | Insert a skill, or attach an issue or note as a pill; the agent gets its full content in the prompt |
+| Model menu | Agent, provider, model, reasoning effort, permission mode; **Save as role** stores the setup as an [agent role](/docs/agents/#agent-roles) |
+| **Worktree** checkbox (new session) | Run the session in a fresh [managed worktree](#worktrees) |
+
+Follow-ups sent while a turn runs are steered into it when the agent supports steering, or queued until the turn finishes. When a turn settles, its tool calls fold behind a label that shows how long the turn worked; expand it to review every step.
+
+Markdown links in replies that point at files open in the editor, including GitHub-style line anchors such as `src/app.ts#L32` or `#L10-L20`.
+
+## Worktrees
+
+Tick **Worktree** on the new-session composer and Cocurdex creates an isolated checkout when you send: it names the branch `cocurdex/<id>` and places the checkout under the [worktree root](/docs/providers-and-settings/#worktree-environments). Alternatively, pick an existing worktree from the picker (disabled while the checkbox is on).
+
+- The workspace's **setup script** runs in the background. The composer does not block; the first turn waits for setup so its changes are not attributed to the agent, and progress shows as a **Prepare worktree** row. Stop abandons the wait without killing the script; a failed setup is reported once and the next send continues without it.
+- Workspace **actions** (for example *Dev server*) appear in the session's **…** menu and run in a new terminal tab.
+- Removing a worktree runs the **cleanup script**, and deletes the app-created branch when it has already been merged.
 
 ## Collaboration and write modes
 
@@ -74,7 +101,17 @@ Dark and light are both first-class. Prefer **system appearance** unless you pin
 
 ## Browser design mode
 
-When reviewing UI in the preview pane, design mode supports annotation-style review so feedback stays attached to the surface you are looking at. Toggle with the default shortcut above, or from the browser chrome.
+The browser preview loads your dev server in tabs (**New tab** opens a blank one). Turn on **Design Mode** with the shortcut above or from the browser chrome, then:
+
+- Click an element, or drag a region, to create an annotation with a screenshot.
+- Add a comment and, optionally, a style preview of the change you want.
+- Send the annotations to chat as one formatted message, so the agent sees exactly what you pointed at.
+
+The annotation popover can be dragged out of the way; **Clear all annotations** resets the page.
+
+## PDF reader
+
+PDFs opened from the file tree open in the PDF reader instead of the code editor. It has a table of contents, page thumbnails, search, fit-width / fit-page zoom, page bookmarks, and highlights in four colors. Bookmarks and highlights are saved by the daemon. Select text and choose **Add to Note** to quote it into a [note](/docs/notes-and-issues/).
 
 ## What desktop owns
 
