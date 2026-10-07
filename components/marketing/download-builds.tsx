@@ -54,12 +54,9 @@ interface DownloadBuildsProps {
   actionLabel: string;
 }
 
-const fileExt: Record<BuildId, string> = {
-  "mac-arm64": ".dmg",
-  "mac-x64": ".dmg",
-  "win-x64": ".exe",
-  "linux-x64": ".AppImage",
-};
+function fileName(href: string) {
+  return href.slice(href.lastIndexOf("/") + 1);
+}
 
 export function DownloadBuilds({
   builds,
@@ -93,8 +90,7 @@ export function DownloadBuilds({
             >
               <span className="flex items-center justify-between gap-3">
                 <span className="font-mono text-[0.6875rem] text-fd-muted-foreground uppercase tracking-[0.12em]">
-                  {build.id}
-                  {fileExt[build.id]}
+                  {fileName(build.href)}
                 </span>
                 {isRecommended && (
                   <span className="rounded-full bg-fd-primary px-2 py-0.5 text-[0.6875rem] text-fd-primary-foreground">

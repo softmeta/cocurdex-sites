@@ -31,6 +31,8 @@ Notes support:
 
 Use the notes surface in the desktop app to browse, edit, and link notes. Prefer stable note titles and links so agents and humans can find the same record later.
 
+Reading a PDF in the [PDF reader](/docs/desktop/#pdf-reader)? Select text and choose **Add to Note** to quote it into a note.
+
 ### CLI
 
 ```bash
@@ -102,15 +104,17 @@ cocurdex search "release" --kind issue --workspace <workspace-id>
 
 ## Working with agents
 
+Give an agent an issue or note directly from the composer: **+ → Issue** or **+ → Note** attaches it as a pill, and the agent receives the full title and body in its prompt. Clicking the pill in the transcript opens the record.
+
 Product skills (`/cocurdex-note`, `/cocurdex-issue`, …) call the same CLI surface so agents do not open SQLite. See [Skills](/docs/skills/).
 
 Recommended loop for product work:
 
 ```text
-/cocurdex-grill  →  /cocurdex-prd  →  /cocurdex-spec?  →  /cocurdex-issue  →  /cocurdex-ship
+/cocurdex-note (PRD or spec)  →  /cocurdex-issue  →  /cocurdex-ship
 ```
 
-PRDs and specs are stored as **private notes by default**. Publishing into a repository requires an explicit user request — never assume “open workspace” means “write product docs into the repo.”
+PRDs and specs are ordinary notes, stored as **private notes by default**. Publishing into a repository requires an explicit user request — never assume “open workspace” means “write product docs into the repo.”
 
 ## What not to do
 

@@ -1,6 +1,6 @@
 ---
 title: Agents
-description: Agent runtimes, permissions, collaboration modes, and how Cocurdex keeps multi-session work legible.
+description: Built-in agents, ACP Registry agents, permissions, collaboration modes, and how Cocurdex keeps multi-session work legible.
 ---
 
 Cocurdex coordinates **multiple agent sessions** in one workspace. Runtimes and providers evolve during pre-release; this page describes the product model and the agents available today.
@@ -14,19 +14,47 @@ Cocurdex coordinates **multiple agent sessions** in one workspace. Runtimes and 
 
 ## Supported agents
 
+Cocurdex ships four **built-in** agents and can add any coding agent published to the [ACP Registry](#acp-registry-agents).
+
 | Id (`--agent`) | UI label | Runtime | Notes |
 | --- | --- | --- | --- |
-| `claude-agent` | Claude Agent | External `claude` CLI | Plan mode, steering, native write |
+| `claude-agent` | Claude Agent | External `claude` CLI (2.0.0 or newer) | Plan mode, steering, native write |
 | `codex` | Codex | External `codex` CLI | Plan mode, steering, native write; auth via Codex itself |
-| `cursor` | Cursor | External `cursor-agent acp` (ACP) | Streaming, native write; no plan mode or steering; login via Cursor |
-| `devin` | Devin | External `devin acp` (ACP) | Streaming, native write; no plan mode or steering; login via Devin |
-| `grok-build` | Grok Build | External `grok` CLI (ACP) | Plan mode, steering over ACP; native write only |
-| `opencode` | OpenCode | External `opencode` CLI | Plan mode, streaming; steering not supported |
-| `pi` | Pi | Built-in | Uses your [provider configs](/docs/providers-and-settings/) and [MCP servers](/docs/providers-and-settings/#mcp-servers); read-only write mode |
+| `opencode` | OpenCode | External `opencode` CLI (2.0.20 or newer) | Plan mode via OpenCode's native plan agent, streaming; no steering |
+| `pi` | Pi | Built in | Uses your [provider configs](/docs/providers-and-settings/) and [MCP servers](/docs/providers-and-settings/#mcp-servers); read-only write mode |
+| `acp:<registry-id>` | Name from the registry | Any [ACP Registry agent](#acp-registry-agents) you install | Native write; plan mode and steering depend on the agent |
 
-External agents must be installed and authenticated on your machine. If a CLI is missing, the agent shows as unavailable until you install it — **Settings → Adapters** shows what was detected and how to install the rest.
+Common registry agents:
 
-**ACP** agents (Cursor, Devin, Grok Build) speak the [Agent Client Protocol](https://agentclientprotocol.com). Cocurdex reads their model catalog and session modes from the agent itself, so the choices you see track the installed CLI version.
+| Id (`--agent`) | UI label | Launch | Notes |
+| --- | --- | --- | --- |
+| `acp:cursor` | Cursor | `cursor-agent acp` | Streaming, native write; login via Cursor |
+| `acp:devin` | Devin | `devin acp` | Streaming, native write; login via Devin |
+| `acp:grok-build` | Grok Build | `grok agent stdio` | Plan mode, steering, native write; plan usage meter |
+
+External agents must be installed and authenticated on your machine. **Settings → Agent CLIs** shows each agent's detected version and status (**Ready**, **Not installed**, **Update required**), a copyable install command, and a docs link. An agent below its minimum version stays usable, but some capabilities may not work until you update.
+
+<Callout title="Upgrading from an earlier build">
+Cursor, Devin, and Grok Build used to be built in with the ids `cursor`, `devin`, and `grok-build`. They now run through the ACP Registry as `acp:cursor`, `acp:devin`, and `acp:grok-build`. Existing sessions and roles are migrated automatically; update any scripts that pass the old ids to `--agent`.
+</Callout>
+
+### ACP Registry agents
+
+[ACP](https://agentclientprotocol.com) agents speak the Agent Client Protocol. Cocurdex reads their model catalog and session modes from the agent itself, so the choices you see track the installed version.
+
+To add one, open **Settings → Agent CLIs → Add from ACP Registry**, search the official registry, and click **Install**. Before anything runs, Cocurdex shows the install plan:
+
+| Distribution | What install does |
+| --- | --- |
+| **Binary** | Downloads the platform archive into the app's data directory and verifies its checksum when the registry provides one |
+| **npx** / **uvx** | Runs the package runner once to cache the pinned package version; later starts reuse the cache |
+| **Local CLI** | Nothing is downloaded — Cocurdex runs the CLI it found on your `PATH` |
+
+Registry agents are third-party code: review an agent's source and license before installing it. **Remove** uninstalls it again.
+
+- If `cursor-agent`, `devin`, or `grok` is already on your `PATH`, Cocurdex adopts it automatically the first time it starts.
+- **Use my own command** registers an agent the registry does not list (or a custom build): install it yourself, then enter its executable name or absolute path and the arguments that start ACP mode.
+- If an ACP agent process dies, the next turn respawns it and resumes the same provider session.
 
 ### Choosing a runtime
 
@@ -34,10 +62,11 @@ External agents must be installed and authenticated on your machine. If a CLI is
 | --- | --- |
 | You already use Claude Code / Claude CLI | `claude-agent` |
 | You already use OpenAI Codex | `codex` |
-| You want Grok-oriented implementation | `grok-build` |
 | You use OpenCode elsewhere | `opencode` |
-| You have a Cursor subscription | `cursor` |
-| You use Devin | `devin` |
+| You have a Cursor subscription | `acp:cursor` |
+| You use Devin | `acp:devin` |
+| You want Grok-oriented implementation | `acp:grok-build` |
+| Another agent from the ACP Registry | `acp:<registry-id>` |
 | Lightweight chat-style turn without native workspace write | `pi` (Pi) |
 
 ## Providers and models
@@ -80,7 +109,7 @@ When the collaboration mode is `plan`, the session uses `claude-plan` (plan only
 | `codex-auto` | elevated |
 | `codex-full-access` | dangerous |
 
-### Grok Build
+### Grok Build (`acp:grok-build`)
 
 | Mode id | Risk |
 | --- | --- |
@@ -96,9 +125,9 @@ When the collaboration mode is `plan`, the session uses `claude-plan` (plan only
 | `opencode-allow` | elevated |
 | `opencode-deny` | normal |
 
-### Cursor and Devin
+### Other ACP Registry agents
 
-No Cocurdex-side permission-mode list. Tool approval follows the agent's own ACP permission requests, which surface as permission cards like any other agent.
+Cursor, Devin, and other registry agents have no Cocurdex-side permission-mode list. Tool approval follows the agent's own ACP permission requests, which surface as permission cards like any other agent.
 
 ### Built-in Pi (`pi`)
 
@@ -113,11 +142,13 @@ When an agent requests a privileged action, Cocurdex surfaces a permission card 
 | **Collaboration** | `default`, `plan` | Plan mode when the runtime supports a plan-first loop |
 | **Write mode** | `read-only`, `native-write` | Whether tools may change the workspace |
 
-Not every agent supports every combination. For example, Grok Build focuses on native write; built-in `pi` is read-oriented.
+Not every agent supports every combination. ACP Registry agents (including Grok Build) run in native write only; built-in `pi` is read-only.
 
 ## Agent roles
 
-An **agent role** is a saved preset: agent + provider/model + permission mode + collaboration and reasoning axes, plus optional instructions and skills. Manage roles under **Settings → Roles** (or save the current session's setup as a role from the session UI), and list them from the CLI:
+An **agent role** is a saved preset: agent + provider/model + permission mode + collaboration and reasoning axes, plus optional instructions and skills. Each role also has an **avatar** (an emoji or initial on a color, badged with the agent's icon) and an optional **description** of what it is good at — team leads read the description when they pick teammates.
+
+Save a role from the composer: open the model menu in a new session and choose **Save as role**. Edit or delete roles under **Settings → Roles**, and list them from the CLI:
 
 ```bash
 cocurdex role list
@@ -137,7 +168,7 @@ Every session gets a local MCP tool server from the daemon. Tools are grouped an
 | `script_run` | `propose` | Main sessions |
 | `settings` | `list`, `get`, `set`, `propose` | Main sessions (also powers the [settings assistant](/docs/providers-and-settings/#settings-assistant)) |
 
-Subagents started by a script run get none of these tools.
+Subagents started by a script run get none of these tools. Sessions that can delegate also receive guidance on when to use the agent's own native subagents (same provider, result only) versus a Cocurdex team or script run (another provider, a saved role, a separate worktree, or task dependencies).
 
 See [Teams and orchestration](/docs/teams/) for what they do.
 

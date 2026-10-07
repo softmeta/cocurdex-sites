@@ -47,13 +47,13 @@ export const dict: MarketingDict = {
         },
         {
           name: "pricing-page",
-          agent: "cursor",
+          agent: "acp:cursor",
           state: "busy",
           label: "思考中",
         },
         {
           name: "api-review",
-          agent: "grok-build",
+          agent: "acp:grok-build",
           state: "done",
           label: "有未读结果",
         },
@@ -91,7 +91,7 @@ export const dict: MarketingDict = {
       },
       {
         title: "每个面板都是一等公民",
-        body: "集成 PTY 终端、代码编辑器、支持设计模式标注的浏览器预览，与对话并列——而不是藏在它后面。",
+        body: "集成 PTY 终端、代码编辑器、PDF 阅读器和浏览器预览，与对话并列——而不是藏在它后面。在设计模式里标注页面，一键发给 Agent。",
         tag: "shell",
       },
       {
@@ -107,17 +107,21 @@ export const dict: MarketingDict = {
     ],
     agentsHeading: "用你已有的 Agent",
     agentsIntro:
-      "Cocurdex 驱动你本机已安装并登录的 Agent CLI，不转售模型额度。",
+      "Cocurdex 驱动你本机已安装并登录的 Agent CLI，也能从 ACP Registry 安装更多 Agent。不转售模型额度。",
     agents: [
       { name: "Claude Agent", cmd: "claude", tags: ["plan", "steer"] },
       { name: "Codex", cmd: "codex", tags: ["plan", "steer"] },
-      { name: "Cursor", cmd: "cursor-agent acp", tags: ["ACP"] },
-      { name: "Devin", cmd: "devin acp", tags: ["ACP"] },
-      { name: "Grok Build", cmd: "grok", tags: ["plan", "steer", "ACP"] },
       { name: "OpenCode", cmd: "opencode", tags: ["plan"] },
       { name: "Pi", cmd: "内置", tags: ["steer", "MCP"] },
+      { name: "Cursor", cmd: "cursor-agent acp", tags: ["ACP registry"] },
+      { name: "Devin", cmd: "devin acp", tags: ["ACP registry"] },
+      {
+        name: "Grok Build",
+        cmd: "grok agent stdio",
+        tags: ["plan", "steer", "ACP registry"],
+      },
     ],
-    agentsMore: "权限模式与能力详情 →",
+    agentsMore: "从 ACP Registry 添加更多 Agent →",
     orchestrationHeading: "编排能力，由 daemon 托管",
     orchestrationIntro:
       "超过一个会话，Agent 就需要结构。Cocurdex 提供可持久化的编排原语——重启不丢，始终在你的批准之下。",
@@ -136,7 +140,7 @@ export const dict: MarketingDict = {
       },
       {
         title: "托管工作树",
-        body: "每个会话独立的 git 检出，创建前自动 fetch，支持按项目配置 setup 与 cleanup 脚本。",
+        body: "新建会话时勾选 Worktree 即得独立检出。setup 脚本在后台运行，移除检出时执行 cleanup。",
         href: "/docs/cli/#worktrees",
         code: "cocurdex worktree create \\\n  --workspace . --branch feat/cookies",
       },
@@ -147,7 +151,7 @@ export const dict: MarketingDict = {
     cliMore: "CLI 参考 →",
     skillsTitle: "产品 Skills",
     skillsBody:
-      "可选的 cocurdex-* skill 包，教会 Agent 在同一套数据上执行 grill → PRD → Issue → 交付 的循环。",
+      "可选的 cocurdex-* skill 包，教会 Agent 在同一套数据上执行 笔记 → Issue → 交付 的循环，以及带团队、改设置。",
     ctaHeading: "别再在 Agent 之间来回切标签页。",
     ctaBody: "macOS、Windows 与 Linux 预发布构建。无需账号。",
     gettingStarted: "快速上手",
@@ -174,8 +178,12 @@ export const dict: MarketingDict = {
         note: "未签名的 NSIS 安装包，SmartScreen 可能提示警告。",
       },
       "linux-x64": {
-        label: "Linux x64",
+        label: "Linux x64（AppImage）",
         note: "AppImage。赋予可执行权限后运行。",
+      },
+      "linux-x64-deb": {
+        label: "Linux x64（.deb）",
+        note: "Debian / Ubuntu 安装包，用 apt 或 dpkg 安装。",
       },
     },
     releaseNotes: "发布说明",
@@ -183,7 +191,7 @@ export const dict: MarketingDict = {
     steps: [
       {
         title: "安装 Agent CLI",
-        body: "至少登录一个：claude、codex、cursor-agent、devin、grok 或 opencode。",
+        body: "至少登录 claude、codex、opencode 中的一个，或在 设置 → Agent CLI 中从 ACP Registry 添加 Cursor、Devin、Grok Build 等。",
       },
       {
         title: "安装 CLI 启动器",
