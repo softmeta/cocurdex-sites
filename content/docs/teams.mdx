@@ -22,13 +22,15 @@ Only **main** sessions can spawn teams or propose script runs. Teammates get the
 A **team** belongs to a **lead** session. The lead spawns **teammates** — separate agent sessions that run in parallel — and coordinates them through a shared task list.
 
 - Each teammate's final reply of every turn is delivered back to the lead automatically.
+- When a teammate stops on a permission request or a question, the lead is told that it is waiting for you (once per turn), so the lead can point you to it instead of waiting silently.
 - Teammates can message the lead or each other.
+- A team holds at most **8** teammates. Teammates cannot spawn their own teammates.
 - A teammate can run in its own [managed worktree](/docs/cli/#worktrees) so parallel edits never share a dirty checkout.
-- A teammate uses a saved [agent role](/docs/agents/#agent-roles) or an agent id; by default it inherits the lead's agent.
+- A teammate uses a saved [agent role](/docs/agents/#agent-roles) or an agent id; by default it inherits the lead's agent. OpenCode sessions cannot lead or join a team.
 
 ### Shared task list
 
-Team tasks are ordinary [issues](/docs/notes-and-issues/) on a team-scoped view, so they show up in search and on the board.
+Each team has its own task list, separate from your [issues](/docs/notes-and-issues/): agent-created tasks never land on your issue board. A task has a title, status (`backlog`, `doing`, `review`, `done`), assignee, prerequisites, and review evidence.
 
 | Rule | Behavior |
 | --- | --- |

@@ -47,13 +47,13 @@ export const dict = {
         },
         {
           name: "pricing-page",
-          agent: "cursor",
+          agent: "acp:cursor",
           state: "busy",
           label: "Thinking",
         },
         {
           name: "api-review",
-          agent: "grok-build",
+          agent: "acp:grok-build",
           state: "done",
           label: "Unread result",
         },
@@ -104,7 +104,7 @@ export const dict = {
       },
       {
         title: "Every pane is a peer",
-        body: "Integrated PTY terminal, code editor, and browser preview with design-mode annotation sit beside chat — not behind it.",
+        body: "Integrated PTY terminal, code editor, PDF reader, and browser preview sit beside chat — not behind it. Annotate a page in Design Mode and send it straight to the agent.",
         tag: "shell",
       },
       {
@@ -120,17 +120,21 @@ export const dict = {
     ],
     agentsHeading: "Bring the agents you already use",
     agentsIntro:
-      "Cocurdex drives the agent CLIs you have installed and authenticated. It does not resell model access.",
+      "Cocurdex drives the agent CLIs you have installed and authenticated, and installs more from the ACP Registry. It does not resell model access.",
     agents: [
       { name: "Claude Agent", cmd: "claude", tags: ["plan", "steer"] },
       { name: "Codex", cmd: "codex", tags: ["plan", "steer"] },
-      { name: "Cursor", cmd: "cursor-agent acp", tags: ["ACP"] },
-      { name: "Devin", cmd: "devin acp", tags: ["ACP"] },
-      { name: "Grok Build", cmd: "grok", tags: ["plan", "steer", "ACP"] },
       { name: "OpenCode", cmd: "opencode", tags: ["plan"] },
       { name: "Pi", cmd: "built in", tags: ["steer", "MCP"] },
+      { name: "Cursor", cmd: "cursor-agent acp", tags: ["ACP registry"] },
+      { name: "Devin", cmd: "devin acp", tags: ["ACP registry"] },
+      {
+        name: "Grok Build",
+        cmd: "grok agent stdio",
+        tags: ["plan", "steer", "ACP registry"],
+      },
     ],
-    agentsMore: "Permission modes and capabilities →",
+    agentsMore: "More agents from the ACP Registry →",
     orchestrationHeading: "Orchestration, owned by the daemon",
     orchestrationIntro:
       "Past one session, agents need structure. Cocurdex gives them durable primitives that survive restarts and stay under your approval.",
@@ -149,7 +153,7 @@ export const dict = {
       },
       {
         title: "Managed worktrees",
-        body: "Isolated git checkouts per session with fetch-before-create and per-project setup and cleanup scripts.",
+        body: "Tick Worktree on a new session for an isolated checkout. Setup scripts run in the background; cleanup runs when the checkout is removed.",
         href: "/docs/cli/#worktrees",
         code: "cocurdex worktree create \\\n  --workspace . --branch feat/cookies",
       },
@@ -160,7 +164,7 @@ export const dict = {
     cliMore: "CLI reference →",
     skillsTitle: "Product skills",
     skillsBody:
-      "An optional cocurdex-* skill pack teaches agents the grill → PRD → issue → ship loop against the same data.",
+      "An optional cocurdex-* skill pack teaches agents the note → issue → ship loop, team leadership, and settings against the same data.",
     ctaHeading: "Stop tab-hopping between agents.",
     ctaBody:
       "Pre-release builds for macOS, Windows, and Linux. No account required.",
@@ -189,8 +193,12 @@ export const dict = {
         note: "Unsigned NSIS installer. SmartScreen may warn.",
       },
       "linux-x64": {
-        label: "Linux x64",
+        label: "Linux x64 (AppImage)",
         note: "AppImage. Mark it executable, then run it.",
+      },
+      "linux-x64-deb": {
+        label: "Linux x64 (.deb)",
+        note: "Debian / Ubuntu package. Install with apt or dpkg.",
       },
     } satisfies Record<BuildId, { label: string; note: string }>,
     releaseNotes: "Release notes",
@@ -198,7 +206,7 @@ export const dict = {
     steps: [
       {
         title: "Install an agent CLI",
-        body: "Authenticate at least one: claude, codex, cursor-agent, devin, grok, or opencode.",
+        body: "Authenticate at least one of claude, codex, or opencode, or add Cursor, Devin, Grok Build, and more from the ACP Registry in Settings → Agent CLIs.",
       },
       {
         title: "Add the CLI launcher",

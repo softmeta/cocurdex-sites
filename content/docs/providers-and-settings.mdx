@@ -1,9 +1,13 @@
 ---
 title: Providers and settings
-description: Provider configs, model catalogs, MCP servers, network proxy, git commit models, the settings assistant, diagnostics, and other desktop settings in Cocurdex.
+description: Agent CLIs, provider configs, model catalogs, MCP servers, network proxy, git commit models, the settings assistant, diagnostics, and other desktop settings in Cocurdex.
 ---
 
-Most Cocurdex configuration lives in the desktop app's **Settings**. This page covers the settings that change how agents and models behave — providers, MCP, network, git, and worktree environments.
+Most Cocurdex configuration lives in the desktop app's **Settings**. This page covers the settings that change how agents and models behave — agent CLIs, providers, MCP, network, git, and worktree environments.
+
+## Agent CLIs
+
+**Settings → Agent CLIs** lists every agent you can pick when starting a session. For each one it shows the detected version and status (**Built in**, **Ready**, **Not installed**, **Update required**), a copyable install command, a docs link, and — for agents that report it — your plan usage. **Add from ACP Registry** installs more agents, or registers one with your own command. See [Agents](/docs/agents/#acp-registry-agents).
 
 ## Providers and models
 
@@ -27,15 +31,18 @@ cocurdex provider list
 cocurdex provider models <provider-id>
 ```
 
-External agent CLIs (`claude`, `codex`, `opencode`, `grok`) keep their own authentication — Codex account state under `~/.codex`, for example. Provider configs do not replace that; they give Pi and the desktop a shared model catalog.
+Provider configs and models are also scriptable: `cocurdex provider add|update|login|key|model|default|import|export` — see [CLI](/docs/cli/#providers).
+
+External agent CLIs (`claude`, `codex`, `opencode`, and ACP Registry agents such as `cursor-agent` or `grok`) keep their own authentication — Codex account state under `~/.codex`, for example. Provider configs do not replace that; they give Pi and the desktop a shared model catalog.
 
 ## MCP servers
 
-**Settings → MCP** configures the Model Context Protocol servers available to the built-in **Pi** agent. Servers connect only when Pi uses one of their tools.
+**Settings → MCP** configures the Model Context Protocol servers available to the built-in **Pi** agent. Pi connects to them when a session starts, through its built-in MCP support.
 
 - Two editing modes: a **form** (name, transport, command/URL, arguments, environment) and raw **JSON**.
 - The JSON shape is the standard `mcpServers` object.
 - Transports: **local** stdio (`command` + `args` + `env`) and **remote** HTTP (`url`).
+- Server names may contain only letters, digits, `_`, and `-`.
 - Changes apply when a Pi session starts; running sessions keep their current tools.
 
 ## Network proxy
@@ -66,7 +73,7 @@ Scope notes:
 Two layers:
 
 - **Settings → Worktrees**: the root directory for managed worktrees (blank = default location) and whether to fetch remotes before creating a worktree. The inventory lists every checkout Cocurdex created, which sessions use it, and offers delete / new-session actions.
-- **Settings → Projects → Worktree settings**: per-project **setup** and **cleanup** scripts. Setup runs after Cocurdex creates a worktree (for example `pnpm install`); cleanup runs before an unused checkout is removed.
+- **Settings → Workspaces → Worktree settings**: per-workspace **setup** and **cleanup** scripts plus **actions**. Setup runs in the background after Cocurdex creates a worktree (for example `pnpm install`), and the session's first turn waits for it; cleanup runs before an unused checkout is removed. Actions are named commands (for example *Dev server* → `npm run dev`) shown in the session's **…** menu, each running in a new terminal tab. **Ask agent** has an agent inspect the repository and propose both scripts for your approval.
 
 The same surface is scriptable via `cocurdex worktree settings` — see [CLI](/docs/cli/#worktrees).
 
@@ -91,15 +98,16 @@ Any main agent session can use the same tools; the optional [`/cocurdex-settings
 | **Editor** | Editor fonts and behavior, code minimap |
 | **Shortcuts** | Rebindable keyboard shortcuts; `null` override unbinds an action |
 | **Providers** | Provider configs and model catalogs (above) |
-| **Adapters** | Per-agent runtime detection and install hints |
-| **Roles** | Saved agent presets; see [Agents](/docs/agents/#agent-roles) |
+| **Agent CLIs** | Installed agents, versions, install hints, and the ACP Registry (above) |
+| **Roles** | Edit or delete saved agent presets, their avatars and descriptions; see [Agents](/docs/agents/#agent-roles) |
 | **Teams** | Reusable [team templates](/docs/teams/#team-templates) |
 | **MCP** | MCP servers for Pi (above) |
 | **Skills** | Install/remove the `cocurdex-*` product skill pack |
 | **Network** | Outbound proxy (above) |
 | **Git** | Commit-message model (above) |
-| **Worktrees** / **Projects** | Managed worktree root and per-project scripts (above) |
+| **Worktrees** / **Workspaces** | Managed worktree root and inventory; per-workspace scripts and actions (above) |
 | **Archived sessions** | Browse sessions you archived |
+| **Open source licenses** / **About** | Third-party licenses and version information |
 | **Diagnostics** | Export diagnostics, verbose logging |
 
 ## Related

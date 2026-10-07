@@ -7,8 +7,8 @@ Cocurdex is a **desktop-first multi-agent development workspace**. Chat, integra
 
 <Cards>
   <Card title="Getting started" href="/docs/getting-started/" description="Install, open a workspace, connect an agent, run a first session." />
-  <Card title="Desktop workspace" href="/docs/desktop/" description="Panes, session attention states, shortcuts, and design mode." />
-  <Card title="Agents" href="/docs/agents/" description="Claude, Codex, Cursor, Devin, Grok Build, OpenCode, and Pi — permissions and capabilities." />
+  <Card title="Desktop workspace" href="/docs/desktop/" description="Panes, composer, worktrees, browser annotations, PDF reader, and shortcuts." />
+  <Card title="Agents" href="/docs/agents/" description="Claude, Codex, OpenCode, Pi, and ACP Registry agents like Cursor, Devin, and Grok Build." />
   <Card title="Teams and orchestration" href="/docs/teams/" description="Agent teams, peer messaging, and approved script runs that fan work out to subagents." />
   <Card title="Notes and issues" href="/docs/notes-and-issues/" description="App-owned notes, issues, board views, search, and backlinks." />
   <Card title="CLI" href="/docs/cli/" description="Script notes, issues, sessions, teams, and worktrees with --json." />
@@ -27,8 +27,8 @@ Cocurdex is a **desktop-first multi-agent development workspace**. Chat, integra
 | Surface | Role |
 | --- | --- |
 | **Desktop app** | Primary place to run agents, edit files, preview UI, and manage notes and issues |
-| **Daemon** | Local process that owns the database, sessions, teams, and script runs |
-| **CLI (`cocurdex`)** | Open folders; manage notes, issues, search, skills, and worktrees; drive sessions and teams |
+| **Daemon** | Local process that owns the database, sessions, teams, script runs, worktrees, and installed ACP agents |
+| **CLI (`cocurdex`)** | Open folders; manage notes, issues, search, skills, providers, and worktrees; drive sessions and teams |
 | **Product skills** | Optional agent skills (`cocurdex-*`) for PRD → issue → ship work against app-owned data |
 
 ## All pages
@@ -40,5 +40,5 @@ Cocurdex is a **desktop-first multi-agent development workspace**. Chat, integra
 | What is stored locally and why | [Workspaces and data](/docs/concepts/workspaces-and-data/) |
 
 <Callout title="Pre-release">
-APIs, installers, and docs are still moving. Public builds cover **macOS** (Apple silicon and Intel), **Windows** x64, and **Linux** x64. If something here disagrees with the app, the app wins — please [open an issue](https://github.com/softmeta/cocurdex/issues).
+APIs, installers, and docs are still moving. Public builds cover **macOS** (Apple silicon and Intel), **Windows** x64, and **Linux** x64 (AppImage and `.deb`). If something here disagrees with the app, the app wins — please [open an issue](https://github.com/softmeta/cocurdex/issues).
 </Callout>

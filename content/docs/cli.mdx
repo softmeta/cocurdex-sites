@@ -29,6 +29,11 @@ Open flows need the Cocurdex / Electron binary. Resolution order includes:
 
 If resolution fails, open the desktop app once and install the CLI launcher, or set `COCURDEX_ELECTRON`.
 
+Platform notes:
+
+- **Linux AppImage** — the launcher runs a stable copy of the CLI bundle, so it keeps working after the AppImage mount goes away.
+- **Windows** — the launcher is a shim on your user `PATH`; uninstalling Cocurdex removes the shim and its `PATH` entry.
+
 ## Global flags
 
 | Flag | Meaning |
@@ -150,7 +155,7 @@ cocurdex session stop <session-id>
 | Flag | Required for | Meaning |
 | --- | --- | --- |
 | `--workspace` | create / tui create | Workspace id or filesystem path |
-| `--agent` | create / tui create | Agent id (`claude-agent`, `codex`, `cursor`, `devin`, `grok-build`, `opencode`, `pi`) |
+| `--agent` | create / tui create | Agent id: `claude-agent`, `codex`, `opencode`, `pi`, or an installed ACP Registry agent such as `acp:cursor`, `acp:devin`, `acp:grok-build` |
 | `--provider` | create / tui create | Provider config id from `provider list` |
 | `--model` | create / tui create | Model id from `provider models` |
 
@@ -166,7 +171,7 @@ A lead session and its teammates. Full model: [Agent teams](/docs/teams/#agent-t
 
 ```bash
 cocurdex team get --lead <session-id> [--json]
-cocurdex team spawn --lead <session-id> --name <name> --prompt <prompt> [--role <role-id>] [--agent <agent>] [--worktree]
+cocurdex team spawn --lead <session-id> --name <name> [--title <title>] --prompt <prompt> [--role <role-id>] [--agent <agent>] [--worktree]
 cocurdex team stop --team <team-id>
 cocurdex team stop-member --team <team-id> --session <session-id>
 cocurdex team roles [--json]
@@ -178,6 +183,7 @@ cocurdex team spawn-template --lead <session-id> --template <template-id> [--pro
 | --- | --- |
 | `--lead` | The lead (main) session that owns the team |
 | `--name` | Teammate name; lowercase slug |
+| `--title` | Display title shown in the app; falls back to the name |
 | `--role` | Saved agent role for the teammate |
 | `--agent` | Agent id when not using a role; defaults to the lead's agent |
 | `--worktree` | Run the teammate in its own managed git worktree |
@@ -198,14 +204,38 @@ cocurdex script-run cancel --run <run-id>
 
 ## Providers
 
+Provider configs feed the built-in Pi agent and the shared model catalog. See [Providers and settings](/docs/providers-and-settings/#providers-and-models).
+
 ```bash
-cocurdex provider list
-cocurdex provider models <provider>
+cocurdex provider list [--json]
+cocurdex provider templates [--json]
+cocurdex provider add <id> [--template <template-id>] [--name <name>] [--base-url <url>]
+cocurdex provider update <id> [--name <name>] [--base-url <url>] [--enable|--disable]
+cocurdex provider remove <id>
+cocurdex provider status <id> [--json]
+cocurdex provider login <id> [--method oauth|api_key] [--no-tui]
+cocurdex provider logout <id>
+cocurdex provider key set <id>        # reads the key from stdin (or a hidden prompt)
+cocurdex provider key clear <id>
+cocurdex provider models <id> [--refresh] [--json]
+cocurdex provider model add <id> <model-id> --api <api> [--name <name>]
+cocurdex provider model remove <id> <model-id>
+cocurdex provider default [--agent <agent>] [--provider <id> --model <model-id>] [--json]
+cocurdex provider import <file|->     # pi models.json format
+cocurdex provider export [--output <file>]
 ```
+
+| Command | Notes |
+| --- | --- |
+| `add` | Needs `--base-url` or a `--template` from `provider templates` |
+| `login` | Defaults to `--method oauth`; uses a terminal UI when stdin and stdout are TTYs, plain text with `--no-tui` |
+| `models --refresh` | Fetches the catalog from the provider instead of the stored list |
+| `model add --api` | One of `openai-completions`, `openai-responses`, `openai-codex-responses`, `anthropic-messages`, `google-generative-ai`, `mistral-conversations` |
+| `default` | Without flags, lists the default provider and model per agent; with `--agent --provider --model`, sets one |
 
 ## Agent roles
 
-Saved agent presets (agent + provider/model + permission + reasoning axes) that teammates and script-run subagents can use. Manage them in the desktop UI; list them from the CLI:
+Saved agent presets (agent + provider/model + permission + reasoning axes, avatar, description) that sessions, teammates, and script-run subagents can use. Manage them in the desktop UI; list them from the CLI:
 
 ```bash
 cocurdex role list [--json]

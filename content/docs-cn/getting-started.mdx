@@ -11,7 +11,7 @@ description: 安装 Cocurdex、打开工作区、配置 Agent 运行时，并运
 | --- | --- |
 | **macOS** | Apple silicon 与 Intel |
 | **Windows** | x64（未签名的 NSIS 安装包） |
-| **Linux** | x64 AppImage |
+| **Linux** | x64 AppImage 或 `.deb` |
 | **Agent 运行时** | 至少一个你已在使用的受支持 Agent CLI 或 provider（见 [Agent](/zh-cn/docs/agents/)） |
 | **磁盘 / 项目** | 磁盘上的一个项目目录，供 Agent 和编辑器用作工作区根目录 |
 
@@ -65,7 +65,7 @@ cocurdex workspace list
 
 在第一次有效运行之前：
 
-1. 安装你想用的 Agent CLI——`claude`、`codex`、`cursor-agent`、`devin`、`grok` 或 `opencode`——**或**在只需要无本地写入的对话式工作时，配合 [Provider 配置](/zh-cn/docs/providers-and-settings/)使用内置的 **Pi**（`pi`）运行时。
+1. 安装你想用的 Agent CLI——`claude`、`codex` 或 `opencode`——或者在 **设置 → Agent CLI → 从 ACP Registry 添加** 中添加 Cursor、Devin、Grok Build 等 Agent。如果 `cursor-agent`、`devin` 或 `grok` 已在 `PATH` 上，Cocurdex 会自动识别。只需要无本地写入的对话式工作时，也可以配合 [Provider 配置](/zh-cn/docs/providers-and-settings/)使用内置的 **Pi**（`pi`）运行时。
 2. 完成该工具自身的授权（API key、ChatGPT 登录等）。Cocurdex 会尽可能复用你已有的 provider 配置。
 3. 在桌面应用中创建会话，选择 **Agent + provider + 模型**。
 
@@ -131,7 +131,7 @@ cocurdex search "getting-started"
 
 ## 可选：产品 Skills
 
-安装命名空间化的产品 Skills,让 Agent 可以对同一数据面执行 `/cocurdex-*` 流程（grill → PRD → issue → ship）：
+安装命名空间化的产品 Skills,让 Agent 可以对同一数据面执行 `/cocurdex-*` 流程（note → issue → ship）：
 
 ```bash
 cocurdex skills list
@@ -146,7 +146,8 @@ cocurdex skills install --scope global
 
 | 现象 | 尝试 |
 | --- | --- |
-| 某个 Agent 显示不可用 | 安装并登录它的 CLI，然后查看 **设置 → 适配器** |
+| 某个 Agent 显示不可用 | 安装并登录它的 CLI，然后查看 **设置 → Agent CLI**(它也会标出需要升级的版本) |
+| Agent 提示需要登录 | 在输入框的模型菜单中选择**登录 …**，然后重新发送 |
 | CLI 数据命令失败 | 打开桌面应用以启动 daemon；运行 `cocurdex daemon status` |
 | 笔记、Issue 或 Agent 无响应 | **设置 → 常规** 中**重启** daemon |
 | 其他问题 | **帮助 → 导出诊断日志…**，把文件附到 [GitHub Issue](https://github.com/softmeta/cocurdex/issues)，或到 [Discord](https://discord.gg/JuRyyv5bv) 提问 |
