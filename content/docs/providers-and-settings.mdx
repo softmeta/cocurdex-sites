@@ -1,13 +1,21 @@
 ---
 title: Providers and settings
-description: Agent CLIs, provider configs, model catalogs, MCP servers, network proxy, git commit models, the settings assistant, diagnostics, and other desktop settings in Cocurdex.
+description: Agent CLIs, provider configs, model catalogs, MCP servers, network proxy, git commit models, devices, the settings assistant, diagnostics, and other desktop settings in Cocurdex.
 ---
 
-Most Cocurdex configuration lives in the desktop app's **Settings**. This page covers the settings that change how agents and models behave — agent CLIs, providers, MCP, network, git, and worktree environments.
+Most Cocurdex configuration lives in the desktop app's **Settings**. This page covers the settings that change how agents and models behave — agent CLIs, providers, MCP, network, git, worktree environments, and devices.
 
 ## Agent CLIs
 
 **Settings → Agent CLIs** lists every agent you can pick when starting a session. For each one it shows the detected version and status (**Built in**, **Ready**, **Not installed**, **Update required**), a copyable install command, a docs link, and — for agents that report it — your plan usage. **Add from ACP Registry** installs more agents, or registers one with your own command. See [Agents](/docs/agents/#acp-registry-agents).
+
+**Run limits** on the same page cap how many agent runs execute at once. Delegated runs (teammates and script-run subagents) past a limit wait in the queue; runs you start yourself are never held back.
+
+| Control | Meaning |
+| --- | --- |
+| **Concurrent runs** | Total agent runs across all sessions (1–64) |
+| **Concurrent runs per agent** | Runs of the same agent at once (1–64) |
+| **Delegated run timeout** | Minutes after which a teammate or subagent run is stopped; empty means no timeout |
 
 ## Providers and models
 
@@ -77,6 +85,10 @@ Two layers:
 
 The same surface is scriptable via `cocurdex worktree settings` — see [CLI](/docs/cli/#worktrees).
 
+## Devices
+
+**Settings → Devices** opens the same host in a browser on this computer, or pairs another device with scoped permissions. See [Devices and local web](/docs/devices-and-web/).
+
 ## Settings assistant
 
 The settings screen has an **assistant** dock: a chat session with the `settings` agent tools. Ask it to "switch to dark mode", "review my notifications", or "what can you change?" and it reads and edits the setting catalog for you — including project worktree setup and cleanup scripts. Changes that need your confirmation are proposed first.
@@ -99,12 +111,12 @@ After an update downloads, an **Update available** card offers **Update and Rest
 
 | Section | Covers |
 | --- | --- |
-| **General** | Language, notifications, **Shell command** (install `cocurdex` on your `PATH`), daemon status and restart |
-| **Appearance** | Theme (system / dark / light — parity is a product requirement), theme presets, fonts |
-| **Editor** | Editor fonts and behavior, code minimap |
+| **General** | Chat layout, transcript view, HTML preview location, send shortcut, follow-up queue/steer, language, notifications (including a completion sound), **Shell command** (install `cocurdex` on your `PATH`), daemon status and restart |
+| **Appearance** | Theme (system / dark / light — parity is a product requirement), color theme presets, UI and code fonts |
+| **Editor** | Code MiniMap |
 | **Shortcuts** | Rebindable keyboard shortcuts; `null` override unbinds an action |
 | **Providers** | Provider configs and model catalogs (above) |
-| **Agent CLIs** | Installed agents, versions, install hints, and the ACP Registry (above) |
+| **Agent CLIs** | Installed agents, versions, install hints, ACP Registry, and [run limits](#agent-clis) (above) |
 | **Roles** | Edit or delete saved agent presets, their avatars and descriptions; see [Agents](/docs/agents/#agent-roles) |
 | **Teams** | Reusable [team templates](/docs/teams/#team-templates) |
 | **MCP** | MCP servers for Pi (above) |
@@ -112,7 +124,8 @@ After an update downloads, an **Update available** card offers **Update and Rest
 | **Network** | Outbound proxy (above) |
 | **Git** | Commit-message model (above) |
 | **Worktrees** / **Workspaces** | Managed worktree root and inventory; per-workspace scripts and actions (above) |
-| **Archived sessions** | Browse sessions you archived |
+| **Devices** | Local web client and paired remote devices; see [Devices and local web](/docs/devices-and-web/) |
+| **Archived sessions** | Browse sessions you archived; restore or permanently delete |
 | **Open source licenses** | Third-party licenses |
 | **About** | Version, update check and channel; see [App updates](#app-updates) |
 | **Diagnostics** | Export diagnostics, verbose logging |
@@ -120,5 +133,6 @@ After an update downloads, an **Update available** card offers **Update and Rest
 ## Related
 
 - [Agents](/docs/agents/)
+- [Devices and local web](/docs/devices-and-web/)
 - [CLI](/docs/cli/)
 - [Desktop workspace](/docs/desktop/)

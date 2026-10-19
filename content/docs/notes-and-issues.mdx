@@ -1,6 +1,6 @@
 ---
 title: Notes and issues
-description: App-owned notes, issues, kanban views, search, and backlinks in Cocurdex.
+description: App-owned notes, tables, issues, kanban views, search, and backlinks in Cocurdex.
 ---
 
 Notes and issues are first-class **product records** in Cocurdex. They live in app-owned storage (`cocurdex.sqlite`), not as an implicit dual-write Markdown tree in your repository.
@@ -21,15 +21,31 @@ Markdown remains available for **explicit** import/export later. Until then, tre
 
 Notes support:
 
-- Hierarchical **folders** and note pages  
-- Markdown bodies  
+- Hierarchical **folders** and note pages (including **New subpage**)  
+- A **note title** field separate from the body  
+- Markdown bodies, edited as blocks  
 - **Tags**  
 - **Backlinks** between notes  
 - Optional association with a **workspace**  
 
-### Desktop
+The notes sidebar groups **Personal** notes and per-workspace sections. Drag a note, or use **Move to**, to reparent it.
 
-Use the notes surface in the desktop app to browse, edit, and link notes. Prefer stable note titles and links so agents and humans can find the same record later.
+### Desktop editor
+
+The title sits above the body. **Enter** or **Down** from the title moves the caret into the body.
+
+The body placeholder is **Start writing, or press "/" for commands…**. `/` opens **Insert block**:
+
+| Block | Inserts |
+| --- | --- |
+| Text / Heading 1–3 | Paragraph or heading |
+| Bulleted / Numbered / To-do list | Lists, including checkboxes |
+| Quote / Code block / Divider | Common Markdown blocks |
+| **Table** | An editable table |
+
+Tables have click/drag handles on the edge (**Click to add, drag to add more**). Row and column menus cover insert, delete, **Duplicate**, **Clear contents**, alignment (left / center / right), **Sort A → Z** / **Sort Z → A**, and **Delete table**. If the last block in a note is a table, clicking the empty space below it inserts a new empty line so you can keep writing.
+
+Saves show as **Saving…** / **Saved**. Prefer stable titles and links so agents and humans can find the same record later.
 
 Reading a PDF in the [PDF reader](/docs/desktop/#pdf-reader)? Select text and choose **Add to Note** to quote it into a note.
 
@@ -40,10 +56,14 @@ cocurdex note list
 cocurdex note create --title "Architecture notes" --body "## Context\n..."
 cocurdex note show <id>
 cocurdex note update <id> --body "..."
+cocurdex note move <id> --parent <note-id>
+cocurdex note move <id> --root
 cocurdex note backlinks <id>
 cocurdex note tags
 cocurdex note delete <id>
 ```
+
+`--body -` reads Markdown from stdin; `--body-file <path>` reads it from a file.
 
 Create a folder:
 
@@ -82,15 +102,26 @@ Issues are the product’s **todo / ticket / board card** model. Language differ
 
 ### Views
 
-The built-in view id is **`project`**. Views can group by **status** or **priority**, and layout can be **board** or **list**. List views and create/move operations go through the daemon (desktop UI or CLI) — do not invent issue ids by hand.
+The built-in view id is **`project`**. The issues sidebar lists **Views** plus shortcuts: **Active**, **All issues**, **Backlog**, and **Agent working**. Views can group by **status** or **priority**, and layout can be **board** or **list**. Drag cards (and columns) to update the grouped field. **View display** applies only to that view. Create extra views with **Add view**; deleting a view does not delete the issues.
+
+Open an issue for title, description, **labels**, **parent** / **sub-issues**, **relations** (blocks / related / duplicate), linked **Agent sessions**, comments, and an **Activity** feed. Filters can hide completed and canceled cards, or narrow by workspace and label.
+
+List views and create/move operations go through the daemon (desktop UI or CLI) — do not invent issue ids by hand.
 
 ```bash
 cocurdex issue views
 cocurdex issue list
-cocurdex issue list --status doing
-cocurdex issue create --title "Wire download artifacts" --status backlog --priority high
+cocurdex issue list --status doing [--label <name>] [--parent <id>] [--open]
+cocurdex issue create --title "Wire download artifacts" --status backlog --priority high [--labels <ids>] [--parent <id>]
+cocurdex issue update <id> [--title <title>] [--body <text>] [--status <column>] [--priority <id>]
 cocurdex issue move <id> doing
-cocurdex issue show <id>
+cocurdex issue show <id> [--detail]
+cocurdex issue comment <id> --body "Shipped on main"
+cocurdex issue relate <id> blocks|related|duplicate <id>
+cocurdex issue unrelate <id> blocks|related|duplicate <id>
+cocurdex issue labels
+cocurdex issue label create --name "release" [--color <color>]
+cocurdex issue label delete <id|name>
 cocurdex issue delete <id>
 ```
 

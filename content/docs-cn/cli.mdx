@@ -1,6 +1,6 @@
 ---
 title: CLI
-description: cocurdex CLI 参考——打开桌面应用，管理笔记、Issue、会话、provider 与 skills。
+description: cocurdex CLI 参考——打开桌面应用，管理笔记、Issue、会话、团队、脚本编排、设备、provider 与 skills。
 ---
 
 **`cocurdex` CLI** 是应用私有产品数据和 daemon 操作受支持的命令行边界。外部工具和 Agent 应该使用 CLI,而不是读取私有数据库文件。
@@ -60,6 +60,7 @@ cocurdex note list [--json]
 cocurdex note show <id> [--json]
 cocurdex note create --title <title> [--body <markdown>] [--parent <id>] [--workspace <id>] [--folder] [--json]
 cocurdex note update <id> [--title <title>] [--body <markdown>] [--json]
+cocurdex note move <id> --parent <note-id> | --root [--json]
 cocurdex note delete <id> [--json]
 cocurdex note backlinks <id> [--json]
 cocurdex note tags [note-id] [--json]
@@ -68,7 +69,8 @@ cocurdex note tags [note-id] [--json]
 | Flag | 含义 |
 | --- | --- |
 | `--title` | 创建时必填 |
-| `--body` | Markdown 正文（非文件夹时，在创建后应用） |
+| `--body` | Markdown 正文（`-` 从 stdin 读取）。`--body-file <path>` 从文件读取 |
+| `--root` | 在 `move` 时把笔记提升到侧栏根级 |
 | `--folder` | 创建文件夹节点而非笔记 |
 | `--parent` | 父级笔记/文件夹 id |
 | `--workspace` | 可选的工作区关联 |
@@ -80,10 +82,17 @@ cocurdex note tags [note-id] [--json]
 默认视图 id 是 `project`,除非传入 `--view`。
 
 ```bash
-cocurdex issue list [--status <column>] [--view <id>] [--json]
-cocurdex issue show <id> [--view <id>] [--json]
-cocurdex issue create --title <title> [--status <column>] [--priority <id>] [--body <text>] [--workspace <id>] [--view <id>] [--json]
+cocurdex issue list [--status <column>] [--label <name>] [--parent <id>] [--open] [--view <id>] [--json]
+cocurdex issue show <id> [--detail] [--view <id>] [--json]
+cocurdex issue create --title <title> [--status <column>] [--priority <id>] [--body <text>] [--workspace <id>] [--parent <id>] [--labels <ids>] [--view <id>] [--json]
+cocurdex issue update <id> [--title <title>] [--body <text>] [--status <column>] [--priority <id>] [--workspace <id>|none] [--parent <id>|none] [--labels <ids>] [--view <id>] [--json]
 cocurdex issue move <id> <column> [--view <id>] [--json]
+cocurdex issue comment <id> --body <markdown> [--json]
+cocurdex issue relate <id> blocks|related|duplicate <id> [--json]
+cocurdex issue unrelate <id> blocks|related|duplicate <id> [--json]
+cocurdex issue labels [--json]
+cocurdex issue label create --name <name> [--color <color>] [--json]
+cocurdex issue label delete <id|name> [--json]
 cocurdex issue delete <id> [--view <id>] [--json]
 cocurdex issue views [--json]
 ```
@@ -125,6 +134,29 @@ cocurdex daemon status
 cocurdex workspace list
 ```
 
+## 设备与本地网页
+
+打印本地网页客户端 URL（桌面应用必须在运行）：
+
+```bash
+cocurdex web [--json]
+```
+
+把另一台设备配对到主机 daemon。完整模型见[设备与本地网页](/zh-cn/docs/devices-and-web/)。
+
+```bash
+cocurdex host status [--json]
+cocurdex host remote enable [--port <port>] | disable [--json]
+cocurdex host pair --label <name> [--scopes read,interact,approvals] [--ttl <minutes>] [--json]
+cocurdex host pairings [--json]
+cocurdex host pairing cancel <pairing-id>
+cocurdex host devices [--json]
+cocurdex host revoke <device-id>
+cocurdex host audit [--limit <n>] [--json]
+```
+
+`--scopes` 是逗号分隔的 `read`、`interact`、`execute`、`files.read`、`files.write`、`git.destructive`、`approvals`、`credentials`。默认配对权限是 `read,interact,approvals`。
+
 ## 工作树
 
 托管的 git 工作树为会话提供工作区仓库的隔离检出。
@@ -146,6 +178,10 @@ cocurdex session create --workspace <id|path> --agent <agent> --provider <provid
 cocurdex session tui [session-id]
 cocurdex session tui --workspace <id|path> --agent <agent> --provider <provider> --model <model>
 cocurdex session send <session-id> <prompt>
+cocurdex session tree <session-id> [--depth <n>] [--json]
+cocurdex session fork <session-id> [--through <message-id>] [--title <title>] [--json]
+cocurdex session switch-agent <session-id> <agent> [--json]
+cocurdex session handoffs <session-id> [--json]
 cocurdex session peers <session-id>
 cocurdex session send-peer <from-session-id> <to-session-id> <message>
 cocurdex session peer-inbound <session-id> deliver|refuse
@@ -161,6 +197,8 @@ cocurdex session stop <session-id>
 
 不带 flags 的 `session tui` 附着到最近的非归档会话。它不支持 `--json`。
 
+`session tree` 打印[执行树](/zh-cn/docs/desktop/#执行树)。`fork` 从当前会话开一个新会话（`--through` 截到该消息）。`switch-agent` 在空闲会话上更换运行时。`handoffs` 列出分叉或切换 Agent 后的上下文交接。见[分叉与切换 Agent](/zh-cn/docs/desktop/#分叉与切换-agent)。
+
 `peers` 列出某会话可以发消息的会话；`send-peer` 把消息作为新一轮投递（或排在当前一轮之后）；`peer-inbound refuse` 让会话拒收其他会话的消息。见[会话间消息](/zh-cn/docs/teams/#会话间消息)。
 
 Agent id 与权限见 [Agent](/zh-cn/docs/agents/)。
@@ -171,6 +209,7 @@ Agent id 与权限见 [Agent](/zh-cn/docs/agents/)。
 
 ```bash
 cocurdex team get --lead <session-id> [--json]
+cocurdex team create --lead <session-id> --template <template-id>
 cocurdex team spawn --lead <session-id> --name <name> [--title <title>] --prompt <prompt> [--role <role-id>] [--agent <agent>] [--worktree]
 cocurdex team stop --team <team-id>
 cocurdex team stop-member --team <team-id> --session <session-id>
@@ -255,6 +294,7 @@ cocurdex role list [--json]
 ## 相关
 
 - [笔记与 Issue](/zh-cn/docs/notes-and-issues/)
+- [设备与本地网页](/zh-cn/docs/devices-and-web/)
 - [Agent](/zh-cn/docs/agents/)
 - [团队与编排](/zh-cn/docs/teams/)
 - [Skills](/zh-cn/docs/skills/)

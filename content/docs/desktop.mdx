@@ -1,6 +1,6 @@
 ---
 title: Desktop workspace
-description: How the Cocurdex desktop shell organizes sessions, chat, Git review, worktrees, terminal, editor, browser preview, PDF reader, and keyboard shortcuts.
+description: How the Cocurdex desktop shell organizes sessions, chat, Git review, worktrees, terminal, editor, browser preview, PDF reader, session fork, and keyboard shortcuts.
 ---
 
 Cocurdex ships as a **native desktop app** (Electron). The goal is a single workspace for multi-agent coding — not a thin browser wrapper around one chat thread.
@@ -23,9 +23,21 @@ Typical peers in the shell:
 | **Team panel** | Teammates of the current lead session, their status, and replies (see [Teams](/docs/teams/)) |
 | **Script runs** | Proposed scripts awaiting approval and running subagents (see [Script runs](/docs/teams/#script-runs)) |
 
-The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. On Windows and Linux the window uses themed native window controls in the title bar.
+The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. On Windows and Linux the window uses themed native window controls in the title bar.
+
+Chat layout is chosen in **Settings → General → Chat layout** and restored on next launch:
+
+| Layout | Behavior |
+| --- | --- |
+| **Center column** | Chat is the main column |
+| **Floating dock** | Chat floats over the editor |
+| **Pinned right rail** | Chat docks beside the editor |
+
+When chat is closed in floating or pinned layout, **Hide chat button when closed** removes the bottom-right button; open chat again with the chat-dock shortcut. HTML generated in replies can preview in the **chat area** or the **sidebar browser**.
 
 Exact layout can change during pre-release; the product model stays multi-pane. No single pane should monopolize the product — chat is a peer, not the whole app.
+
+You can also [open the same host in a browser](/docs/devices-and-web/) on this computer, or pair another device.
 
 ## Sessions and attention
 
@@ -40,6 +52,30 @@ You can run **more than one** session without merging transcripts. The shell der
 
 Underlying session status values include `idle`, `running`, `error`, and `exited`. UI copy stays neutral (“Thinking”, “Using tools”, “Ready for follow-up”) rather than anthropomorphic flourish.
 
+### Session list
+
+The sidebar **Group and filter sessions** menu controls how sessions are listed:
+
+| Control | Options |
+| --- | --- |
+| **Group by** | Workspace, status, agent, last updated, or no grouping |
+| **Sort by** | Recent activity, created time, or title |
+| **Filters** | Agent, status, environment (local vs worktree), source, unread |
+| **Sessions per group** | Cap how many root sessions show; **Show more** reveals the rest |
+| **Compact mode** | Denser rows |
+
+**Pin** keeps a session at the top of the list. **Archive** hides one session; **Archive sessions** on a group moves matching sessions to **Settings → Archived sessions**, skipping pinned, running, and waiting ones — **Undo** restores them. Nested subagent sessions expand and collapse in the tree.
+
+### Execution tree
+
+**Execution tree** on a session's sidebar menu shows runs, tool calls, subagents, and pending approvals for the session. Expand a row to see what it contains; select a tool call to read its output. **Issues only** filters to failed calls and waiting approvals. Some provider-native subagents are not observable.
+
+### Fork and switch agent
+
+**Fork session** in the sidebar starts a new session from the current one. On a user message, **Fork from here** starts the fork through that prompt — useful to try a different path without losing the original. The new title gets a `(fork)` suffix.
+
+While a session is not running, pick a different agent in the composer: Cocurdex hands conversation context to the new runtime. Claude Agent and Codex can fork onto the provider's own thread; a marker in the transcript can **Show** / **Hide handed-off context**. Pi sidebar **Chat** conversations cannot be forked or switched this way.
+
 ## Composer
 
 The composer starts every session and every follow-up:
@@ -52,9 +88,13 @@ The composer starts every session and every follow-up:
 | Model menu | Agent, provider, model, reasoning effort, permission mode; **Save as role** stores the setup as an [agent role](/docs/agents/#agent-roles) |
 | **Worktree** checkbox (new session) | Run the session in a fresh [managed worktree](#worktrees) |
 
-Follow-ups sent while a turn runs are steered into it when the agent supports steering, or queued until the turn finishes. When a turn settles, its tool calls fold behind a label that shows how long the turn worked; expand it to review every step.
+Follow-ups sent while a turn runs are steered into it when the agent supports steering, or queued until the turn finishes (**Settings → General → Follow-up behavior**). When a turn settles, its tool calls fold behind a label that shows how long the turn worked; expand it to review every step.
 
-Markdown links in replies that point at files open in the editor, including GitHub-style line anchors such as `src/app.ts#L32` or `#L10-L20`.
+**Settings → General → Transcript view** chooses how much of that work is visible: **Concise** (final replies only), **Standard** (folded summaries), or **Verbose** (everything expanded).
+
+In a long transcript, a prompt rail jumps to each user message; **Jump to latest** and **Jump to top** skip the scroll. The context-window meter on a reply shows token usage; when the runtime compacts context, the transcript records that it happened.
+
+Markdown links in replies that point at files open in the editor, including GitHub-style line anchors such as `src/app.ts#L32` or `#L10-L20`. HTML in replies can be previewed or shown as source; Mermaid diagrams offer **Open preview** and **Download SVG**.
 
 ## Worktrees
 
@@ -80,6 +120,7 @@ The commit popover offers **Commit** and **Commit and push**. Leave the message 
 - **Open in a separate window** moves chat into its own window; **Move back to main window** returns it. The editor panel must be open to detach chat.
 - The terminal supports multiple tabs with **New terminal**, **Find in terminal**, and **Restart**.
 - Use **Search files** in the editor's file tree. Its context menu offers **Add to Chat**, **Reveal in Finder** (where file-manager support is available), **Copy Path**, and **Copy Relative Path**.
+- Workspace `.md` files in the editor toggle **Preview** / **Source** in the tab bar. (App-owned [notes](/docs/notes-and-issues/) use the notes editor, not this toggle.)
 - For workspaces with several folders, **Edit workspace** manages **Source folders** with **Add folder**, **Make primary**, and **Remove folder**. Drop a folder onto the window to open it as a workspace.
 
 ## Collaboration and write modes
@@ -141,6 +182,7 @@ See [Workspaces and data](/docs/concepts/workspaces-and-data/).
 ## Related
 
 - [Getting started](/docs/getting-started/)  
+- [Devices and local web](/docs/devices-and-web/)  
 - [Agents](/docs/agents/)  
 - [Notes and issues](/docs/notes-and-issues/)  
 - [CLI](/docs/cli/)  

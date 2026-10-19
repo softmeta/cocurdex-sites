@@ -1,6 +1,6 @@
 ---
 title: 笔记与 Issue
-description: Cocurdex 中应用私有的笔记、Issue、看板视图、搜索与反向链接。
+description: Cocurdex 中应用私有的笔记、表格、Issue、看板视图、搜索与反向链接。
 ---
 
 笔记和 Issue 是 Cocurdex 中的一等**产品记录**。它们存放在应用私有存储(`cocurdex.sqlite`)中，而不是在仓库里隐式双写一棵 Markdown 树。
@@ -21,15 +21,31 @@ Markdown 之后仍可用于**显式**导入导出。在此之前，请把 CLI �
 
 笔记支持：
 
-- 层级**文件夹**与笔记页
-- Markdown 正文
+- 层级**文件夹**与笔记页（含**新建子页面**）
+- 与正文分开的**笔记标题**字段
+- 以块编辑的 Markdown 正文
 - **标签**
 - 笔记之间的**反向链接**
 - 可选关联到某个**工作区**
 
-### 桌面端
+笔记侧栏按**个人**笔记和各工作区分组。拖动笔记，或用**移动到**，可以改它的父级。
 
-使用桌面应用中的笔记面板浏览、编辑和链接笔记。保持稳定的笔记标题和链接，这样 Agent 和人之后能找到同一条记录。
+### 桌面编辑器
+
+标题在正文上方。在标题里按 **Enter** 或 **Down** 会把光标移进正文。
+
+正文占位是 **开始写作，或按 “/” 插入块…**。`/` 打开**插入块**：
+
+| 块 | 插入 |
+| --- | --- |
+| 正文 / 标题 1–3 | 段落或标题 |
+| 无序列表 / 有序列表 / 待办列表 | 列表，含勾选框 |
+| 引用 / 代码块 / 分隔线 | 常见 Markdown 块 |
+| **表格** | 可编辑表格 |
+
+表格边缘有点击/拖动手柄（**点击添加，拖动可添加多个**）。行、列菜单覆盖插入、删除、**复制**、**清空内容**、对齐（左对齐 / 居中 / 右对齐）、**升序排列** / **降序排列**，以及**删除表格**。如果笔记的最后一块是表格，点击它下方的空白会插入一个空行，方便继续写。
+
+保存状态显示为 **保存中…** / **已保存**。保持稳定的笔记标题和链接，这样 Agent 和人之后能找到同一条记录。
 
 在 [PDF 阅读器](/zh-cn/docs/desktop/#pdf-阅读器)里看文档时，选中文字并选择**加入笔记**，即可把它摘录进笔记。
 
@@ -40,10 +56,14 @@ cocurdex note list
 cocurdex note create --title "Architecture notes" --body "## Context\n..."
 cocurdex note show <id>
 cocurdex note update <id> --body "..."
+cocurdex note move <id> --parent <note-id>
+cocurdex note move <id> --root
 cocurdex note backlinks <id>
 cocurdex note tags
 cocurdex note delete <id>
 ```
+
+`--body -` 从 stdin 读 Markdown；`--body-file <path>` 从文件读。
 
 创建文件夹：
 
@@ -82,15 +102,26 @@ Issue 是产品中的 **todo / ticket / 看板卡片**模型。叫法不同，�
 
 ### 视图
 
-内置视图 id 是 **`project`**。视图可以按**状态**或**优先级**分组，布局可以是**看板**或**列表**。列表视图以及创建/移动操作都经由 daemon（桌面 UI 或 CLI）——不要手工编造 issue id。
+内置视图 id 是 **`project`**。Issue 侧栏列出**视图**，以及快捷入口：**进行中**、**全部 Issue**、**Backlog** 和 **Agent 在做**。视图可以按**状态**或**优先级**分组，布局可以是**看板**或**列表**。拖动卡片（和列）会更新被分组的字段。**视图显示**只作用于该视图。用**添加视图**再建视图；删除视图不会删除 Issue。
+
+打开一条 Issue 可编辑标题、描述、**标签**、**父 issue** / **子 issue**、**关联**（阻塞 / 相关 / 重复）、已链接的 **Agent 会话**、评论，以及**动态**记录。筛选可以隐藏已完成和已取消的卡片，或按工作区和标签收窄。
+
+列表视图以及创建/移动操作都经由 daemon（桌面 UI 或 CLI）——不要手工编造 issue id。
 
 ```bash
 cocurdex issue views
 cocurdex issue list
-cocurdex issue list --status doing
-cocurdex issue create --title "Wire download artifacts" --status backlog --priority high
+cocurdex issue list --status doing [--label <name>] [--parent <id>] [--open]
+cocurdex issue create --title "Wire download artifacts" --status backlog --priority high [--labels <ids>] [--parent <id>]
+cocurdex issue update <id> [--title <title>] [--body <text>] [--status <column>] [--priority <id>]
 cocurdex issue move <id> doing
-cocurdex issue show <id>
+cocurdex issue show <id> [--detail]
+cocurdex issue comment <id> --body "Shipped on main"
+cocurdex issue relate <id> blocks|related|duplicate <id>
+cocurdex issue unrelate <id> blocks|related|duplicate <id>
+cocurdex issue labels
+cocurdex issue label create --name "release" [--color <color>]
+cocurdex issue label delete <id|name>
 cocurdex issue delete <id>
 ```
 

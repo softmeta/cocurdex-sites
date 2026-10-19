@@ -127,7 +127,7 @@ When the collaboration mode is `plan`, the session uses `claude-plan` (plan only
 
 ### Other ACP Registry agents
 
-Cursor, Devin, and other registry agents have no Cocurdex-side permission-mode list. Tool approval follows the agent's own ACP permission requests, which surface as permission cards like any other agent.
+Cursor, Devin, and other registry agents have no Cocurdex-side permission-mode list. Tool approval follows the agent's own ACP permission requests, which surface as permission cards like any other agent. Many registry agents still advertise **session modes** in the composer (for example Devin's Ask / Plan / Autonomous). Those choices come from the installed agent, not from a Cocurdex table.
 
 ### Built-in Pi (`pi`)
 
@@ -176,6 +176,10 @@ See [Teams and orchestration](/docs/teams/) for what they do.
 
 Some runtimes can change **model**, **thinking / reasoning effort**, **permission**, or related axes **without recreating** the provider session. That preserves conversation continuity and provider-side cache. If a control is missing for an agent, it is intentionally unsupported — there is no silent “restart the session under the hood” fallback.
 
+While a session is idle, you can also **switch the agent** in the composer, or **fork** the session (or **Fork from here** on a user message). See [Fork and switch agent](/docs/desktop/#fork-and-switch-agent). **Execution tree** shows the nested runs and tool calls.
+
+**Settings → Agent CLIs → Run limits** caps concurrent delegated work; sessions you start yourself are never queued. See [Providers and settings](/docs/providers-and-settings/#agent-clis).
+
 ## Steering and follow-ups
 
 When an agent supports **steering**, you can send follow-up guidance while a run is active (or queue follow-ups until the current turn finishes — configurable in chat settings). When steering is unavailable, wait for the turn to finish or stop the session.
@@ -202,3 +206,4 @@ Keep titles short and status visible. Switch only when attention demands it — 
 - [Teams and orchestration](/docs/teams/)  
 - [Skills](/docs/skills/)  
 - [CLI](/docs/cli/)  
+- [Devices and local web](/docs/devices-and-web/)  
