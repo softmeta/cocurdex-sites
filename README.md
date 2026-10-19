@@ -1,6 +1,6 @@
 # cocurdex-sites
 
-Private source for the public **marketing site** and **product documentation**
+Source for the public **marketing site** and **product documentation**
 at [cocurdex.com](https://cocurdex.com) (static, SEO-first).
 
 ## Stack
@@ -41,8 +41,8 @@ Marketing copy lives in `lib/marketing/{en,zh-cn}.ts`. Sidebar order lives in
 - SSG only. No auth, no team console, no desktop/Electron imports.
 - User-facing docs only under `content/`; internal engineering documents live
   in the product repo and are not part of this pipeline.
-- The product repo may become public under FSL; this repository stays private
-  so the site design, copy, and docs source are not trivially forkable.
+- This repository is public. It holds the site design, marketing copy, and docs
+  source.
 
 ## Deploy
 
