@@ -280,26 +280,6 @@ cocurdex provider export [--output <file>]
 cocurdex role list [--json]
 ```
 
-## 工作流
-
-CLI 可以创建并驱动一次**工作流运行**：planner → implementer → reviewer 循环，带审批关卡。把 Agent 或已保存角色绑到这三个角色上，然后在关卡处批准或拒绝，工作才会继续。
-
-```bash
-cocurdex workflow definitions [--json]
-cocurdex workflow list [--json]
-cocurdex workflow tui [run-id]
-cocurdex workflow tui --workspace <id|path> --prompt <prompt> \
-  [--planner codex] [--implementer grok-build] [--reviewer codex] \
-  [--planner-role <id>] [--implementer-role <id>] [--reviewer-role <id>]
-cocurdex workflow create --workspace <id|path> --prompt <prompt> [--definition <id>] [...]
-cocurdex workflow show <run-id>
-cocurdex workflow start <run-id>
-cocurdex workflow approve|reject <run-id> [--reason <text>]
-cocurdex workflow cancel <run-id>
-```
-
-不带 run id 的 `workflow tui` 附着到最近一次运行；传入 `--workspace` 和 `--prompt` 时会新建一次。预发布期间这是 CLI 优先的界面。
-
 ## CLI 不是什么
 
 - 第二份事实源——本地数据库仍由桌面 daemon 掌管

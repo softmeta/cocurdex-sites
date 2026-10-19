@@ -280,26 +280,6 @@ Saved agent presets (agent + provider/model + permission + reasoning axes, avata
 cocurdex role list [--json]
 ```
 
-## Workflows
-
-The CLI can create and drive a **workflow run**: a planner → implementer → reviewer loop with approval gates. Bind agents or saved roles to those three parts, then approve or reject a gate before work continues.
-
-```bash
-cocurdex workflow definitions [--json]
-cocurdex workflow list [--json]
-cocurdex workflow tui [run-id]
-cocurdex workflow tui --workspace <id|path> --prompt <prompt> \
-  [--planner codex] [--implementer grok-build] [--reviewer codex] \
-  [--planner-role <id>] [--implementer-role <id>] [--reviewer-role <id>]
-cocurdex workflow create --workspace <id|path> --prompt <prompt> [--definition <id>] [...]
-cocurdex workflow show <run-id>
-cocurdex workflow start <run-id>
-cocurdex workflow approve|reject <run-id> [--reason <text>]
-cocurdex workflow cancel <run-id>
-```
-
-`workflow tui` without a run id attaches to the latest run, or creates one when you pass `--workspace` and `--prompt`. This surface is CLI-first during pre-release.
-
 ## What the CLI is not
 
 - A second source of truth — the desktop daemon still owns the local database  
