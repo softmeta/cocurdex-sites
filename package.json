@@ -8,6 +8,7 @@
     "dev": "next dev --port 4321",
     "build": "next build",
     "check:links": "node scripts/check-links.mjs",
+    "check:parity": "node scripts/check-docs-parity.mjs",
     "postinstall": "fumadocs-mdx",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --passWithNoTests",
