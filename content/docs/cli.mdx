@@ -1,6 +1,6 @@
 ---
 title: CLI
-description: cocurdex CLI reference — open the desktop app, manage notes and issues, sessions, teams, script runs, devices, providers, and skills.
+description: cocurdex CLI reference — open the desktop app, manage notes, issues, and slide decks, sessions, teams, script runs, devices, providers, and skills.
 ---
 
 The **`cocurdex` CLI** is the supported command-line boundary for app-owned product data and daemon operations. External tools and agents should use the CLI rather than reading private database files.
@@ -107,6 +107,35 @@ cocurdex issue create --title "Fix download page" --status backlog --priority hi
 cocurdex issue move <id> doing
 cocurdex issue list --status doing
 ```
+
+## Decks
+
+Slide decks are app-owned records: Markdown in, a 16:9 deck out, with a checker for overflow, empty slides, and unknown slots. Layouts, themes, presenting, and the `/cocurdex-deck` skill: [Slide decks](/docs/decks/).
+
+```bash
+cocurdex deck list [--json]
+cocurdex deck show <id> [--json]
+cocurdex deck create [--title <title>] [--markdown-file <path|-> | --content-file <path|->] [--workspace <id>] [--json]
+cocurdex deck update <id> [--title <title>] [--markdown-file <path|-> | --content-file <path|->] [--expected-revision <n>] [--json]
+cocurdex deck edit <id> --ops-file <path|-> [--expected-revision <n>] [--json]
+cocurdex deck image <id> --slide <slideId> --file <path.png|path.jpg> [--alt <text>] [--replace <elementId>] [--expected-revision <n>] [--json]
+cocurdex deck check <id> [--json]
+cocurdex deck export <id> --output <path.pptx|path.pdf> [--format pptx|pdf] [--json]
+cocurdex deck import <file.pptx> [--title <title>] [--workspace <id>] [--json]
+cocurdex deck read <file.pptx> [--json]
+cocurdex deck delete <id> [--json]
+```
+
+| Flag | Meaning |
+| --- | --- |
+| `--markdown-file` / `--content-file` | Markdown source, or structured deck JSON. `-` reads stdin. Pass one of them |
+| `--ops-file` | JSON array of edit ops, or `{ "ops": [ ... ] }`. Applied in order; a failure saves nothing |
+| `--expected-revision` | Revision from `deck show`. A stale write fails with `Deck was modified` |
+| `--output` / `--format` | Export path. Format is `pptx` or `pdf`, or the output extension |
+| `--workspace` | Optional workspace id on create or import |
+| `--slide` / `--file` / `--alt` / `--replace` | Add a PNG or JPEG (up to 20 MB), or swap one and keep its frame |
+
+`deck list` prints id, title, slide count, revision, and updated time. `deck show` includes checker issues. `deck read` prints the PowerPoint file as Markdown and does not create a deck. `deck import` creates a deck and leaves the file untouched. A line that is only `---` splits slides; a paragraph starting with `Notes:` or `备注：` starts speaker notes.
 
 ## Search
 
@@ -294,6 +323,7 @@ Do not point scripts at `cocurdex.sqlite` or private schema paths. Those are imp
 ## Related
 
 - [Notes and issues](/docs/notes-and-issues/)  
+- [Slide decks](/docs/decks/)  
 - [Devices and local web](/docs/devices-and-web/)  
 - [Agents](/docs/agents/)  
 - [Teams and orchestration](/docs/teams/)  

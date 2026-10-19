@@ -1,0 +1,266 @@
+---
+title: Slide decks
+description: App-owned slide decks in Cocurdex — the Decks panel, Markdown authoring, themes, presenting, and the cocurdex deck CLI.
+---
+
+Slide decks are **product records**, like [notes and issues](/docs/notes-and-issues/). They live in app-owned storage, with stable ids, and show up in the desktop **Decks** tab. Agents create and revise them through `cocurdex deck` and the `/cocurdex-deck` skill. Export a PowerPoint or PDF file when you want a copy outside the app.
+
+Each slide is a **16:9** canvas, **1280×720**. Text is sized to fit its region. A deck has one theme, which sets colors, type, backgrounds, and decorations such as page numbers for every layout.
+
+## Decks panel
+
+Open **Decks** from the right panel's view switcher.
+
+The list on the left holds every deck. **New deck** creates an **Untitled deck** with a cover slide and starts a rename. **Import PowerPoint (.pptx)** brings in an existing file. Double-click a title, or choose **Rename**, to edit it in place — the same control as a [note](/docs/notes-and-issues/) title. **Delete** asks you to confirm; the deck and its slides are removed. The row menu also exports. **Hide deck list** collapses the list; **Show deck list** brings it back. Drag the edge to resize it.
+
+An empty list says **No decks yet** and offers **New deck** and **Import PowerPoint**.
+
+`create` and `import` can store a workspace id. The list itself shows every deck, in one list.
+
+Importing a PowerPoint file and inserting a picture use a local file picker, so those actions are in the desktop app. The [browser client](/docs/devices-and-web/) can still open, edit, present, and download decks.
+
+## Viewing and editing
+
+Select a deck to open it. The toolbar shows the title and **1 / N**, then:
+
+| Control | Does |
+| --- | --- |
+| **Add slide** | Insert a slide in one of the [layouts](#layouts) after the current one |
+| **Layout** | Change the current slide's layout and keep its content |
+| **Insert image** | Add a PNG or JPEG to the current slide (desktop app) |
+| **Theme** | Apply a theme to the whole deck, with a preview of each one |
+| **Present** | Fullscreen presentation of this deck |
+| **Presenter view** | Your notes on this screen, the slide on an audience window |
+| **Export** | Download **Export PPTX** or **Export PDF** |
+
+The slide fills the center and stays 16:9. Click a text region to edit it. Empty regions read **Click to add title**, **Click to add subtitle**, or **Click to add text**. Press Escape to cancel. Clicking away, or Primary+Enter, saves. Under the slide, **Speaker notes** (placeholder **Add speaker notes**) saves when you leave the field.
+
+Changing layout keeps what you wrote. Slots the new layout has stay put. A single body moves into the left column when you switch to two columns, and two text columns merge into the body when you switch back. Anything the new layout cannot hold stays on the slide as its own element, in the same place.
+
+A picture can be right-clicked for **Replace image…** or **Delete image**. With the picture focused, Delete or Backspace removes it. A new picture is fitted in the center of the slide and keeps its aspect ratio.
+
+The filmstrip under the notes shows every slide. Click a thumbnail to select it; its notes appear above. Right-click a thumbnail for **Duplicate slide**, **Move earlier**, **Move later**, and **Delete slide**. With a thumbnail focused, the arrow keys and Page Up / Page Down move the selection, and focus follows. Home and End jump to the first and last thumbnail.
+
+If a save loses a race with another edit, the panel reports **Could not save the change** and reloads the latest deck.
+
+## Presenting
+
+**Present** fills the screen with the current slide on a black 16:9 stage. Click, or use the keys below, to move. Escape leaves fullscreen and returns you to the slide you were showing.
+
+**Presenter view** opens a second window titled **Cocurdex Presentation** for the audience, and covers this window with the presenter screen:
+
+| Region | Shows |
+| --- | --- |
+| Current slide | The slide the audience sees |
+| **Up next** | The following slide, or **This is the last slide** |
+| **Speaker notes** | This slide's notes, or **No speaker notes** |
+| Elapsed time | Time since the show started |
+| **Previous** / **Next** | Step through the deck |
+| **End show** | Close the audience window and return to the slide you were showing |
+
+When another display is connected, the audience window goes fullscreen on that display. On a single display it opens as a window on the current screen, and the presenter screen says **Move the audience window to the projector or shared screen.** Closing the audience window ends the show.
+
+In a browser client, **Presenter view** opens the audience view as a popup. If the browser blocks it, the app says **Could not open the audience window. Allow pop-ups for this page and try again.**
+
+These keys work while presenting, in presenter view, and on the audience window. They are separate from the shortcuts in **Settings → Shortcuts**.
+
+| Key | Does |
+| --- | --- |
+| Right, Down, Page Down, Space, Enter, N | Next slide |
+| Left, Up, Page Up, Backspace, P | Previous slide |
+| Home / End | First or last slide |
+| Escape | Leave the show and return to the slide you were showing. On the audience window, Escape closes that window and ends the show |
+| Click | Next slide, in fullscreen and on the audience window |
+
+## Themes and layouts
+
+Pick a theme from **Theme**, or set its id with [`deck edit`](#editing-with-ops). The menu label is what you see in the app; the id is what the CLI uses.
+
+| Id | Menu | Fits |
+| --- | --- | --- |
+| `default` | Default | Clean, for any topic |
+| `midnight` | Midnight | Dark, for any topic |
+| `sand` | Sand | Warm, for any topic |
+| `forest` | Forest | Calm, for any topic |
+| `tech` | Launch | Minimal tech · products and engineering |
+| `editorial` | Editorial | Magazine · research and stories |
+| `academic` | Lecture | Classic · teaching and lectures |
+| `pop` | Pop | Bold color · marketing and pitches |
+| `boardroom` | Boardroom | Corporate · business and consulting |
+| `nebula` | Nebula | Dark gradient · AI and keynotes |
+| `ember` | Ember | Dark gradient · creative and events |
+| `swiss` | Swiss | Strategy, consulting, and planning |
+| `playful` | Playful | Classes, workshops, and creative pitches |
+| `noir` | Noir | Finance, annual reports, and premium brands |
+| `botanical` | Botanical | Health, sustainability, and nonprofits |
+| `blueprint` | Blueprint | Engineering reviews and technical designs |
+| `zen` | Zen | Culture, brand stories, and hospitality |
+| `retro` | Retro | Events, festivals, and lifestyle |
+| `terminal` | Terminal | Developer talks and hackathons |
+| `bauhaus` | Bauhaus | Design, art, and architecture |
+| `clinic` | Clinic | Healthcare and SaaS products |
+
+On Swiss, Playful, Noir, Botanical, Blueprint, Zen, Retro, Terminal, Bauhaus, and Clinic, a **Section** slide shows a large chapter number counted from the section slides in the deck. Use that layout for chapter breaks, and leave the number out of the title.
+
+### Layouts
+
+| Id | Menu | Slots |
+| --- | --- | --- |
+| `cover` | Cover | Title, subtitle |
+| `section` | Section | Title, subtitle |
+| `title-content` | Title and content | Title, body |
+| `two-content` | Two columns | Title, left column, right column |
+| `title-only` | Title only | Title |
+| `closing` | Closing | Title, subtitle |
+| `blank` | Blank | None |
+
+Only the slots a layout defines are shown. A body can be text or a table.
+
+## Writing Markdown
+
+Markdown is the fastest way to write a whole deck. The app compiles it into slides; after that, the deck is ordinary product data you can edit in the panel.
+
+- A line that is only `---` separates slides. A rule inside a code fence does not.
+- A slide whose heading is `#`, with only plain paragraphs under it, is a title slide. The first one becomes the cover, the last one the closing slide, and any other a section divider. The paragraphs become the subtitle.
+- A `##` heading is a content-slide title. Lists (bulleted, numbered, or task, up to five levels), paragraphs, quotes, and code fill the body.
+- Exactly two `###` sections, with the first one right after the title, make a two-column slide.
+- A table makes a table slide. Text before or after it becomes a caption above the table. Keep one table per slide; extra tables are dropped and reported.
+- A `##` heading with no body is a title-only slide.
+- A paragraph that starts with `Notes:` or `备注：` starts the speaker notes. Everything after it on that slide is notes.
+- Bold, italic, strikethrough, inline code, and links are kept.
+- A Markdown image is skipped and reported. Add the picture with **Insert image** or [`cocurdex deck image`](#images).
+
+The first heading becomes the deck title when you do not pass `--title`.
+
+```markdown
+# Q3 Review
+Platform team · October 2026
+
+---
+
+## Highlights
+- Shipped sync to all users
+  - p95 latency down 38%
+- Two incidents, both resolved within SLA
+
+Notes: Open with the latency win.
+
+---
+
+## Plan
+### Now
+- Hardening
+### Next
+- Mobile client
+
+---
+
+# Thank you
+Questions?
+```
+
+Pass the file to `deck create` or `deck update`. A Markdown update replaces every slide and its ids. To change a deck someone is already editing, prefer [ops](#editing-with-ops).
+
+## Checker
+
+`deck create`, `deck update`, and `deck edit` return `warnings` and `issues`. Warnings are Markdown the compiler skipped. Issues are problems in the result. `deck show` includes the current issues, and `deck check` returns them on their own.
+
+| Kind | Meaning |
+| --- | --- |
+| `overflow` | Text or a table still does not fit at the smallest size. Shorten it or split the slide |
+| `empty-slide` | The slide has no content |
+| `unknown-slot` | Content sits in a slot this layout does not show, so it is hidden |
+
+Fix the issues before treating the deck as finished.
+
+## CLI
+
+The daemon must be running (open the desktop app). Full command index: [CLI](/docs/cli/#decks).
+
+```bash
+cocurdex deck list [--json]
+cocurdex deck show <id> [--json]
+cocurdex deck create [--title <title>] [--markdown-file <path|-> | --content-file <path|->] [--workspace <id>] [--json]
+cocurdex deck update <id> [--title <title>] [--markdown-file <path|-> | --content-file <path|->] [--expected-revision <n>] [--json]
+cocurdex deck edit <id> --ops-file <path|-> [--expected-revision <n>] [--json]
+cocurdex deck image <id> --slide <slideId> --file <path.png|path.jpg> [--alt <text>] [--replace <elementId>] [--expected-revision <n>] [--json]
+cocurdex deck check <id> [--json]
+cocurdex deck export <id> --output <path.pptx|path.pdf> [--format pptx|pdf] [--json]
+cocurdex deck import <file.pptx> [--title <title>] [--workspace <id>] [--json]
+cocurdex deck read <file.pptx> [--json]
+cocurdex deck delete <id> [--json]
+```
+
+| Flag | Meaning |
+| --- | --- |
+| `--title` | Deck title. On create, falls back to the first Markdown heading, then **Untitled deck** |
+| `--markdown-file` | Markdown source. `-` reads stdin. On update, pass this or `--content-file` |
+| `--content-file` | Structured deck JSON. `-` reads stdin. Replaces the whole deck |
+| `--workspace` | Optional workspace id stored on the deck |
+| `--ops-file` | JSON array of ops, or `{ "ops": [ ... ] }`. `-` reads stdin |
+| `--expected-revision` | Revision from an earlier `deck show`. The write fails with `Deck was modified` if the deck changed; show it again, reapply, and retry |
+| `--output` | File to write. The extension picks the format when `--format` is omitted |
+| `--format` | `pptx` or `pdf` |
+| `--slide` / `--file` | Slide id and PNG or JPEG path for `deck image` |
+| `--alt` | Description stored with a new picture |
+| `--replace` | Element id whose picture is swapped. The frame stays |
+
+`deck list` prints id, title, slide count, revision, and updated time. `deck show` prints the deck plus its checker issues. `deck read` prints Markdown to the terminal; `--json` adds each slide's title, text lines, and notes. Reading a file does not create a deck.
+
+On this computer, `deck export` writes `--output` wherever the daemon can write. **Export** in the panel downloads the file instead. A [paired device](/docs/devices-and-web/) with **Read** can view decks and download an export. Creating, editing, importing, and adding pictures need **Interact**. `deck read` needs **Read files**, and `deck export` needs **Write files**. From a paired device, `deck read`, `deck import`, `deck image`, and `deck export` only use paths inside a workspace.
+
+### Editing with ops
+
+`deck edit` applies the ops in order, and saves only if every op succeeds. Slide and element ids you do not touch stay put. Read ids from `deck show --json` (`content.slides[].id` and each element's `id`) or from an issue's `target`.
+
+```json
+[
+  { "op": "setText", "slideId": "<id>", "target": "slot:title", "markdown": "Q3 **Review**" },
+  { "op": "setNotes", "slideId": "<id>", "notes": "Open with the latency win." },
+  { "op": "insertSlides", "index": 2, "markdown": "## Risks\n- Latency" },
+  { "op": "addSlide", "layout": "title-content", "index": 3 },
+  { "op": "duplicateSlide", "slideId": "<id>" },
+  { "op": "moveSlide", "slideId": "<id>", "index": 0 },
+  { "op": "deleteSlide", "slideId": "<id>" },
+  { "op": "setLayout", "slideId": "<id>", "layout": "two-content" },
+  { "op": "setTheme", "theme": "midnight" },
+  { "op": "deleteElement", "slideId": "<id>", "elementId": "<element-id>" }
+]
+```
+
+`setText` replaces one slot (`slot:title`, `slot:body`, …) or one free text element (`element:<id>`). Pass `markdown` or `paragraphs`, and only a slot the layout has. `insertSlides` uses the Markdown rules above; omit `index` to append. `setLayout` follows the [layout rules](#viewing-and-editing).
+
+`--content-file` is the other precise path: edit the JSON from `deck show` and send it back. Layout ids, slot names, speaker notes, the theme id, and element frames (on the 1280×720 canvas) are all in that document. A content update replaces the whole deck, so prefer ops when the deck is already being edited.
+
+## Images
+
+Add a PNG or JPEG, up to 20 MB. The app keeps its own copy, so the deck still works after the source file moves.
+
+```bash
+cocurdex deck image <deck-id> --slide <slide-id> --file ./chart.png --alt "Q3 latency chart"
+cocurdex deck image <deck-id> --slide <slide-id> --file ./chart-v2.png --replace <element-id>
+```
+
+`--replace` swaps the picture and keeps its frame. Remove one with **Delete image** or the `deleteElement` op. A picture referenced from ops or content JSON has to be imported with `deck image` first.
+
+## PowerPoint
+
+`deck read <file.pptx>` prints the slide text and speaker notes as deck Markdown, with `---` between slides and pictures as `![alt](file)`. It does not create a deck.
+
+`deck import <file.pptx>` creates a new deck and leaves the file untouched. Title, title-and-content, two-column, and title-only slides map onto deck layouts in their original order. Other shapes become free text, tables, and images. Charts, SmartArt, video, and pictures other than PNG or JPEG are skipped. The panel reports **Imported with some content left out** and lists what it skipped; the CLI returns the same notes as `warnings`. Fonts, colors, and backgrounds follow the deck theme. Run `deck check` afterward — imported text may not fit the theme's sizes.
+
+**Export PPTX** is a PowerPoint file you can keep editing in PowerPoint, Keynote, or WPS. **Export PDF** is a fixed copy of the slides.
+
+## Working with agents
+
+Install the product skill pack, then invoke `/cocurdex-deck`. The skill uses the same CLI, so the agent does not open the database. See [Skills](/docs/skills/).
+
+People can edit the same deck in the panel while an agent works. The agent should pass `--expected-revision` from its last `deck show`, and retry from a fresh show when the write reports `Deck was modified`.
+
+## Related
+
+- [Desktop workspace](/docs/desktop/)
+- [Notes and issues](/docs/notes-and-issues/)
+- [CLI](/docs/cli/)
+- [Skills](/docs/skills/)
+- [Workspaces and data](/docs/concepts/workspaces-and-data/)

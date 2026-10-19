@@ -1,6 +1,6 @@
 ---
 title: CLI
-description: cocurdex CLI 参考——打开桌面应用，管理笔记、Issue、会话、团队、脚本编排、设备、provider 与 skills。
+description: cocurdex CLI 参考——打开桌面应用，管理笔记、Issue、演示文稿、会话、团队、脚本编排、设备、provider 与 skills。
 ---
 
 **`cocurdex` CLI** 是应用私有产品数据和 daemon 操作受支持的命令行边界。外部工具和 Agent 应该使用 CLI,而不是读取私有数据库文件。
@@ -107,6 +107,35 @@ cocurdex issue create --title "Fix download page" --status backlog --priority hi
 cocurdex issue move <id> doing
 cocurdex issue list --status doing
 ```
+
+## 演示文稿
+
+演示文稿是应用私有记录：用 Markdown 写入，得到 16:9 的幻灯片，并检查溢出、空白页和未知槽位。版式、主题、放映和 `/cocurdex-deck` skill 见[演示文稿](/zh-cn/docs/decks/)。
+
+```bash
+cocurdex deck list [--json]
+cocurdex deck show <id> [--json]
+cocurdex deck create [--title <title>] [--markdown-file <path|-> | --content-file <path|->] [--workspace <id>] [--json]
+cocurdex deck update <id> [--title <title>] [--markdown-file <path|-> | --content-file <path|->] [--expected-revision <n>] [--json]
+cocurdex deck edit <id> --ops-file <path|-> [--expected-revision <n>] [--json]
+cocurdex deck image <id> --slide <slideId> --file <path.png|path.jpg> [--alt <text>] [--replace <elementId>] [--expected-revision <n>] [--json]
+cocurdex deck check <id> [--json]
+cocurdex deck export <id> --output <path.pptx|path.pdf> [--format pptx|pdf] [--json]
+cocurdex deck import <file.pptx> [--title <title>] [--workspace <id>] [--json]
+cocurdex deck read <file.pptx> [--json]
+cocurdex deck delete <id> [--json]
+```
+
+| Flag | 含义 |
+| --- | --- |
+| `--markdown-file` / `--content-file` | Markdown 源，或结构化的演示文稿 JSON。`-` 从 stdin 读取。只传其中一个 |
+| `--ops-file` | 编辑 ops 的 JSON 数组，或 `{ "ops": [ ... ] }`。按顺序应用；有一步失败则不会保存 |
+| `--expected-revision` | 来自 `deck show` 的修订号。过期的写入会失败并提示 `Deck was modified` |
+| `--output` / `--format` | 导出路径。格式为 `pptx` 或 `pdf`，也可由输出文件的扩展名决定 |
+| `--workspace` | 创建或导入时可选的工作区 id |
+| `--slide` / `--file` / `--alt` / `--replace` | 添加 PNG 或 JPEG（最大 20 MB），或换掉一张并保留其框 |
+
+`deck list` 打印 id、标题、幻灯片数量、修订号和更新时间。`deck show` 带上检查问题。`deck read` 把 PowerPoint 文件打成 Markdown，不会新建演示文稿。`deck import` 新建演示文稿，原文件保持不动。单独一行 `---` 用来分页；以 `Notes:` 或 `备注：` 开头的段落开始演讲者备注。
 
 ## 搜索
 
@@ -294,6 +323,7 @@ cocurdex role list [--json]
 ## 相关
 
 - [笔记与 Issue](/zh-cn/docs/notes-and-issues/)
+- [演示文稿](/zh-cn/docs/decks/)
 - [设备与本地网页](/zh-cn/docs/devices-and-web/)
 - [Agent](/zh-cn/docs/agents/)
 - [团队与编排](/zh-cn/docs/teams/)

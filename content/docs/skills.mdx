@@ -1,9 +1,9 @@
 ---
 title: Skills
-description: Install and use Cocurdex product skills (cocurdex-*) for notes, issues, teams, settings, and shipping work.
+description: Install and use Cocurdex product skills (cocurdex-*) for notes, issues, slide decks, teams, settings, and shipping work.
 ---
 
-**Product skills** teach agents how to work with Cocurdex notes, issues, and the product knowledge flow. Skill names are **namespaced** with the `cocurdex-` prefix so they do not clash with other global skills.
+**Product skills** teach agents how to work with Cocurdex notes, issues, slide decks, and the product knowledge flow. Skill names are **namespaced** with the `cocurdex-` prefix so they do not clash with other global skills.
 
 Skills are **not auto-installed**. Install from **Settings → Skills** in the desktop app, or from the CLI.
 
@@ -34,6 +34,7 @@ cocurdex skills remove --scope project
 | --- | --- |
 | `cocurdex-note` | Create, update, and link notes — including PRDs and technical specs — through the CLI |
 | `cocurdex-issue` | Create, list, move, and refine issues; also answers to “todo”, “ticket”, and “backlog” |
+| `cocurdex-deck` | Create and revise [slide decks](/docs/decks/), check them, and export PPTX or PDF. Invoke it as `/cocurdex-deck` |
 | `cocurdex-ship` | Implement an issue or spec note, run the project's checks, and move the issue through its columns. You invoke it explicitly; agents do not start it on their own |
 | `cocurdex-team` | Lead an [agent team](/docs/teams/#agent-teams): decide when a team helps, brief teammates, merge their reports |
 | `cocurdex-settings` | Inspect and change app and project settings through the `settings_*` agent tools |
@@ -58,9 +59,11 @@ Earlier packs also shipped `cocurdex-ask`, `cocurdex-grill`, `cocurdex-prd`, `co
 | Board work | `/cocurdex-issue` | Issues via `cocurdex issue …` |
 | Implement | `/cocurdex-ship` | Code + issue status updates |
 
+Slide decks sit beside that loop. `/cocurdex-deck` writes them with `cocurdex deck`.
+
 ## Privacy default
 
-PRDs, specs, notes, and issues are **private app-owned data**. Opening a project folder is **not** permission to dump product docs into `.cocurdex/` or Markdown trees; publishing a note into a repository needs an explicit export.
+PRDs, specs, notes, issues, and slide decks are **private app-owned data**. Opening a project folder is **not** permission to dump product docs into `.cocurdex/` or Markdown trees; publishing a note into a repository needs an explicit export.
 
 Issue structure (list / create / move / validate) always goes through:
 
@@ -82,5 +85,6 @@ Other non-product skills (`tdd`, code review, etc.) may still exist in your envi
 ## Related
 
 - [Notes and issues](/docs/notes-and-issues/)  
+- [Slide decks](/docs/decks/)  
 - [CLI](/docs/cli/)  
 - [Workspaces and data](/docs/concepts/workspaces-and-data/)  

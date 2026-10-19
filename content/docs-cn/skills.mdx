@@ -1,9 +1,9 @@
 ---
 title: Skills
-description: 安装并使用 Cocurdex 产品 Skills(cocurdex-*)，处理笔记、Issue、团队、设置和交付工作。
+description: 安装并使用 Cocurdex 产品 Skills(cocurdex-*)，处理笔记、Issue、演示文稿、团队、设置和交付工作。
 ---
 
-**产品 Skills** 教会 Agent 如何使用 Cocurdex 的笔记、Issue 和产品知识流。Skill 名称以 `cocurdex-` 前缀做**命名空间隔离**，避免与其他全局 skills 冲突。
+**产品 Skills** 教会 Agent 如何使用 Cocurdex 的笔记、Issue、演示文稿和产品知识流。Skill 名称以 `cocurdex-` 前缀做**命名空间隔离**，避免与其他全局 skills 冲突。
 
 Skills **不会自动安装**。从桌面应用的 **设置 → Skills** 安装，或使用 CLI。
 
@@ -34,6 +34,7 @@ cocurdex skills remove --scope project
 | --- | --- |
 | `cocurdex-note` | 通过 CLI 创建、更新、关联笔记——包括 PRD 和技术 spec |
 | `cocurdex-issue` | 创建、列出、移动和细化 Issue;「todo」「ticket」「backlog」也会触发它 |
+| `cocurdex-deck` | 创建和修改[演示文稿](/zh-cn/docs/decks/)，检查并导出 PPTX 或 PDF。以 `/cocurdex-deck` 调用 |
 | `cocurdex-ship` | 实现一个 Issue 或 spec 笔记，运行项目检查，并推进 Issue 的状态列。需要你显式调用，Agent 不会自行启动 |
 | `cocurdex-team` | 领导 [Agent 团队](/zh-cn/docs/teams/)：判断何时需要团队、给队友下达简报、合并报告 |
 | `cocurdex-settings` | 通过 `settings_*` Agent 工具查看与修改应用和项目设置 |
@@ -58,9 +59,11 @@ todo、ticket、backlog item 都指 **Issue**——同一个池子，不是独�
 | 看板工作 | `/cocurdex-issue` | 经 `cocurdex issue …` 写 Issue |
 | 实现 | `/cocurdex-ship` | 代码 + Issue 状态更新 |
 
+演示文稿在这条循环旁边。`/cocurdex-deck` 通过 `cocurdex deck` 写入。
+
 ## 隐私默认值
 
-PRD、spec、笔记和 Issue 都是**私有的应用数据**。打开项目文件夹**不等于**授权把产品文档写进 `.cocurdex/` 或 Markdown 树；把笔记发布到仓库需要明确的导出操作。
+PRD、spec、笔记、Issue 和演示文稿都是**私有的应用数据**。打开项目文件夹**不等于**授权把产品文档写进 `.cocurdex/` 或 Markdown 树；把笔记发布到仓库需要明确的导出操作。
 
 Issue 结构操作（列表 / 创建 / 移动 / 校验）始终经由：
 
@@ -82,5 +85,6 @@ Skills 不得编造 issue id,也不得通过手工编辑文件改写状态。
 ## 相关
 
 - [笔记与 Issue](/zh-cn/docs/notes-and-issues/)
+- [演示文稿](/zh-cn/docs/decks/)
 - [CLI](/zh-cn/docs/cli/)
 - [工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)
