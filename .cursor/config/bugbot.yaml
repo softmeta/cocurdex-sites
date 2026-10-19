@@ -1,0 +1,20 @@
+# Bugbot 从 PR 的目标分支读取本文件，合并进 main 之后才生效。
+version: 1
+
+triggers:
+  # 本仓库的 PR 经常由代理以草稿打开，草稿也要审。
+  drafts: true
+  frequency: everyPush
+
+review:
+  effort: default
+  # 复审只看上次审查之后的新 diff。
+  incremental: true
+
+prSummary:
+  # 用评论，避免覆盖 PR 模板里的 Summary / Source / Testing。
+  mode: comment
+
+autofix:
+  # 不自动改代码，避免审查者和代理作者来回空转。
+  mode: disabled
