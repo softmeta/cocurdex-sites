@@ -42,18 +42,19 @@ jobs:
       - name: Build static site
         run: pnpm build
 
-      # 密钥只注入真正调用 wrangler 的步骤，安装和构建读不到。
+      # 密钥只注入真正调用 wrangler 的步骤。if 表达式读不到 secrets，所以是否跳过在这一步里判断。
       - name: Deploy to Cloudflare Pages
-        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: >-
-          pnpm dlx wrangler@4.151.2 pages deploy out
-          --project-name=cocurdex-web
-          --branch=${{ github.head_ref || github.ref_name }}
-          --commit-dirty=true
-
-      - name: Explain skipped deployment
-        if: ${{ secrets.CLOUDFLARE_API_TOKEN == '' || secrets.CLOUDFLARE_ACCOUNT_ID == '' }}
-        run: echo "Cloudflare deployment skipped because repository secrets are not configured."
+          # 分支名经环境变量传入，避免把 github 上下文拼进脚本。
+          DEPLOY_BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "Cloudflare deployment skipped because repository secrets are not configured."
+            exit 0
+          fi
+          pnpm dlx wrangler@4.151.2 pages deploy out \
+            --project-name=cocurdex-web \
+            --branch="$DEPLOY_BRANCH" \
+            --commit-dirty=true
