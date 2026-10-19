@@ -36,10 +36,7 @@ A bot review is not a human approval. Do not put a bot in `CODEOWNERS`.
 ## Owners
 
 `CODEOWNERS` lists `@ladieman217`. That login is on every human commit in this
-repo and on the product repo (`softmeta/cocurdex`). The first commit here is
-authored as `richard` with the noreply email of GitHub user id 12859005, which
-is `ladieman217`. `@richardwong` has no commits on either repo, so it is not
-used.
+repo and on the product repo (`softmeta/cocurdex`).
 
 ## Convergence
 

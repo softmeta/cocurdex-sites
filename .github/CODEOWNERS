@@ -1,8 +1,6 @@
 # 高风险路径必须由仓库所有者审查。
 # 登录名取自 git 历史，不是猜测：
 # 本仓库与 softmeta/cocurdex 的人类提交都是 ladieman217。
-# 首次提交的作者名是 richard，noreply 邮箱对应用户 id 12859005（即 ladieman217）。
-# @richardwong 在上述两个仓库都没有提交，因此不写进本文件。
 
 /.github/ @ladieman217
 /.cursor/ @ladieman217

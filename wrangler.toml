@@ -1,6 +1,6 @@
 # Cloudflare Pages project metadata for local `wrangler pages deploy`.
 # CI uses the same project name (see .github/workflows/deploy-web.yml).
-# Repo stays private; only the built out/ directory is public.
+# 本仓库是公开的；Cloudflare Pages 发布的是构建目录 out/。
 name = "cocurdex-web"
 compatibility_date = "2026-04-01"
 pages_build_output_dir = "out"
