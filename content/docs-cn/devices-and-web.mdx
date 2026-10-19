@@ -1,0 +1,88 @@
+---
+title: 设备与本地网页
+description: 在本机浏览器中打开 Cocurdex，或把另一台设备按权限配对到同一 daemon。
+---
+
+桌面应用是主机。**设置 → 设备** 让你从浏览器使用这台主机——可以是本机，也可以是你配对的另一台设备。
+
+这里不会替换 daemon。浏览器连的是已经在这台机器上运行的 Cocurdex 实例，不会另开一个工作区，也不需要云账号。
+
+## 在浏览器中打开（本机）
+
+**设置 → 设备 → 在浏览器中打开** 会加载本地网页客户端，连到与桌面应用相同的工作区和会话。
+
+CLI 会打印该 URL：
+
+```bash
+cocurdex web
+```
+
+桌面应用必须在运行，daemon 才能提供该客户端。URL 带有本机 token，请把它当作对本机的访问权限来对待。
+
+## 远程访问
+
+默认关闭。**允许远程设备** 让局域网或 Tailscale tailnet 上已配对的设备连到这台电脑。
+
+- 有可达地址时，界面会列出 **局域网** 和 **Tailscale**。
+- 可以设置监听**端口**（字段里会显示默认值）。
+- 连接**未加密**。请在受信任的网络上使用，或走 Tailscale。
+
+从 CLI：
+
+```bash
+cocurdex host status
+cocurdex host remote enable [--port <port>]
+cocurdex host remote disable
+```
+
+## 配对设备
+
+**配对设备** 会生成一次性配对码。在另一台设备上打开配对链接，或在**配对此浏览器**界面输入配对码。
+
+| 设置 | 含义 |
+| --- | --- |
+| **设备名称** | 显示在已配对设备列表中的标签 |
+| **配对码有效期** | 10、30 或 60 分钟 |
+| **权限** | 新设备可以做什么（见下） |
+
+若要让对方打开链接，请先开启远程访问。配对码只能用一次。未完成的配对会出现在**待完成的配对**中，直到过期或你**取消**。
+
+```bash
+cocurdex host pair --label "My phone" [--scopes read,interact,approvals] [--ttl <minutes>]
+cocurdex host pairings
+cocurdex host pairing cancel <pairing-id>
+```
+
+CLI 默认权限是 `read`、`interact` 和 `approvals`。
+
+## 已配对设备可以做什么
+
+配对时选择权限。**主机管理**（改应用设置、管理设备）只属于这台电脑，不能授给已配对设备。
+
+| 权限 | 允许该设备 |
+| --- | --- |
+| **读取** | 查看会话、消息、笔记和 issue |
+| **交互** | 发送消息、停止会话、编辑笔记和 issue |
+| **审批** | 处理权限请求、问题和计划审批 |
+| **启动任务** | 启动会话、团队、脚本运行和工作流 |
+| **读取文件** | 读取工作区文件、差异和 Git 状态 |
+| **写入文件** | 编辑工作区文件、暂存和提交 |
+| **破坏性 Git 操作** | 丢弃更改、切换分支和推送 |
+| **凭据** | 管理模型提供方登录、API Key 和 MCP 服务器 |
+
+随时可在**已配对设备**中**吊销**。设备会立即断开，必须重新配对才能再连。
+
+```bash
+cocurdex host devices
+cocurdex host revoke <device-id>
+cocurdex host audit [--limit <n>]
+```
+
+**访问记录**记录本机上的配对、吊销和远程访问变更。
+
+## 相关
+
+- [桌面工作台](/zh-cn/docs/desktop/)
+- [Provider 与设置](/zh-cn/docs/providers-and-settings/)
+- [CLI](/zh-cn/docs/cli/#设备与本地网页)
+- [工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)

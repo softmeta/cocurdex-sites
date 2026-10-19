@@ -104,7 +104,7 @@ export const dict = {
       },
       {
         title: "Every pane is a peer",
-        body: "Integrated PTY terminal, code editor, PDF reader, and browser preview sit beside chat — not behind it. Review Git diffs by turn, branch, or commit, and undo a turn; annotate a page in Design Mode and send it straight to the agent.",
+        body: "Integrated PTY terminal, code editor, PDF reader, and browser preview sit beside chat — not behind it. Review Git diffs by turn, branch, or commit, and undo a turn; fork a session from any prompt; annotate a page in Design Mode and send it straight to the agent.",
         tag: "shell",
       },
       {
@@ -114,7 +114,7 @@ export const dict = {
       },
       {
         title: "Local-first data",
-        body: "Notes, issues, and search live in app-owned storage on your machine. No account required.",
+        body: "Notes, issues, and search live in app-owned storage on your machine. No account required. Open the same workspace in a browser on this computer, or pair another device with the permissions you choose.",
         tag: "data",
       },
     ],

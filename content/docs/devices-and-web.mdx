@@ -1,0 +1,88 @@
+---
+title: Devices and local web
+description: Open Cocurdex in a browser on this computer, or pair another device with scoped access to the same daemon.
+---
+
+The desktop app is the host. **Settings → Devices** lets you use that same host from a browser — on this computer, or on another device you pair.
+
+Nothing here replaces the daemon. The browser talks to the Cocurdex instance already running on the machine; it does not create a second workspace or a cloud account.
+
+## Open in browser (this computer)
+
+**Settings → Devices → Open in browser** loads the local web client against the same workspaces and sessions as the desktop app.
+
+The CLI prints that URL:
+
+```bash
+cocurdex web
+```
+
+The desktop app must be running so the daemon can serve the client. The URL includes a local token; treat it like access to this machine.
+
+## Remote access
+
+Off by default. **Allow remote devices** lets paired devices on your LAN or Tailscale tailnet connect to this computer.
+
+- The UI lists reachable **LAN** and **Tailscale** addresses when they exist.
+- You can set the listen **port** (default is shown in the field).
+- Connections are **not encrypted**. Use a trusted network or Tailscale.
+
+From the CLI:
+
+```bash
+cocurdex host status
+cocurdex host remote enable [--port <port>]
+cocurdex host remote disable
+```
+
+## Pair a device
+
+**Pair device** creates a one-time code. On the other device, open the pairing link or enter the code on the **Pair this browser** screen.
+
+| Setting | Meaning |
+| --- | --- |
+| **Device name** | Label shown in the paired-devices list |
+| **Code valid for** | 10, 30, or 60 minutes |
+| **Permissions** | What the new device may do (below) |
+
+Turn remote access on first if you want a link the other device can open. Codes work once. Pending pairings appear under **Pending pairings** until they expire or you **Cancel** them.
+
+```bash
+cocurdex host pair --label "My phone" [--scopes read,interact,approvals] [--ttl <minutes>]
+cocurdex host pairings
+cocurdex host pairing cancel <pairing-id>
+```
+
+Default CLI scopes are `read`, `interact`, and `approvals`.
+
+## What a paired device may do
+
+You choose scopes when pairing. **Host administration** (change app settings and manage devices) stays on this computer and cannot be granted to a paired device.
+
+| Permission | Lets the device |
+| --- | --- |
+| **Read** | See sessions, messages, notes, and issues |
+| **Interact** | Send messages, stop sessions, and edit notes and issues |
+| **Approvals** | Answer permission requests, questions, and plan approvals |
+| **Start work** | Start sessions, teams, script runs, and workflows |
+| **Read files** | Read workspace files, diffs, and Git status |
+| **Write files** | Edit workspace files, stage, and commit |
+| **Destructive Git** | Discard changes, check out branches, and push |
+| **Credentials** | Manage provider logins, API keys, and MCP servers |
+
+Revoke a device at any time from **Paired devices**. It disconnects immediately and must pair again to reconnect.
+
+```bash
+cocurdex host devices
+cocurdex host revoke <device-id>
+cocurdex host audit [--limit <n>]
+```
+
+**Access log** records pairing, revoke, and remote-access changes on this host.
+
+## Related
+
+- [Desktop workspace](/docs/desktop/)
+- [Providers and settings](/docs/providers-and-settings/)
+- [CLI](/docs/cli/#devices-and-local-web)
+- [Workspaces and data](/docs/concepts/workspaces-and-data/)

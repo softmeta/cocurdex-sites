@@ -1,13 +1,21 @@
 ---
 title: Provider 与设置
-description: Cocurdex 桌面端的 Agent CLI、Provider 配置、模型目录、MCP 服务器、网络代理、Git 提交信息模型及其他设置。
+description: Cocurdex 桌面端的 Agent CLI、Provider 配置、模型目录、MCP 服务器、网络代理、Git 提交信息模型、设备及其他设置。
 ---
 
-Cocurdex 的大部分配置位于桌面应用的**设置**中。本页覆盖会影响 Agent 与模型行为的设置：Agent CLI、Provider、MCP、网络、Git 和工作树环境。
+Cocurdex 的大部分配置位于桌面应用的**设置**中。本页覆盖会影响 Agent 与模型行为的设置：Agent CLI、Provider、MCP、网络、Git、工作树环境和设备。
 
 ## Agent CLI
 
 **设置 → Agent CLI** 列出新建会话时可以选用的所有 Agent。每一项会显示探测到的版本和状态（**内置**、**可用**、**未安装**、**需要升级**）、可复制的安装命令、文档链接，以及——对能上报的 Agent——你的套餐用量。**从 ACP Registry 添加**可以安装更多 Agent,或用你自己的命令注册一个。见 [Agent](/zh-cn/docs/agents/#acp-registry-agent)。
+
+同一页的**运行上限**限制同时执行的 agent 运行数量。超出上限的委派运行（队友和脚本编排的子 Agent）会排队等待；你自己发起的运行不受限制。
+
+| 控件 | 含义 |
+| --- | --- |
+| **并发运行数** | 所有会话合计的 agent 运行数（1–64） |
+| **每个 agent 并发运行数** | 同一 agent 同时运行的数量（1–64） |
+| **委派运行超时** | 队友或子 agent 超过该分钟数会被停止；留空表示不限时 |
 
 ## Provider 与模型
 
@@ -77,6 +85,10 @@ Provider 配置与模型同样可以脚本化：`cocurdex provider add|update|lo
 
 同样的能力可用 `cocurdex worktree settings` 脚本化——见 [CLI](/zh-cn/docs/cli/#工作树)。
 
+## 设备
+
+**设置 → 设备** 可在本机浏览器中打开同一主机，或把另一台设备按权限配对。见[设备与本地网页](/zh-cn/docs/devices-and-web/)。
+
 ## 设置助手
 
 设置页有一个**助手**侧栏：一个带 `settings` Agent 工具的对话会话。让它「切换到深色模式」「检查我的通知设置」或者问「你能改哪些设置？」，它会替你读取并修改设置目录——包括项目工作树的 setup 与 cleanup 脚本。需要你确认的改动会先以提议形式给出。
@@ -99,12 +111,12 @@ Provider 配置与模型同样可以脚本化：`cocurdex provider add|update|lo
 
 | 分区 | 内容 |
 | --- | --- |
-| **常规** | 语言、通知、**Shell 命令**（把 `cocurdex` 安装到 `PATH`）、daemon 状态与重启 |
-| **外观** | 主题（跟随系统 / 深色 / 浅色——双主题对齐是产品要求）、主题预设、字体 |
-| **编辑器** | 编辑器字体与行为、代码缩略图 |
+| **常规** | 聊天布局、对话视图、HTML 预览位置、发送快捷键、后续消息排队/引导、语言、通知（含完成提示音）、**Shell 命令**（把 `cocurdex` 安装到 `PATH`）、daemon 状态与重启 |
+| **外观** | 主题（跟随系统 / 深色 / 浅色——双主题对齐是产品要求）、配色主题预设、界面与代码字体 |
+| **编辑器** | 代码 MiniMap |
 | **快捷键** | 可重新绑定的键盘快捷键；`null` 覆盖表示解绑 |
 | **服务商** | Provider 配置与模型目录（见上文） |
-| **Agent CLI** | 已安装的 Agent、版本、安装提示与 ACP Registry(见上文) |
+| **Agent CLI** | 已安装的 Agent、版本、安装提示、ACP Registry 与[运行上限](#agent-cli)（见上文） |
 | **角色** | 编辑或删除保存的 Agent 预设及其头像和描述；见 [Agent](/zh-cn/docs/agents/#agent-角色) |
 | **团队** | 可复用的[团队模板](/zh-cn/docs/teams/#团队模板) |
 | **MCP** | 供 Pi 使用的 MCP 服务器（见上文） |
@@ -112,7 +124,8 @@ Provider 配置与模型同样可以脚本化：`cocurdex provider add|update|lo
 | **网络** | 出站代理（见上文） |
 | **Git** | 提交信息模型（见上文） |
 | **工作树** / **工作区** | 托管工作树根目录与清单；按工作区的脚本与 Actions(见上文) |
-| **已归档会话** | 浏览你归档的会话 |
+| **设备** | 本地网页客户端与已配对的远程设备；见[设备与本地网页](/zh-cn/docs/devices-and-web/) |
+| **已归档会话** | 浏览你归档的会话；恢复或永久删除 |
 | **开源许可** | 第三方许可 |
 | **关于** | 版本、更新检查与更新通道；见[应用更新](#应用更新) |
 | **诊断** | 导出诊断信息、详细日志 |
@@ -120,5 +133,6 @@ Provider 配置与模型同样可以脚本化：`cocurdex provider add|update|lo
 ## 相关
 
 - [Agents](/zh-cn/docs/agents/)
+- [设备与本地网页](/zh-cn/docs/devices-and-web/)
 - [CLI](/zh-cn/docs/cli/)
 - [桌面工作台](/zh-cn/docs/desktop/)

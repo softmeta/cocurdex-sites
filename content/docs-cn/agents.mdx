@@ -127,7 +127,7 @@ Cocurdex 会尽可能复用你已有的 provider 配置(例如 `~/.codex` 下的
 
 ### 其他 ACP Registry Agent
 
-Cursor、Devin 及其他 Registry Agent 在 Cocurdex 侧没有独立的权限模式列表。工具审批遵循 Agent 自身的 ACP 权限请求，和其他 Agent 一样以权限卡片呈现。
+Cursor、Devin 及其他 Registry Agent 在 Cocurdex 侧没有独立的权限模式列表。工具审批遵循 Agent 自身的 ACP 权限请求，和其他 Agent 一样以权限卡片呈现。许多 Registry Agent 仍会在输入框里提供**会话模式**（例如 Devin 的询问 / 计划 / 自主）。这些选项来自已安装的 Agent，而不是 Cocurdex 的一张表。
 
 ### 内置 Pi(`pi`)
 
@@ -174,6 +174,10 @@ daemon 为每个会话挂载一个本地 MCP 工具服务。工具按组划分�
 
 一些运行时可以在**不重建** provider 会话的情况下切换**模型**、**思考/推理力度**、**权限**或相关轴。这能保持对话连续性和 provider 侧的缓存。如果某个 Agent 缺少某个控制项，那是有意不支持——没有「暗中重启会话」的兜底。
 
+会话空闲时，也可以在输入框里**切换 Agent**，或**分叉会话**（以及在用户消息上**从这里分叉**）。见[分叉与切换 Agent](/zh-cn/docs/desktop/#分叉与切换-agent)。**执行树**展示嵌套的运行和工具调用。
+
+**设置 → Agent CLI → 运行上限** 限制并发的委派工作；你自己发起的会话不会被排队。见 [Provider 与设置](/zh-cn/docs/providers-and-settings/#agent-cli)。
+
 ## 引导与后续输入
 
 当 Agent 支持**引导**(steering)时，你可以在运行进行中发送后续指引（或把后续输入排队到当前轮次结束——可在对话设置中配置）。当引导不可用时，等待当前轮次结束或停止会话。
@@ -197,5 +201,7 @@ cocurdex session stop <session-id>
 ## 相关
 
 - [桌面工作台](/zh-cn/docs/desktop/)
+- [团队与编排](/zh-cn/docs/teams/)
 - [Skills](/zh-cn/docs/skills/)
 - [CLI](/zh-cn/docs/cli/)
+- [设备与本地网页](/zh-cn/docs/devices-and-web/)
