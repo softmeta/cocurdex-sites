@@ -91,7 +91,7 @@ export const dict: MarketingDict = {
       },
       {
         title: "每个面板都是一等公民",
-        body: "集成 PTY 终端、代码编辑器、PDF 阅读器和浏览器预览与对话并列，而不是藏在后面。Git 面板可按回合、分支或提交查看差异，也能撤销某个回合；可以从任意提示分叉会话；还可以在设计模式里标注页面并直接发给 Agent。",
+        body: "集成 PTY 终端、代码编辑器、PDF 阅读器、演示文稿和浏览器预览与对话并列，而不是藏在后面。Git 面板可按回合、分支或提交查看差异，也能撤销某个回合；可以从任意提示分叉会话；还可以在设计模式里标注页面并直接发给 Agent。",
         tag: "shell",
       },
       {
@@ -101,7 +101,7 @@ export const dict: MarketingDict = {
       },
       {
         title: "本地优先的数据",
-        body: "笔记、Issue 与搜索索引保存在本机的应用私有存储中，无需注册账号。可在本机浏览器打开同一工作区，或按你选择的权限配对另一台设备。",
+        body: "笔记、Issue、演示文稿与搜索索引保存在本机的应用私有存储中，无需注册账号。可在本机浏览器打开同一工作区，或按你选择的权限配对另一台设备。",
         tag: "data",
       },
     ],
@@ -151,7 +151,7 @@ export const dict: MarketingDict = {
     cliMore: "CLI 参考 →",
     skillsTitle: "产品 Skills",
     skillsBody:
-      "可选的 cocurdex-* skill 包，教会 Agent 在同一套数据上执行 笔记 → Issue → 交付 的循环，以及带团队、改设置。",
+      "可选的 cocurdex-* skill 包，教会 Agent 在同一套数据上执行 笔记 → Issue → 交付 的循环，以及带团队、改设置、做演示文稿。",
     ctaHeading: "别再在 Agent 之间来回切标签页。",
     ctaBody: "macOS、Windows 与 Linux 预发布构建。无需账号。",
     gettingStarted: "快速上手",

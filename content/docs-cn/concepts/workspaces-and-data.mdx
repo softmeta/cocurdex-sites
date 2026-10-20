@@ -1,6 +1,6 @@
 ---
 title: 工作区与数据
-description: Cocurdex 如何在本机存储工作区、笔记、Issue 与搜索数据——以及什么保持私有。
+description: Cocurdex 如何在本机存储工作区、笔记、Issue、演示文稿与搜索数据——以及什么保持私有。
 ---
 
 ## 工作区
@@ -23,13 +23,13 @@ cocurdex open /path/to/project
 cocurdex workspace list
 ```
 
-会话和许多产品视图围绕当前工作区组织。笔记和 Issue 可选地关联到某个工作区 id 以便过滤；默认它们不是「项目树里的文件」。
+会话和许多产品视图围绕当前工作区组织。笔记、Issue 和演示文稿可以可选地关联到某个工作区 id；默认它们不是「项目树里的文件」。演示文稿列表把全部演示文稿放在同一份列表里。
 
 本机的[本地网页客户端](/zh-cn/docs/devices-and-web/)——以及你允许的[已配对设备](/zh-cn/docs/devices-and-web/)——连的是同一个 daemon 和同一批工作区。
 
 ## 应用私有数据
 
-笔记、Issue、视图、标签、链接和搜索索引存放在**应用私有存储**(`cocurdex.sqlite`)中，而不是双写的 Markdown 树。
+笔记、Issue、演示文稿、视图、标签、链接和搜索索引存放在**应用私有存储**(`cocurdex.sqlite`)中，而不是双写的 Markdown 树。
 
 重要规则：
 
@@ -44,7 +44,7 @@ cocurdex workspace list
 
 | 数据 | 权威方 |
 | --- | --- |
-| 笔记、Issue、视图、标签、链接、FTS 索引 | Daemon + `cocurdex.sqlite` |
+| 笔记、Issue、演示文稿、视图、标签、链接、FTS 索引 | Daemon + `cocurdex.sqlite` |
 | Agent 角色、团队任务、工作树设置、会话记录 | Daemon + `cocurdex.sqlite` |
 | 已安装的 ACP Registry Agent | 记录在应用设置中；下载的二进制位于应用数据目录 |
 | 托管的 git 工作树 | 由 daemon 在配置的工作树根目录下创建 |
@@ -64,7 +64,7 @@ cocurdex workspace list
 
 ## 为什么这样设计
 
-以路径为身份的文件树让稳定 id、事务、全文搜索和反向链接更难实现。SQLite 提供了这些性质，而不要求每个工具都去解析仓库。Agent 通过 `cocurdex note|issue|search …` 保持互操作，而不是另造平行的 `.scratch` 树。
+以路径为身份的文件树让稳定 id、事务、全文搜索和反向链接更难实现。SQLite 提供了这些性质，而不要求每个工具都去解析仓库。Agent 通过 `cocurdex note|issue|deck|search …` 保持互操作，而不是另造平行的 `.scratch` 树。
 
 ## Daemon
 
@@ -98,11 +98,12 @@ cocurdex daemon status
 - 不要在脚本里打开或迁移 `cocurdex.sqlite`
 - 不要把私有 schema 当集成面来爬取
 - 优先使用 CLI `--json` 和返回的 UUID
-- 在你显式发布之前，把产品笔记/Issue 当作私有
+- 在你显式发布之前，把产品笔记、Issue 和演示文稿当作私有
 
 ## 相关
 
 - [笔记与 Issue](/zh-cn/docs/notes-and-issues/)
+- [演示文稿](/zh-cn/docs/decks/)
 - [CLI](/zh-cn/docs/cli/)
 - [Skills](/zh-cn/docs/skills/)
 - [桌面工作台](/zh-cn/docs/desktop/)

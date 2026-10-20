@@ -1,6 +1,6 @@
 ---
 title: Cocurdex 文档
-description: Cocurdex 多 Agent 桌面工作台的产品文档——会话、Agent、团队、笔记、Issue、设备与 CLI。
+description: Cocurdex 多 Agent 桌面工作台的产品文档——会话、Agent、团队、笔记、Issue、演示文稿、设备与 CLI。
 ---
 
 Cocurdex 是一个**桌面优先的多 Agent 开发工作台**。对话、集成终端、编辑器和浏览器预览共处一个外壳，让你同时运行多个 AI 编程 Agent，而不会搞丢哪个会话在等你。
@@ -11,8 +11,9 @@ Cocurdex 是一个**桌面优先的多 Agent 开发工作台**。对话、集成
   <Card title="Agent" href="/zh-cn/docs/agents/" description="Claude、Codex、OpenCode、Pi,以及 Cursor、Devin、Grok Build 等 ACP Registry Agent。" />
   <Card title="团队与编排" href="/zh-cn/docs/teams/" description="Agent 团队、会话间消息，以及经你批准后把工作分发给子 Agent 的脚本编排。" />
   <Card title="笔记与 Issue" href="/zh-cn/docs/notes-and-issues/" description="应用私有的笔记、表格、Issue、看板视图、搜索与反向链接。" />
+  <Card title="演示文稿" href="/zh-cn/docs/decks/" description="演示文稿标签、Markdown 幻灯片、主题、演讲者视图，以及 PPTX 或 PDF 导出。" />
   <Card title="设备与本地网页" href="/zh-cn/docs/devices-and-web/" description="在浏览器中打开同一主机，或把另一台设备按权限配对。" />
-  <Card title="CLI" href="/zh-cn/docs/cli/" description="用 --json 脚本化笔记、Issue、会话、团队、设备与工作树。" />
+  <Card title="CLI" href="/zh-cn/docs/cli/" description="用 --json 脚本化笔记、Issue、演示文稿、会话、团队、设备与工作树。" />
 </Cards>
 
 ## 心智模型
@@ -21,21 +22,22 @@ Cocurdex 是一个**桌面优先的多 Agent 开发工作台**。对话、集成
 2. **并行会话**——同时运行多个 Agent，不把它们合并进同一段对话历史。
 3. **如实的状态**——状态始终具体：思考中、使用工具中、等待你、有未读结果。
 4. **Agent 协调 Agent，但由你掌控**——团队和脚本编排都是持久化的、由 daemon 托管，并受你的批准约束。
-5. **本地优先的产品数据**——笔记和 Issue 存放在本机的应用私有存储中。CLI 是受支持的外部边界；SQLite 文件不是公开 API。
+5. **本地优先的产品数据**——笔记、Issue 和演示文稿存放在本机的应用私有存储中。CLI 是受支持的外部边界；SQLite 文件不是公开 API。
 
 ## 你会得到什么
 
 | 界面 | 作用 |
 | --- | --- |
-| **桌面应用** | 运行 Agent、编辑文件、预览 UI、管理笔记与 Issue 的主要场所 |
+| **桌面应用** | 运行 Agent、编辑文件、预览 UI、管理笔记、Issue 与演示文稿的主要场所 |
 | **Daemon** | 本地进程，掌管数据库、会话、团队、脚本编排、工作树和已安装的 ACP Agent |
-| **CLI（`cocurdex`）** | 打开文件夹；管理笔记、Issue、搜索、Skills、Provider 与工作树；驱动会话和团队 |
-| **产品 Skills** | 可选的 Agent skills（`cocurdex-*`），在应用私有数据上完成 PRD → Issue → 交付 |
+| **CLI（`cocurdex`）** | 打开文件夹；管理笔记、Issue、演示文稿、搜索、Skills、Provider 与工作树；驱动会话和团队 |
+| **产品 Skills** | 可选的 Agent skills（`cocurdex-*`），在应用私有数据上完成 PRD → Issue → 交付，以及演示文稿 |
 
 ## 全部页面
 
 | 目标 | 页面 |
 | --- | --- |
+| 演示文稿、放映与导出 | [演示文稿](/zh-cn/docs/decks/) |
 | 面向 Agent 的产品 Skills | [Skills](/zh-cn/docs/skills/) |
 | Provider、MCP、代理、Git、设备、诊断 | [Provider 与设置](/zh-cn/docs/providers-and-settings/) |
 | 浏览器客户端与已配对设备 | [设备与本地网页](/zh-cn/docs/devices-and-web/) |

@@ -1,0 +1,268 @@
+---
+title: 演示文稿
+description: Cocurdex 里的应用私有演示文稿——演示文稿面板、Markdown 编写、主题、放映，以及 cocurdex deck CLI。
+---
+
+演示文稿和[笔记与 Issue](/zh-cn/docs/notes-and-issues/)一样，是**产品记录**。它们存放在应用私有存储中，有稳定 id，并出现在桌面右侧的**演示文稿**标签里。Agent 通过 `cocurdex deck` 和 `/cocurdex-deck` skill 创建和修改。需要拿到应用外面的副本时，再导出 PowerPoint 或 PDF。
+
+每一页都是 **16:9** 的画布，**1280×720**。文字会缩放到放进它所在的区域。一份演示文稿使用一个主题，主题决定全部版式的颜色、字体、背景，以及页码这类装饰。
+
+## 演示文稿面板
+
+从右侧面板的视图切换器打开**演示文稿**。
+
+左侧列表列出全部演示文稿。**新建演示文稿**会生成一份带封面的**未命名演示文稿**，并立刻进入改名。**导入 PowerPoint (.pptx)** 读入已有文件。双击标题，或选择**重命名**，即可就地改名——和[笔记](/zh-cn/docs/notes-and-issues/)标题用的是同一套操作。**删除**会要求确认；演示文稿及其幻灯片会被移除。行上的菜单也可以导出。**隐藏演示文稿列表**把列表收起，**显示演示文稿列表**再展开。拖动边缘可以改宽度。
+
+列表为空时显示**还没有演示文稿**，并提供**新建演示文稿**和**导入 PowerPoint**。
+
+`create` 和 `import` 可以记下工作区 id。列表本身不按工作区分组，所有演示文稿都在同一份列表里。
+
+导入 PowerPoint 和插入图片走本机文件选择，所以这两项在桌面应用里。[浏览器客户端](/zh-cn/docs/devices-and-web/)仍可打开、编辑、放映和下载演示文稿。
+
+## 查看与编辑
+
+选中一份演示文稿即可打开。工具栏显示标题和 **1 / N**，然后是：
+
+| 控件 | 作用 |
+| --- | --- |
+| **添加幻灯片** | 在当前页之后插入一种[版式](#版式) |
+| **版式** | 更换当前页的版式，并保留内容 |
+| **插入图片** | 把 PNG 或 JPEG 加到当前页（桌面应用） |
+| **主题** | 为整份演示文稿套用主题，菜单里带每套主题的预览 |
+| **放映** | 全屏放映这份演示文稿 |
+| **演讲者视图** | 本屏看备注，观众窗口看幻灯片 |
+| **导出** | 下载**导出 PPTX**或**导出 PDF** |
+
+幻灯片居中显示，并保持 16:9。单击一块文字即可编辑。空区域会显示**单击添加标题**、**单击添加副标题**或**单击添加文本**。按 Escape 取消。点到别处，或按 Primary+Enter，会保存。幻灯片下方的**演讲者备注**（占位文字是**添加演讲者备注**）在离开输入框时保存。
+
+更换版式会留下已经写好的内容。新版式本来就有的槽位留在原处。从单栏正文改成两栏时，正文会移到左栏；两栏都是文字时再改回去，会合并进正文。新版式放不下的内容仍留在这一页上，位置不变，变成独立元素。
+
+右键图片可**替换图片…**或**删除图片**。图片处于焦点时，Delete 或 Backspace 也会删掉它。新图片按原比例放在幻灯片中央。
+
+备注下方的胶片条列出每一页。单击缩略图即可选中，上方会显示这一页的备注。右键缩略图可**复制幻灯片**、**前移**、**后移**和**删除幻灯片**。缩略图拥有焦点时，方向键和 Page Up / Page Down 会移动选中项，焦点跟着走。Home 和 End 跳到第一张和最后一张。
+
+如果保存时和另一处编辑撞在一起，面板会提示**无法保存更改**，并重新载入最新内容。
+
+## 放映
+
+**放映**用黑色的 16:9 舞台把当前页铺满屏幕。单击，或用下面的键，可以翻页。Escape 退出全屏，并回到正在放映的那一页。
+
+**演讲者视图**会打开标题为 **Cocurdex Presentation** 的观众窗口，并用演讲者画面盖住当前窗口：
+
+| 区域 | 显示 |
+| --- | --- |
+| 当前幻灯片 | 观众看到的这一页 |
+| **下一张** | 后面那一页，或**已是最后一张** |
+| **演讲者备注** | 这一页的备注，或**没有演讲者备注** |
+| 已用时间 | 从开始放映起经过的时间 |
+| **上一张** / **下一张** | 前后翻页 |
+| **结束放映** | 关闭观众窗口，并回到正在放映的那一页 |
+
+接了另一块屏幕时，观众窗口会在那块屏幕上全屏。只有一块屏幕时，它在当前屏幕上开一个窗口，演讲者画面会提示**把观众窗口拖到投影屏或共享的屏幕上。**关掉观众窗口即结束放映。
+
+在浏览器客户端里，**演讲者视图**用弹出窗口打开观众视图。若浏览器拦截了弹出窗口，应用会提示**无法打开观众窗口。请允许此页面弹出窗口后重试。**
+
+放映、演讲者视图和观众窗口使用下面这些键。它们和**设置 → 快捷键**里的快捷键是两套。
+
+| 键 | 作用 |
+| --- | --- |
+| 右、下、Page Down、空格、Enter、N | 下一页 |
+| 左、上、Page Up、Backspace、P | 上一页 |
+| Home / End | 第一页或最后一页 |
+| Escape | 结束放映，并回到正在放映的那一页。在观众窗口里，Escape 会关掉该窗口并结束放映 |
+| 单击 | 在全屏和观众窗口里翻到下一页 |
+
+## 主题与版式
+
+从**主题**菜单挑选，或用 [`deck edit`](#用-ops-修改) 设置主题 id。菜单名是应用里看到的名字；id 是 CLI 使用的名字。
+
+| Id | 菜单 | 适合 |
+| --- | --- | --- |
+| `default` | 默认 | 简洁，适合任何主题 |
+| `midnight` | 午夜 | 深色，适合任何主题 |
+| `sand` | 沙色 | 暖色，适合任何主题 |
+| `forest` | 森林 | 沉静，适合任何主题 |
+| `tech` | 发布会 | 极简科技 · 产品与技术 |
+| `editorial` | 杂志 | 编辑杂志 · 研究与故事 |
+| `academic` | 讲堂 | 学院经典 · 教学与讲座 |
+| `pop` | 撞色 | 大胆撞色 · 营销与提案 |
+| `boardroom` | 董事会 | 商务稳重 · 商业与咨询 |
+| `nebula` | 星云 | 深色渐变 · AI 与发布会 |
+| `ember` | 余烬 | 深色渐变 · 创意与活动 |
+| `swiss` | 瑞士 | 战略、咨询与规划 |
+| `playful` | 波普 | 课堂、工作坊与创意提案 |
+| `noir` | 黑金 | 金融、年报与高端品牌 |
+| `botanical` | 植物 | 健康、可持续发展与公益 |
+| `blueprint` | 蓝图 | 工程评审与技术方案 |
+| `zen` | 和风 | 文化、品牌故事与餐饮 |
+| `retro` | 复古 | 活动、音乐节与生活方式 |
+| `terminal` | 终端 | 开发者分享与黑客松 |
+| `bauhaus` | 包豪斯 | 设计、艺术与建筑 |
+| `clinic` | 清新 | 医疗健康与 SaaS 产品 |
+
+在瑞士、波普、黑金、植物、蓝图、和风、复古、终端、包豪斯和清新里，**章节**页会显示一个大号章节号，按这份演示文稿里的章节页计数。章节间断开时用这个版式，标题里不必再写编号。
+
+### 版式
+
+| Id | 菜单 | 槽位 |
+| --- | --- | --- |
+| `cover` | 封面 | 标题、副标题 |
+| `section` | 章节 | 标题、副标题 |
+| `title-content` | 标题和内容 | 标题、正文 |
+| `two-content` | 两栏 | 标题、左栏、右栏 |
+| `title-only` | 仅标题 | 标题 |
+| `closing` | 结束页 | 标题、副标题 |
+| `blank` | 空白 | 无 |
+
+只有版式定义了的槽位会显示出来。正文可以是文字或表格。
+
+## 用 Markdown 编写
+
+用 Markdown 写完整份演示文稿最快。应用会把它编译成幻灯片；编译之后，它就是可以在面板里继续改的普通产品数据。
+
+- 单独一行 `---` 用来分页。代码块里的分隔线不会分页。
+- 标题是 `#`、下面只有普通段落的一页是标题页。第一页成为封面，最后一页成为结束页，中间的成为章节页。段落成为副标题。
+- `##` 标题是内容页的标题。列表（项目符号、编号或任务列表，最多五级）、段落、引用和代码进入正文。
+- 恰好两个 `###` 小节，且第一个紧跟在标题后面，会变成两栏。
+- 表格会变成表格页。表格前后的文字成为表格上方的说明。一页只保留一个表格，多出来的会被丢掉并报告。
+- 没有正文的 `##` 标题是仅标题页。
+- 以 `Notes:` 或 `备注：` 开头的段落开始演讲者备注。这一页里它后面的内容都是备注。
+- 粗体、斜体、删除线、行内代码和链接会保留。
+- Markdown 图片会被跳过并报告。用**插入图片**或 [`cocurdex deck image`](#图片) 添加图片。
+
+`deck create` 在没有传 `--title` 时，用第一个标题作为演示文稿标题。
+
+```markdown
+# Q3 Review
+Platform team · October 2026
+
+---
+
+## Highlights
+- Shipped sync to all users
+  - p95 latency down 38%
+- Two incidents, both resolved within SLA
+
+Notes: Open with the latency win.
+
+---
+
+## Plan
+### Now
+- Hardening
+### Next
+- Mobile client
+
+---
+
+# Thank you
+Questions?
+```
+
+把文件传给 `deck create` 或 `deck update`。用 Markdown 更新会换掉每一页及其 id，并把主题设为 `default`。只有传入 `--title` 时标题才会变。别人已经在改的演示文稿，优先用 [ops](#用-ops-修改)。
+
+## 检查
+
+`deck create`、`deck update` 和 `deck edit` 会返回 `warnings` 和 `issues`。warnings 是编译时跳过的 Markdown。issues 是结果里的问题。`deck show` 带上当前的 issues，`deck check` 只返回 issues。
+
+| 种类 | 含义 |
+| --- | --- |
+| `overflow` | 文字或表格即使用最小字号也放不下。缩短内容，或把这一页拆开 |
+| `empty-slide` | 这一页没有内容 |
+| `unknown-slot` | 内容放在该版式不显示的槽位里，因此被藏起来 |
+
+把 issues 处理完，再把这份演示文稿当作完成。
+
+## CLI
+
+需要 daemon 正在运行（打开桌面应用即可）。完整命令索引见 [CLI](/zh-cn/docs/cli/#演示文稿)。
+
+```bash
+cocurdex deck list [--json]
+cocurdex deck show <id> [--json]
+cocurdex deck create [--title <title>] [--markdown-file <path|-> | --content-file <path|->] [--workspace <id>] [--json]
+cocurdex deck update <id> [--title <title>] [--markdown-file <path|-> | --content-file <path|->] [--expected-revision <n>] [--json]
+cocurdex deck edit <id> --ops-file <path|-> [--expected-revision <n>] [--json]
+cocurdex deck image <id> --slide <slideId> --file <path.png|path.jpg> [--alt <text>] [--replace <elementId>] [--expected-revision <n>] [--json]
+cocurdex deck check <id> [--json]
+cocurdex deck export <id> --output <path.pptx|path.pdf> [--format pptx|pdf] [--json]
+cocurdex deck import <file.pptx> [--title <title>] [--workspace <id>] [--json]
+cocurdex deck read <file.pptx> [--json]
+cocurdex deck delete <id> [--json]
+```
+
+| Flag | 含义 |
+| --- | --- |
+| `--title` | 标题。创建时若省略，先用 Markdown 的第一个标题，否则为 **Untitled deck** |
+| `--markdown-file` | Markdown 源。`-` 从 stdin 读取。可选，且与 `--content-file` 互斥 |
+| `--content-file` | 结构化的演示文稿 JSON。`-` 从 stdin 读取。可选，且与 `--markdown-file` 互斥。更新时替换演示文稿内容 |
+| `--workspace` | 可选，记在这份演示文稿上的工作区 id |
+| `--ops-file` | ops 的 JSON 数组，或 `{ "ops": [ ... ] }`。`-` 从 stdin 读取 |
+| `--expected-revision` | 早先 `deck show` 得到的修订号。演示文稿若已变化，写入会失败并提示 `Deck was modified`；重新 show，再应用一次并重试 |
+| `--output` | 要写入的文件。省略 `--format` 时由扩展名决定格式 |
+| `--format` | `pptx` 或 `pdf` |
+| `--slide` / `--file` | `deck image` 的幻灯片 id，以及 PNG 或 JPEG 路径 |
+| `--alt` | 和新图片一起保存的说明 |
+| `--replace` | 要换掉图片的元素 id。框的位置和大小保持不变 |
+
+同时传入 `--markdown-file` 和 `--content-file` 会失败，提示 `Pass either --markdown-file or --content-file, not both`。两个都不传时，`deck create` 存一份没有幻灯片的演示文稿，`deck update` 保留现有幻灯片。只传 `--title` 会改标题，幻灯片保持原样。
+
+`deck list` 打印 id、标题、幻灯片数量、修订号和更新时间。`deck show` 打印演示文稿及其检查问题。`deck read` 把 Markdown 打到终端；`--json` 额外给出每一页的标题、文本行和备注。读取文件不会新建演示文稿。
+
+在本机上，`deck export` 会把 `--output` 写到 daemon 能够写入的位置。面板里的**导出**则是下载文件。[已配对设备](/zh-cn/docs/devices-and-web/)拥有**读取**权限时可以查看演示文稿并下载导出。新建、编辑、导入和添加图片需要**交互**。`deck read` 需要**读取文件**，`deck export` 需要**写入文件**。从已配对设备执行时，`deck read`、`deck import`、`deck image` 和 `deck export` 只能使用工作区里的路径。
+
+### 用 ops 修改
+
+`deck edit` 按顺序应用 ops，全部成功才保存。没有碰到的幻灯片和元素 id 保持不变。id 从 `deck show --json` 读取（`content.slides[].id` 和每个元素的 `id`），或从某条 issue 的 `target` 读取。
+
+```json
+[
+  { "op": "setText", "slideId": "<id>", "target": "slot:title", "markdown": "Q3 **Review**" },
+  { "op": "setNotes", "slideId": "<id>", "notes": "Open with the latency win." },
+  { "op": "insertSlides", "index": 2, "markdown": "## Risks\n- Latency" },
+  { "op": "addSlide", "layout": "title-content", "index": 3 },
+  { "op": "duplicateSlide", "slideId": "<id>" },
+  { "op": "moveSlide", "slideId": "<id>", "index": 0 },
+  { "op": "deleteSlide", "slideId": "<id>" },
+  { "op": "setLayout", "slideId": "<id>", "layout": "two-content" },
+  { "op": "setTheme", "theme": "midnight" },
+  { "op": "deleteElement", "slideId": "<id>", "elementId": "<element-id>" }
+]
+```
+
+`setText` 替换一个槽位（`slot:title`、`slot:body` 等）或一个自由文本元素（`element:<id>`）。传 `markdown` 或 `paragraphs` 其中之一，并且槽位必须是该版式拥有的。`insertSlides` 使用上面的 Markdown 规则；省略 `index` 则追加到末尾。`setLayout` 遵循[版式规则](#查看与编辑)。
+
+`--content-file` 是另一条精确路径：改 `deck show` 得到的 JSON 再送回去。版式 id、槽位名、演讲者备注、主题 id，以及元素的框（在 1280×720 画布上）都在这份文档里。内容更新会替换演示文稿内容；只有传入 `--title` 时标题才会变。演示文稿已经在被编辑时，优先用 ops。
+
+## 图片
+
+可以添加 PNG 或 JPEG，最大 20 MB。应用会留下自己的副本，源文件挪走之后演示文稿仍然可用。
+
+```bash
+cocurdex deck image <deck-id> --slide <slide-id> --file ./chart.png --alt "Q3 latency chart"
+cocurdex deck image <deck-id> --slide <slide-id> --file ./chart-v2.png --replace <element-id>
+```
+
+`--replace` 换掉图片并保留原来的框。用**删除图片**或 `deleteElement` 这个 op 移除。ops 或内容 JSON 里引用的图片，必须先用 `deck image` 导入。
+
+## PowerPoint
+
+`deck read <file.pptx>` 把幻灯片文字和演讲者备注打成演示文稿 Markdown，页与页之间是 `---`，图片写成 `![alt](file)`。它不会新建演示文稿。
+
+`deck import <file.pptx>` 新建一份演示文稿，原文件保持不动。标题页、标题加内容、两栏和仅标题会按原来的顺序映射到演示文稿版式。其他形状变成自由文本、表格和图片。图表、SmartArt、视频，以及 PNG / JPEG 以外的图片会被跳过。面板会提示**已导入，部分内容未能保留**，并列出跳过的内容；CLI 把同样的说明放在 `warnings` 里。字体、颜色和背景跟随演示文稿主题。导入后跑一次 `deck check`——导入的文字可能放不进主题的字号。
+
+**导出 PPTX** 是可以在 PowerPoint、Keynote 或 WPS 里继续编辑的 PowerPoint 文件。**导出 PDF** 是幻灯片的固定副本。
+
+## 和 Agent 一起用
+
+安装产品 skill 包，然后调用 `/cocurdex-deck`。这个 skill 走同一套 CLI，Agent 不会去打开数据库。见 [Skills](/zh-cn/docs/skills/)。
+
+Agent 工作时，人可以在面板里改同一份演示文稿。Agent 应带上最近一次 `deck show` 的 `--expected-revision`；若写入返回 `Deck was modified`，就重新 show 再试。
+
+## 相关
+
+- [桌面工作台](/zh-cn/docs/desktop/)
+- [笔记与 Issue](/zh-cn/docs/notes-and-issues/)
+- [CLI](/zh-cn/docs/cli/)
+- [Skills](/zh-cn/docs/skills/)
+- [工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)

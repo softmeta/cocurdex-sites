@@ -1,6 +1,6 @@
 ---
 title: Workspaces and data
-description: How Cocurdex stores workspaces, notes, issues, and search data on your machine — and what stays private.
+description: How Cocurdex stores workspaces, notes, issues, slide decks, and search data on your machine — and what stays private.
 ---
 
 ## Workspace
@@ -23,13 +23,13 @@ cocurdex open /path/to/project
 cocurdex workspace list
 ```
 
-Sessions and many product views are oriented around the active workspace. Notes and issues may optionally associate with a workspace id for filtering; they are not “files inside the project tree” by default.
+Sessions and many product views are oriented around the active workspace. Notes, issues, and decks may optionally associate with a workspace id; they are not “files inside the project tree” by default. The Decks list shows every deck in one list.
 
 The [local web client](/docs/devices-and-web/) on this computer — and any [paired device](/docs/devices-and-web/) you allow — talks to the same daemon and the same workspaces.
 
 ## App-owned data
 
-Notes, issues, views, tags, links, and search indexes live in **app-owned storage** (`cocurdex.sqlite`), not as a dual-write Markdown tree.
+Notes, issues, slide decks, views, tags, links, and search indexes live in **app-owned storage** (`cocurdex.sqlite`), not as a dual-write Markdown tree.
 
 Important rules:
 
@@ -44,7 +44,7 @@ Important rules:
 
 | Data | Authority |
 | --- | --- |
-| Notes, issues, views, tags, links, FTS indexes | Daemon + `cocurdex.sqlite` |
+| Notes, issues, slide decks, views, tags, links, FTS indexes | Daemon + `cocurdex.sqlite` |
 | Agent roles, team tasks, worktree settings, session records | Daemon + `cocurdex.sqlite` |
 | Installed ACP Registry agents | Recorded in app settings; downloaded binaries live in the app's data directory |
 | Managed git worktrees | Created by the daemon under the configured worktree root |
@@ -64,7 +64,7 @@ This location stays the same across releases, so updates keep reading your exist
 
 ## Why this exists
 
-Path-as-identity file trees make stable IDs, transactions, full-text search, and backlinks harder. SQLite gives those properties without asking every tool to parse the repo. Agents keep interoperability through `cocurdex note|issue|search …` instead of inventing parallel `.scratch` trees.
+Path-as-identity file trees make stable IDs, transactions, full-text search, and backlinks harder. SQLite gives those properties without asking every tool to parse the repo. Agents keep interoperability through `cocurdex note|issue|deck|search …` instead of inventing parallel `.scratch` trees.
 
 ## Daemon
 
@@ -98,11 +98,12 @@ End-user behavior for sync will appear here as features ship.
 - Do not open or migrate `cocurdex.sqlite` in scripts  
 - Do not scrape private schema as an integration surface  
 - Prefer CLI `--json` and returned UUIDs  
-- Treat product notes/issues as private until you explicitly publish  
+- Treat product notes, issues, and decks as private until you explicitly publish  
 
 ## Related
 
 - [Notes and issues](/docs/notes-and-issues/)  
+- [Slide decks](/docs/decks/)  
 - [CLI](/docs/cli/)  
 - [Skills](/docs/skills/)  
 - [Desktop workspace](/docs/desktop/)  

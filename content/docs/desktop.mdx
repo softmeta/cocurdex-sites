@@ -1,6 +1,6 @@
 ---
 title: Desktop workspace
-description: How the Cocurdex desktop shell organizes sessions, chat, Git review, worktrees, terminal, editor, browser preview, PDF reader, session fork, and keyboard shortcuts.
+description: How the Cocurdex desktop shell organizes sessions, chat, Git review, worktrees, terminal, editor, browser preview, PDF reader, slide decks, session fork, and keyboard shortcuts.
 ---
 
 Cocurdex ships as a **native desktop app** (Electron). The goal is a single workspace for multi-agent coding — not a thin browser wrapper around one chat thread.
@@ -20,10 +20,11 @@ Typical peers in the shell:
 | **PDF reader** | Read PDFs from the file tree with outline, thumbnails, search, bookmarks, and highlights |
 | **Worktrees** | Managed git worktrees for isolated session work (**Worktree** checkbox on new sessions; inventory under **Settings → Worktrees**) |
 | **Notes / issues** | App-owned product data (see [Notes and issues](/docs/notes-and-issues/)) |
+| **Decks** | App-owned slide decks: edit, present, and export (see [Slide decks](/docs/decks/)) |
 | **Team panel** | Teammates of the current lead session, their status, and replies (see [Teams](/docs/teams/)) |
 | **Script runs** | Proposed scripts awaiting approval and running subagents (see [Script runs](/docs/teams/#script-runs)) |
 
-The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. On Windows and Linux the window uses themed native window controls in the title bar.
+The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. Hover an icon-only button to see its action name. On Windows and Linux the window uses themed native window controls in the title bar.
 
 Chat layout is chosen in **Settings → General → Chat layout** and restored on next launch:
 
@@ -149,7 +150,7 @@ Defaults are VS Code / Cursor-adjacent where that helps muscle memory. **Primary
 | Toggle workspace search | `Primary+Shift+F` |
 | Toggle browser design mode | `Primary+Shift+D` |
 
-Send-key behavior for chat (Enter vs Primary+Enter for multiline) is configurable in settings.
+Send-key behavior for chat (Enter vs Primary+Enter for multiline) is configurable in settings. Keys for moving through a slide deck are listed on [Slide decks](/docs/decks/#presenting).
 
 ## Approvals in one place
 
@@ -173,9 +174,13 @@ The annotation popover can be dragged out of the way; **Clear all annotations** 
 
 PDFs opened from the file tree open in the PDF reader instead of the code editor. It has a table of contents, page thumbnails, search, fit-width / fit-page zoom, page bookmarks, and highlights in four colors. Bookmarks and highlights are saved by the daemon. Select text and choose **Add to Note** to quote it into a [note](/docs/notes-and-issues/).
 
+## Decks
+
+The **Decks** tab in the right panel lists slide decks, opens a 16:9 viewer with a filmstrip and speaker notes, and presents fullscreen or in presenter view. Rename, delete, and export from the list. See [Slide decks](/docs/decks/).
+
 ## What desktop owns
 
-Local product data (notes, issues, views, tags, links, search indexes, and related state) is written through the desktop **daemon** into app-owned storage. The public website and future team console do not replace that path for on-device work.
+Local product data (notes, issues, decks, views, tags, links, search indexes, and related state) is written through the desktop **daemon** into app-owned storage. The public website and future team console do not replace that path for on-device work.
 
 See [Workspaces and data](/docs/concepts/workspaces-and-data/).
 
@@ -185,4 +190,5 @@ See [Workspaces and data](/docs/concepts/workspaces-and-data/).
 - [Devices and local web](/docs/devices-and-web/)  
 - [Agents](/docs/agents/)  
 - [Notes and issues](/docs/notes-and-issues/)  
+- [Slide decks](/docs/decks/)  
 - [CLI](/docs/cli/)  

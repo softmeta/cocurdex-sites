@@ -119,7 +119,7 @@ cocurdex session stop <session-id>
 
 ## Product data in five minutes
 
-Notes and issues are **app-owned**, not a second Markdown tree in your repo:
+Notes, issues, and slide decks are **app-owned**, not a second Markdown tree in your repo:
 
 ```bash
 cocurdex note create --title "Kickoff notes" --body "Goals for this week"
@@ -127,11 +127,13 @@ cocurdex issue create --title "Ship getting-started docs" --status backlog
 cocurdex search "getting-started"
 ```
 
+Slide decks are the same kind of record. See [Slide decks](/docs/decks/).
+
 Details: [Notes and issues](/docs/notes-and-issues/) and [Workspaces and data](/docs/concepts/workspaces-and-data/).
 
 ## Optional: product skills
 
-Install namespaced product skills so agents can run `/cocurdex-*` flows (note → issue → ship) against the same data plane:
+Install namespaced product skills so agents can run `/cocurdex-*` flows (note → issue → ship, and `/cocurdex-deck` for slide decks) against the same data plane:
 
 ```bash
 cocurdex skills list
@@ -159,7 +161,7 @@ See [Skills](/docs/skills/).
 - [ ] At least one agent runtime is installed/authenticated  
 - [ ] You can create a session and see honest status while it runs  
 - [ ] `cocurdex --help` works from a terminal  
-- [ ] You know where notes/issues live (app-owned storage, not ad-hoc repo files)
+- [ ] You know where notes, issues, and decks live (app-owned storage, not ad-hoc repo files)
 
 ## Next
 
