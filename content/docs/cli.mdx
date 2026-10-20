@@ -128,7 +128,7 @@ cocurdex deck delete <id> [--json]
 
 | Flag | Meaning |
 | --- | --- |
-| `--markdown-file` / `--content-file` | Markdown source, or structured deck JSON. `-` reads stdin. Pass one of them |
+| `--markdown-file` / `--content-file` | Markdown source, or structured deck JSON. `-` reads stdin. Mutually exclusive and optional. Omit both to create a deck with no slides, or to leave slides unchanged on update |
 | `--ops-file` | JSON array of edit ops, or `{ "ops": [ ... ] }`. Applied in order; a failure saves nothing |
 | `--expected-revision` | Revision from `deck show`. A stale write fails with `Deck was modified` |
 | `--output` / `--format` | Export path. Format is `pptx` or `pdf`, or the output extension |

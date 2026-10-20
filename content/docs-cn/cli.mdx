@@ -128,7 +128,7 @@ cocurdex deck delete <id> [--json]
 
 | Flag | 含义 |
 | --- | --- |
-| `--markdown-file` / `--content-file` | Markdown 源，或结构化的演示文稿 JSON。`-` 从 stdin 读取。只传其中一个 |
+| `--markdown-file` / `--content-file` | Markdown 源，或结构化的演示文稿 JSON。`-` 从 stdin 读取。二者互斥，也都可以省略。都不传时，创建得到没有幻灯片的演示文稿，更新则保留现有幻灯片 |
 | `--ops-file` | 编辑 ops 的 JSON 数组，或 `{ "ops": [ ... ] }`。按顺序应用；有一步失败则不会保存 |
 | `--expected-revision` | 来自 `deck show` 的修订号。过期的写入会失败并提示 `Deck was modified` |
 | `--output` / `--format` | 导出路径。格式为 `pptx` 或 `pdf`，也可由输出文件的扩展名决定 |

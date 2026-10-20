@@ -130,7 +130,7 @@ Markdown is the fastest way to write a whole deck. The app compiles it into slid
 - Bold, italic, strikethrough, inline code, and links are kept.
 - A Markdown image is skipped and reported. Add the picture with **Insert image** or [`cocurdex deck image`](#images).
 
-The first heading becomes the deck title when you do not pass `--title`.
+On `deck create`, the first heading becomes the deck title when you do not pass `--title`.
 
 ```markdown
 # Q3 Review
@@ -159,7 +159,7 @@ Notes: Open with the latency win.
 Questions?
 ```
 
-Pass the file to `deck create` or `deck update`. A Markdown update replaces every slide and its ids. To change a deck someone is already editing, prefer [ops](#editing-with-ops).
+Pass the file to `deck create` or `deck update`. A Markdown update replaces every slide and its ids, and sets the theme to `default`. The title changes only when you pass `--title`. To change a deck someone is already editing, prefer [ops](#editing-with-ops).
 
 ## Checker
 
@@ -194,8 +194,8 @@ cocurdex deck delete <id> [--json]
 | Flag | Meaning |
 | --- | --- |
 | `--title` | Deck title. On create, falls back to the first Markdown heading, then **Untitled deck** |
-| `--markdown-file` | Markdown source. `-` reads stdin. On update, pass this or `--content-file` |
-| `--content-file` | Structured deck JSON. `-` reads stdin. Replaces the whole deck |
+| `--markdown-file` | Markdown source. `-` reads stdin. Optional. Mutually exclusive with `--content-file` |
+| `--content-file` | Structured deck JSON. `-` reads stdin. Optional. Mutually exclusive with `--markdown-file`. On update, replaces the deck content |
 | `--workspace` | Optional workspace id stored on the deck |
 | `--ops-file` | JSON array of ops, or `{ "ops": [ ... ] }`. `-` reads stdin |
 | `--expected-revision` | Revision from an earlier `deck show`. The write fails with `Deck was modified` if the deck changed; show it again, reapply, and retry |
@@ -204,6 +204,8 @@ cocurdex deck delete <id> [--json]
 | `--slide` / `--file` | Slide id and PNG or JPEG path for `deck image` |
 | `--alt` | Description stored with a new picture |
 | `--replace` | Element id whose picture is swapped. The frame stays |
+
+Passing both `--markdown-file` and `--content-file` fails with `Pass either --markdown-file or --content-file, not both`. With neither file, `deck create` stores a deck that has no slides, and `deck update` keeps the current slides. `--title` alone renames the deck and leaves the slides in place.
 
 `deck list` prints id, title, slide count, revision, and updated time. `deck show` prints the deck plus its checker issues. `deck read` prints Markdown to the terminal; `--json` adds each slide's title, text lines, and notes. Reading a file does not create a deck.
 
@@ -230,7 +232,7 @@ On this computer, `deck export` writes `--output` wherever the daemon can write.
 
 `setText` replaces one slot (`slot:title`, `slot:body`, …) or one free text element (`element:<id>`). Pass `markdown` or `paragraphs`, and only a slot the layout has. `insertSlides` uses the Markdown rules above; omit `index` to append. `setLayout` follows the [layout rules](#viewing-and-editing).
 
-`--content-file` is the other precise path: edit the JSON from `deck show` and send it back. Layout ids, slot names, speaker notes, the theme id, and element frames (on the 1280×720 canvas) are all in that document. A content update replaces the whole deck, so prefer ops when the deck is already being edited.
+`--content-file` is the other precise path: edit the JSON from `deck show` and send it back. Layout ids, slot names, speaker notes, the theme id, and element frames (on the 1280×720 canvas) are all in that document. A content update replaces the deck content and keeps the title unless you pass `--title`, so prefer ops when the deck is already being edited.
 
 ## Images
 

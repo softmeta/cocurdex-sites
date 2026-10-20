@@ -130,7 +130,7 @@ description: Cocurdex 里的应用私有演示文稿——演示文稿面板、M
 - 粗体、斜体、删除线、行内代码和链接会保留。
 - Markdown 图片会被跳过并报告。用**插入图片**或 [`cocurdex deck image`](#图片) 添加图片。
 
-没有传 `--title` 时，第一个标题会成为演示文稿标题。
+`deck create` 在没有传 `--title` 时，用第一个标题作为演示文稿标题。
 
 ```markdown
 # Q3 Review
@@ -159,7 +159,7 @@ Notes: Open with the latency win.
 Questions?
 ```
 
-把文件传给 `deck create` 或 `deck update`。用 Markdown 更新会换掉每一页及其 id。别人已经在改的演示文稿，优先用 [ops](#用-ops-修改)。
+把文件传给 `deck create` 或 `deck update`。用 Markdown 更新会换掉每一页及其 id，并把主题设为 `default`。只有传入 `--title` 时标题才会变。别人已经在改的演示文稿，优先用 [ops](#用-ops-修改)。
 
 ## 检查
 
@@ -194,8 +194,8 @@ cocurdex deck delete <id> [--json]
 | Flag | 含义 |
 | --- | --- |
 | `--title` | 标题。创建时若省略，先用 Markdown 的第一个标题，否则为 **Untitled deck** |
-| `--markdown-file` | Markdown 源。`-` 从 stdin 读取。更新时与 `--content-file` 互斥 |
-| `--content-file` | 结构化的演示文稿 JSON。`-` 从 stdin 读取。会整份替换 |
+| `--markdown-file` | Markdown 源。`-` 从 stdin 读取。可选，且与 `--content-file` 互斥 |
+| `--content-file` | 结构化的演示文稿 JSON。`-` 从 stdin 读取。可选，且与 `--markdown-file` 互斥。更新时替换演示文稿内容 |
 | `--workspace` | 可选，记在这份演示文稿上的工作区 id |
 | `--ops-file` | ops 的 JSON 数组，或 `{ "ops": [ ... ] }`。`-` 从 stdin 读取 |
 | `--expected-revision` | 早先 `deck show` 得到的修订号。演示文稿若已变化，写入会失败并提示 `Deck was modified`；重新 show，再应用一次并重试 |
@@ -204,6 +204,8 @@ cocurdex deck delete <id> [--json]
 | `--slide` / `--file` | `deck image` 的幻灯片 id，以及 PNG 或 JPEG 路径 |
 | `--alt` | 和新图片一起保存的说明 |
 | `--replace` | 要换掉图片的元素 id。框的位置和大小保持不变 |
+
+同时传入 `--markdown-file` 和 `--content-file` 会失败，提示 `Pass either --markdown-file or --content-file, not both`。两个都不传时，`deck create` 存一份没有幻灯片的演示文稿，`deck update` 保留现有幻灯片。只传 `--title` 会改标题，幻灯片保持原样。
 
 `deck list` 打印 id、标题、幻灯片数量、修订号和更新时间。`deck show` 打印演示文稿及其检查问题。`deck read` 把 Markdown 打到终端；`--json` 额外给出每一页的标题、文本行和备注。读取文件不会新建演示文稿。
 
@@ -230,7 +232,7 @@ cocurdex deck delete <id> [--json]
 
 `setText` 替换一个槽位（`slot:title`、`slot:body` 等）或一个自由文本元素（`element:<id>`）。传 `markdown` 或 `paragraphs` 其中之一，并且槽位必须是该版式拥有的。`insertSlides` 使用上面的 Markdown 规则；省略 `index` 则追加到末尾。`setLayout` 遵循[版式规则](#查看与编辑)。
 
-`--content-file` 是另一条精确路径：改 `deck show` 得到的 JSON 再送回去。版式 id、槽位名、演讲者备注、主题 id，以及元素的框（在 1280×720 画布上）都在这份文档里。内容更新会整份替换，所以演示文稿已经在被编辑时，优先用 ops。
+`--content-file` 是另一条精确路径：改 `deck show` 得到的 JSON 再送回去。版式 id、槽位名、演讲者备注、主题 id，以及元素的框（在 1280×720 画布上）都在这份文档里。内容更新会替换演示文稿内容；只有传入 `--title` 时标题才会变。演示文稿已经在被编辑时，优先用 ops。
 
 ## 图片
 
