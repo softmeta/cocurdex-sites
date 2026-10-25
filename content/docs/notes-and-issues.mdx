@@ -147,6 +147,26 @@ Recommended loop for product work:
 
 PRDs and specs are ordinary notes, stored as **private notes by default**. Publishing into a repository requires an explicit user request — never assume “open workspace” means “write product docs into the repo.”
 
+## On the phone
+
+The iOS and Android app reads notes and issues for the computer named in the toolbar. Pairing needs **Read**. Both tabs are read-only in this release: there is no create control, no inbox tab, no board, and no **Activity** or comments. The phone also has no way to hand a note or issue to an agent. Attach one from the desktop composer with **+ → Note** or **+ → Issue**. Setup for the app is on [Devices and local web](/docs/devices-and-web/#native-app).
+
+### Issues tab
+
+**Issues** groups cards by status, in-progress first. On the default board that puts **Doing** and **Review** above **Backlog** and **Done**. The header is the status name and a count, such as **Doing 2**. A toolbar menu filters by workspace; its title is the workspace name, or **All Workspaces**. **Search issues** matches a title or an identifier. Pull down to refresh.
+
+Nothing tracked yet shows **No Issues** — **Issues you track on** that computer **appear here.** A search with no matches shows **No issues match** the query. If the list cannot load, the screen is **Couldn’t load issues from** that computer, and **Try Again**.
+
+Each row shows the title, then the identifier and labels. Open it and the header is the identifier. The page shows the title, the description as Markdown when it has one, then **Status**, **Priority**, and **Labels** (**None** when there are no labels). When sessions are linked, **Agent Sessions** lists them; tap one to open it. A session with no title reads **Untitled session**. When there are sub-issues, the header is the done count over the total, such as **Sub-issues 1/3**, and the page lists those children. A deleted issue shows **This issue was deleted on the computer.**
+
+### Notes tab
+
+**Notes** groups notes by workspace as an indented tree. A note with no workspace sits under **No Workspace**. Folders stay in the tree; open a note to read it. **Search notes** matches titles. Inside each workspace the matches are a flat list, newest first. Pull down to refresh.
+
+An empty computer shows **No Notes** — **Notes you write on** that computer **appear here.** A search with no matches shows **No notes match** the query. If the list cannot load, the screen is **Couldn’t load notes from** that computer, and **Try Again**.
+
+The note page shows the title, the workspace, how long ago it changed, and the Markdown body — the same rendering as a session transcript. An empty note says **This note is empty.** A deleted note shows **This note was deleted on the computer.**
+
 ## What not to do
 
 - Do not treat paths under the project as issue identity  
@@ -157,6 +177,7 @@ PRDs and specs are ordinary notes, stored as **private notes by default**. Publi
 ## Related
 
 - [Slide decks](/docs/decks/)  
+- [Devices and local web](/docs/devices-and-web/#native-app)  
 - [Workspaces and data](/docs/concepts/workspaces-and-data/)  
 - [CLI](/docs/cli/)  
 - [Skills](/docs/skills/)  
