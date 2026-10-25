@@ -203,9 +203,9 @@ cocurdex worktree remove --workspace <id|path> --path <worktree-path> [--json]
 
 ```bash
 cocurdex session list
-cocurdex session create --workspace <id|path> --agent <agent> --provider <provider> --model <model>
+cocurdex session create --workspace <id|path> [--agent <agent>] [--provider <provider> --model <model>] [--permission <mode>] [--title <title>]
 cocurdex session tui [session-id]
-cocurdex session tui --workspace <id|path> --agent <agent> --provider <provider> --model <model>
+cocurdex session tui --workspace <id|path> [--agent <agent>] [--provider <provider> --model <model>] [--permission <mode>] [--title <title>]
 cocurdex session send <session-id> <prompt>
 cocurdex session tree <session-id> [--depth <n>] [--json]
 cocurdex session fork <session-id> [--through <message-id>] [--title <title>] [--json]
@@ -219,12 +219,18 @@ cocurdex session stop <session-id>
 
 | Flag | 必填场景 | 含义 |
 | --- | --- | --- |
-| `--workspace` | create / tui 创建 | 工作区 id 或文件系统路径 |
-| `--agent` | create / tui 创建 | Agent id:`claude-agent`、`codex`、`opencode`、`pi`，或已安装的 ACP Registry Agent，如 `acp:cursor`、`acp:devin`、`acp:grok-build` |
-| `--provider` | create / tui 创建 | `provider list` 中的 provider 配置 id |
-| `--model` | create / tui 创建 | `provider models` 中的模型 id |
+| `--workspace` | create，以及 tui 创建时 | 工作区 id 或文件系统路径 |
+| `--agent` | 可选 | Agent id：`claude-agent`、`codex`、`opencode`、`pi`，或已安装的 ACP Registry Agent，如 `acp:cursor`、`acp:devin`、`acp:grok-build` |
+| `--provider` | 可选，须与 `--model` 同时给出 | `provider list` 中的 provider 配置 id |
+| `--model` | 可选，须与 `--provider` 同时给出 | `provider models` 中的模型 id |
+| `--permission` | 可选 | 该 Agent 的权限模式 id。Id 见 [Agent](/zh-cn/docs/agents/#权限模式) |
+| `--title` | 可选 | 会话标题。省略时标题为该 Agent 的名称 |
 
-不带 flags 的 `session tui` 附着到最近的非归档会话。它不支持 `--json`。
+Daemon 会补上你省掉的项。省略 `--agent` 时，用该工作区最近更新的会话所用的 Agent。那个 Agent 当前不可用，或这个工作区还没有会话时，用这台电脑上第一个可用的 Agent。省略 `--permission` 时，用该工作区里这个 Agent 最近一次会话的权限模式（该模型仍允许这个模式时）；否则用该模型允许的第一个模式。没有权限模式的 Agent（例如 Pi）不会设置模式。同时省略 `--provider` 和 `--model` 时，模型依次是：该 Agent 的默认模型、这个 Agent 在该工作区上次使用的模型、第一个兼容模型。这个 Agent 没有兼容模型时，会话仍会创建，只是不设置模型。像以前一样同时传入 `--agent`、`--provider` 和 `--model` 的命令仍然有效。
+
+`--provider` 和 `--model` 必须一起给出。只给其中一个会失败，并提示 `--provider and --model must be given together`。这台电脑上不可用的 Agent 会提示 `<agent> is not available on this machine`。省略 `--agent` 且没有可用 Agent 时，提示是 `No agent is available on this machine`。Agent 不能使用的模型会提示 `<provider>/<model> is not available for <agent>`。该 Agent 不提供的模式会提示 `<mode> is not a permission mode of <agent>`。
+
+不带 flags 的 `session tui` 附着到最近的非归档会话。传入 `--workspace`、`--agent`、`--provider` 或 `--model` 时，它会按与 `session create` 相同的默认值创建会话——这次创建仍然需要 `--workspace`——然后附着。`--permission` 和 `--title` 在创建时生效。它不支持 `--json`。
 
 `session tree` 打印[执行树](/zh-cn/docs/desktop/#执行树)。`fork` 从当前会话开一个新会话（`--through` 截到该消息）。`switch-agent` 在空闲会话上更换运行时。`handoffs` 列出分叉或切换 Agent 后的上下文交接。见[分叉与切换 Agent](/zh-cn/docs/desktop/#分叉与切换-agent)。
 

@@ -82,9 +82,11 @@ cocurdex host audit [--limit <n>]
 
 ## Native app
 
-The iOS and Android app has two tabs: **Sessions** and **Computers**. **Computers** lists paired computers. **Sessions** is the live list for the computer named in the toolbar.
+The iOS and Android app has four tabs: **Sessions**, **Issues**, **Notes**, and **Computers**. **Computers** lists paired computers. **Sessions**, **Issues**, and **Notes** are for the computer named in the toolbar.
 
-With no computer paired yet, **Sessions** shows **No Computers** and **Pair a Computer**. After you pair, open the computer name in the toolbar to switch hosts, or choose **Pair a Computer** to add another.
+With no computer paired yet, those tabs show **No Computers** and **Pair a Computer**. After you pair, open the computer name in the toolbar to switch hosts, or choose **Pair a Computer** to add another.
+
+**Issues** and **Notes** are read-only on the phone. See [Notes and issues](/docs/notes-and-issues/#on-the-phone).
 
 Rows are grouped by workspace. **Search sessions** filters the list. A child session rolls its state up to the root row:
 
@@ -97,6 +99,25 @@ Rows are grouped by workspace. **Search sessions** filters the list. A child ses
 The line under the title is more specific — for example **Waiting for your approval**, **Has a question for you**, **Plan ready for review**, **Working…**, **Connecting…**, **Working in the background**, or **Finished**. A failed run shows **Run failed**.
 
 If the phone cannot reach the computer but already has a list, it keeps that list and shows **Can't reach** the computer's name. **Showing the last update.** With nothing loaded yet, the screen is **Can't reach** that computer, **Check that the computer is awake and on the same network.**, and **Try Again**. A computer with no sessions shows **No Sessions** — **Sessions you start on** that computer **appear here.** A search with no matches shows **No sessions match** the query.
+
+### Start a session
+
+The **Sessions** toolbar shows a **New session** button when this computer was paired with **Start work** (`execute`). It opens a sheet titled **New session**.
+
+The prompt placeholder is **What should the agent do?**. **Start** stays disabled until that prompt has text, and reads **Starting…** while the session is opening. Under **Run on**:
+
+| Row | Opens |
+| --- | --- |
+| **Workspace** | Workspaces on this computer |
+| **Agent** | **Agent**, **Model**, and **Mode** |
+
+Both pickers push inside the sheet. The **Agent** row shows the model and permission mode that **Start** will use. The line under the rows is **Runs on** the computer's name.
+
+**Workspace** leads with the workspace that had the latest session, and that one is selected until you pick another. **Search workspaces** filters the list. Each row includes a count, such as **1 session** or **3 sessions**. The footer is **Add new workspaces on the computer.**
+
+On **Agent**, a row you can choose says **Ready**. The others say **Not installed on the computer**, **Not supported on the computer**, or **Failed to start on the computer**. **Model** lists models from the providers on the computer (**Models come from the providers set up on the computer.**). If the agent has none, that section says **No provider models for this agent; it uses its own default model.** **Mode** lists that agent's permission modes. An agent with none, such as Pi, says **This agent has no permission modes to choose from.** Mode ids are on [Agents](/docs/agents/#permission-modes).
+
+**Start** creates the session with the workspace, agent, model, and mode on screen, sends the prompt, names the session from that prompt the same way the desktop app does, and opens it. If **Start** fails after that session exists, the sheet says **Couldn't start the session. Check the connection and try again.** Another **Start** on that sheet sends the prompt into the session already created.
 
 Open a row and the tab bar hides. The back button reads **Sessions**. The header is the session title, with the workspace and model under it. The transcript updates as the agent runs: your messages, the assistant's messages, and tool calls.
 
@@ -115,6 +136,7 @@ Paired without **Approvals**, that dock shows **Approve this on your computer** 
 ## Related
 
 - [Desktop workspace](/docs/desktop/)
+- [Notes and issues](/docs/notes-and-issues/#on-the-phone)
 - [Providers and settings](/docs/providers-and-settings/)
 - [CLI](/docs/cli/#devices-and-local-web)
 - [Workspaces and data](/docs/concepts/workspaces-and-data/)
