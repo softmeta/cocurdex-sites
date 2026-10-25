@@ -37,7 +37,9 @@ cocurdex host remote disable
 
 ## Pair a device
 
-**Pair device** creates a one-time code. On another browser, open the pairing link or enter the code on the **Pair this browser** screen. On the iOS or Android app, paste that link into **Pair a Computer** (the field is **Pairing link**, then **Pair**). The app adds that computer, selects it, and you continue on **Sessions**.
+**Pair device** creates a one-time code. On another browser, open the pairing link or enter the code on the **Pair this browser** screen. On the iOS or Android app, paste that link into **Pair a Computer** (the field is **Pairing link**, then **Pair**). **Scan to Pair** reads the same code from the QR code on the computer. The app adds that computer, selects it, and you continue on **Sessions**.
+
+If the phone cannot reach the computer — a different Wi-Fi network, or access-point isolation — the request times out after about 10 seconds. **Pair** and the scan screen then show **Can't reach the computer. Check that both are on the same network.**
 
 | Setting | Meaning |
 | --- | --- |
@@ -82,7 +84,7 @@ cocurdex host audit [--limit <n>]
 
 ## Native app
 
-The iOS and Android app has two tabs: **Sessions** and **Computers**. **Computers** lists paired computers. **Sessions** is the live list for the computer named in the toolbar.
+The iOS and Android app has four tabs: **Sessions**, **Issues**, **Notes**, and **Computers**. On Android, every tab label stays visible, selected or not, so the tabs keep one height. **Computers** lists paired computers. **Sessions**, **Issues**, and **Notes** are the lists for the computer named in the toolbar.
 
 With no computer paired yet, **Sessions** shows **No Computers** and **Pair a Computer**. After you pair, open the computer name in the toolbar to switch hosts, or choose **Pair a Computer** to add another.
 
@@ -94,13 +96,19 @@ Rows are grouped by workspace. **Search sessions** filters the list. A child ses
 | **Running** | The session is still working |
 | **Unread** | A result is finished and not yet opened |
 
-The line under the title is more specific — for example **Waiting for your approval**, **Has a question for you**, **Plan ready for review**, **Working…**, **Connecting…**, **Working in the background**, or **Finished**. A failed run shows **Run failed**.
+The line under the title shows the model name, or a run status when that is more relevant — for example **Waiting for your approval**, **Has a question for you**, **Plan ready for review**, **Working…**, **Connecting…**, **Working in the background**, or **Finished**. A failed run shows **Run failed**.
 
 If the phone cannot reach the computer but already has a list, it keeps that list and shows **Can't reach** the computer's name. **Showing the last update.** With nothing loaded yet, the screen is **Can't reach** that computer, **Check that the computer is awake and on the same network.**, and **Try Again**. A computer with no sessions shows **No Sessions** — **Sessions you start on** that computer **appear here.** A search with no matches shows **No sessions match** the query.
 
-Open a row and the tab bar hides. The back button reads **Sessions**. The header is the session title, with the workspace and model under it. The transcript updates as the agent runs: your messages, the assistant's messages, and tool calls.
+On **Notes**, the line under a title is a plain-text excerpt of the body. On **Issues**, the identifier is monospace. On the issue screen, each row under **Sub-issues** opens that issue.
 
-Assistant messages are Markdown. Tables render. A fenced code block shows the language, a copy button, and syntax highlighting. Math is disabled.
+Open a session and the tab bar hides. The back button reads **Sessions**. The header is the session title, with the workspace and model under it. The transcript updates as the agent runs: your messages, the assistant's messages, and tool calls.
+
+Assistant messages are Markdown. Tables render. A fenced code block shows the language, a copy button, and syntax highlighting. A fenced `mermaid` block renders as a diagram, in the same theme family as the desktop app. If rendering fails, or the phone is offline and the diagram cannot be drawn, the source is shown as a normal code block. Math is disabled.
+
+Tap an image in the transcript to open a full-screen viewer. Pinch-zoom works on iOS. On Android the viewer is full screen, and pinch-zoom is not available yet. **Close** leaves the viewer.
+
+Tap a tool-call row to open its detail screen. The header shows the status — **Done**, **Failed**, or **Running** — and the duration in seconds after the call finishes. **Input** and **Output** follow. A long output shows the tail, labeled **Last 64 KB**. When output is on screen, **Copy Output** copies it. If the output cannot be loaded, the screen shows **Couldn't load the output**. The formatting matches the desktop app.
 
 The composer placeholder is **Reply to the agent**. **Send** posts the message. While the session is running and the field is empty, that control is **Stop**. Sending and stopping need the **Interact** permission from pairing.
 
