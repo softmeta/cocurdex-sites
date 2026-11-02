@@ -21,6 +21,8 @@ export const dict: MarketingDict = {
     cli: "CLI 参考",
     agents: "Agent",
     releases: "版本发布",
+    support: "支持",
+    privacy: "隐私政策",
   },
   home: {
     badge: "预发布 · macOS · Windows · Linux",
@@ -207,5 +209,177 @@ export const dict: MarketingDict = {
     sourceHeading: "从源码运行",
     sourceBody: "需要 Node.js 24 和 pnpm。",
     readDocs: "快速上手指南",
+  },
+  privacy: {
+    pageTitle: "隐私政策",
+    metaDescription:
+      "Cocurdex 桌面端、CLI、iOS 和 Android App 以及 cocurdex.com 如何处理数据。",
+    updatedLabel: "最后更新",
+    updated: "2026-11-02",
+    heading: "隐私政策",
+    intro:
+      "Cocurdex 运行在你自己的电脑上。你的项目、会话、对话记录、笔记、设置和凭据都留在你自己的设备上。本政策适用于 Cocurdex 桌面端、cocurdex CLI、Cocurdex iOS 和 Android App，以及 cocurdex.com。Cocurdex 由美国公司 softmeta LLC（下称「我们」）发布。",
+    sections: [
+      {
+        heading: "简要说明",
+        body: [],
+        items: [
+          "Cocurdex 没有账号体系，使用 App 不需要注册或登录。",
+          "App 里没有统计、广告或追踪 SDK，也不上传崩溃报告。",
+          "配对的手机或浏览器直接连接你自己的电脑，连接是端到端加密的。",
+          "我们不出售个人信息，也不会为了广告而共享个人信息。",
+        ],
+      },
+      {
+        heading: "保存在你设备上的数据",
+        body: [
+          "桌面端和 CLI 把工作区、会话、Agent 对话记录、记忆、笔记、Issue、Deck、设置、提供商凭据和日志保存在你的电脑上，我们不会收到副本。",
+          "手机 App 把已配对的电脑和配对密钥保存在手机上，使用系统提供的安全存储。App 里显示的所有内容都来自你的电脑。",
+          "桌面端会在本机记录崩溃信息，方便你排查问题。这些报告不会上传。如果你主动把日志发给我们，请先删掉凭据和个人数据。",
+        ],
+      },
+      {
+        heading: "可选的记忆同步",
+        body: [
+          "桌面端保存的记忆留在你的电脑上。多设备同步默认关闭。打开后，记忆会通过你在 rsrs（rsrs.rs）创建的账号同步，rsrs 是独立的第三方服务。记录在到达 rsrs 服务器前已经加密，密钥留在你的设备上。该账号适用 rsrs 自己的条款和隐私政策。",
+        ],
+      },
+      {
+        heading: "你选择的 AI 提供商和 Agent 工具",
+        body: [
+          "运行 Agent 时，你的电脑会把提示词、Agent 读取的文件和上下文以及工具结果，直接发给你配置的模型提供商或 Agent CLI，例如 Anthropic、OpenAI 或 Google。这些数据从你的电脑直接发往该提供商，适用该提供商自己的条款和隐私政策，不经过我们。",
+        ],
+      },
+      {
+        heading: "手机 App 的权限",
+        body: ["iOS 和 Android App 只在你用到相关功能时才申请对应权限："],
+        items: [
+          "相机：扫描电脑上显示的配对二维码。画面不会被保存或发送。",
+          "相册：把你选中的照片附到发给 Agent 的消息里。照片只发到你的电脑。",
+          "本地网络（iOS）：连接你在局域网里配对的电脑。",
+          "通知：在 Agent 需要你处理或任务完成时提醒你。可选。",
+        ],
+      },
+      {
+        heading: "推送通知",
+        body: [
+          "如果你允许通知，手机会从 Apple 或 Google 获取一个推送 token 并交给已配对的电脑。电脑把这个 token 注册到 Cocurdex 推送网关，网关返回一个加密的 handle，由你的电脑保存。网关不保存 token 数据库。",
+          "每条通知都在你的电脑上用手机的密钥加密。我们的推送网关、Apple 推送通知服务（APNs）和 Firebase 云消息（FCM）只能看到加密内容，以及投递所需的信息，比如 token 和时间，看不到 Agent 做了什么。",
+          "要停止通知，可以在手机设置里关闭 Cocurdex 的通知、在电脑上撤销这台手机，或者运行 cocurdex host push off。",
+        ],
+      },
+      {
+        heading: "远程访问和 Relay",
+        body: [
+          "远程访问默认关闭。打开后，配对设备通过局域网或 Tailscale 连接你的电脑。Tailscale 是独立的服务，有自己的隐私政策。",
+          "你也可以让远程访问经过 Relay 转发。Relay 只转发加密流量，无法读取或篡改。官方 Relay 目前仅限邀请使用。如果你使用官方 Relay，它会处理你电脑的 IP 地址、路由标识、邀请凭证里的账号标识和流量大小，用于运行服务和执行用量限制。自己部署的 Relay 由你自己运营。",
+        ],
+      },
+      {
+        heading: "应用更新",
+        body: [
+          "桌面端会访问 updates.cocurdex.com 检查新版本，并从 GitHub 下载安装包。这些请求会带上你的 IP 地址和常规请求信息，比如 App 版本、平台和更新通道。我们只用它们来提供更新。",
+        ],
+      },
+      {
+        heading: "本网站",
+        body: [
+          "cocurdex.com 是托管在 Cloudflare Pages 上的静态网站。我们用 Cloudflare Web Analytics 统计页面访问量，它不使用 cookie，也不跨站追踪你。Cloudflare 会处理你的 IP 地址，用于提供和保护网站。",
+          "网站会在浏览器的本地存储里记住你选的主题。文档搜索在本站完成，不会发给第三方。下载文件由 GitHub 提供。",
+        ],
+      },
+      {
+        heading: "联系我们时",
+        body: [
+          "你给我们发邮件时，我们会收到你的邮箱地址和邮件内容，并用来回复你。GitHub Issues 和 Discord 是公开或社区空间，适用它们自己的条款。请不要在那里发布凭据、私有代码或个人数据。",
+        ],
+      },
+      {
+        heading: "保留期限和你的选择",
+        body: [
+          "你设备上的数据由你掌控。你可以在 App 里删除工作区或会话、撤销已配对的设备，或者卸载 App 来删除数据。卸载手机 App 会删除手机上的配对信息，同时也请在电脑上撤销这台手机。",
+          "支持邮件只在帮助你所需的期限内保留。推送网关和 Relay 的技术日志只在运行和保护这些服务所需的期限内保留。",
+          "根据你所在的地区（包括欧洲经济区、英国和加州），你可能有权访问、更正、删除你的个人信息，或反对我们处理这些信息。发邮件给我们即可提出请求，我们不会因此区别对待你。你也可以向当地的数据保护机构投诉。",
+        ],
+      },
+      {
+        heading: "儿童",
+        body: [
+          "Cocurdex 是开发者工具，不面向 13 岁以下（欧洲经济区和英国为 16 岁以下）的儿童，我们不会有意收集他们的个人信息。",
+        ],
+      },
+      {
+        heading: "跨境传输",
+        body: [
+          "我们位于美国。我们的服务处理个人信息时，这些信息可能在美国以及我们的服务提供商所在的其他国家处理。",
+        ],
+      },
+      {
+        heading: "政策变更",
+        body: [
+          "本政策如有变更，我们会在本页更新并修改上方的日期。如果变更对我们处理你数据的方式有重大影响，我们会在生效前在本站说明。",
+        ],
+      },
+    ],
+    contactHeading: "联系方式",
+    contactBody: "关于隐私的问题或请求，请联系 softmeta LLC：",
+  },
+  support: {
+    pageTitle: "支持",
+    metaDescription: "获取 Cocurdex 桌面端、CLI、iOS 和 Android 的帮助。",
+    eyebrow: "支持",
+    heading: "获取 Cocurdex 帮助",
+    intro:
+      "Cocurdex 处于预发布阶段，不提供支持 SLA。通过以下渠道可以直接联系到开发团队。",
+    channels: [
+      {
+        id: "email" as const,
+        title: "邮件",
+        body: "桌面端、iOS 或 Android App 的问题、隐私请求，以及不方便公开发的内容。",
+        linkLabel: "邮件",
+      },
+      {
+        id: "issues" as const,
+        title: "Bug 反馈和功能建议",
+        body: "请附上 Cocurdex 版本、操作系统、所用 Agent 和复现步骤。不要附带凭据、私有代码或对话记录。",
+        linkLabel: "GitHub Issues",
+      },
+      {
+        id: "discord" as const,
+        title: "社区",
+        body: "使用问题、快速反馈和讨论。",
+        linkLabel: "加入 Discord",
+      },
+      {
+        id: "security" as const,
+        title: "安全漏洞",
+        body: "请通过 GitHub Security Advisory 私下报告，不要开公开 issue。",
+        linkLabel: "报告漏洞",
+      },
+    ],
+    faqHeading: "常见问题",
+    faq: [
+      {
+        question: "怎么把手机 App 连到电脑？",
+        answer:
+          "在电脑上打开 设置 → 设备 → 配对设备，点生成配对码。在 iOS 或 Android App 里选择配对电脑，然后点扫码配对或粘贴配对链接。",
+        docPath: "/docs/devices-and-web/",
+      },
+      {
+        question: "App 提示连不上我的电脑。",
+        answer:
+          "请确认电脑没有休眠、Cocurdex 桌面端正在运行、远程访问已打开，并且两台设备在同一个网络或同一个 Tailscale tailnet 里。",
+        docPath: "/docs/devices-and-web/",
+      },
+      {
+        question: "怎么移除手机或删除我的数据？",
+        answer:
+          "Cocurdex 没有需要删除的账号。在电脑的 Paired devices 里撤销这台手机，然后卸载 App。你的会话和设置都在电脑上，可以在电脑上删除。",
+        docPath: "/docs/concepts/workspaces-and-data/",
+      },
+    ],
+    readMore: "文档",
+    privacyNote: "我们如何处理数据：",
+    privacyLink: "隐私政策",
   },
 };
