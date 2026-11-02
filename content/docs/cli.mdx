@@ -203,9 +203,9 @@ cocurdex worktree remove --workspace <id|path> --path <worktree-path> [--json]
 
 ```bash
 cocurdex session list
-cocurdex session create --workspace <id|path> --agent <agent> --provider <provider> --model <model>
+cocurdex session create --workspace <id|path> [--agent <agent>] [--provider <provider> --model <model>] [--permission <mode>] [--title <title>]
 cocurdex session tui [session-id]
-cocurdex session tui --workspace <id|path> --agent <agent> --provider <provider> --model <model>
+cocurdex session tui --workspace <id|path> [--agent <agent>] [--provider <provider> --model <model>] [--permission <mode>] [--title <title>]
 cocurdex session send <session-id> <prompt>
 cocurdex session tree <session-id> [--depth <n>] [--json]
 cocurdex session fork <session-id> [--through <message-id>] [--title <title>] [--json]
@@ -219,12 +219,18 @@ cocurdex session stop <session-id>
 
 | Flag | Required for | Meaning |
 | --- | --- | --- |
-| `--workspace` | create / tui create | Workspace id or filesystem path |
-| `--agent` | create / tui create | Agent id: `claude-agent`, `codex`, `opencode`, `pi`, or an installed ACP Registry agent such as `acp:cursor`, `acp:devin`, `acp:grok-build` |
-| `--provider` | create / tui create | Provider config id from `provider list` |
-| `--model` | create / tui create | Model id from `provider models` |
+| `--workspace` | create, and tui when creating | Workspace id or filesystem path |
+| `--agent` | optional | Agent id: `claude-agent`, `codex`, `opencode`, `pi`, or an installed ACP Registry agent such as `acp:cursor`, `acp:devin`, `acp:grok-build` |
+| `--provider` | optional, with `--model` | Provider config id from `provider list` |
+| `--model` | optional, with `--provider` | Model id from `provider models` |
+| `--permission` | optional | Permission mode id for that agent. Ids: [Agents](/docs/agents/#permission-modes) |
+| `--title` | optional | Session title. Omit it and the title is the agent's name |
 
-`session tui` without flags attaches to the latest non-archived session. It does not support `--json`.
+The daemon fills in whatever you leave out. Omit `--agent` and the session uses the agent from the workspace's most recently updated session. If that agent is not available, or the workspace has no session yet, it uses the first agent available on this computer. Omit `--permission` and it uses the mode from the most recently updated session of that agent in the workspace, when the model still allows it; otherwise the first mode the model allows. An agent with no permission modes, such as Pi, leaves the mode unset. Omit `--provider` and `--model` together and the model is the agent's default, then the model that agent last used in the workspace, then the first compatible model. If the agent has no compatible model, the session is still created and the model is left unset. A command that still passes `--agent`, `--provider`, and `--model` keeps working.
+
+`--provider` and `--model` have to be given together. One without the other fails with `--provider and --model must be given together`. An agent that is not available on this computer fails with `<agent> is not available on this machine`. When no agent is available and you omit `--agent`, the message is `No agent is available on this machine`. A model that agent cannot use fails with `<provider>/<model> is not available for <agent>`. A mode that agent does not offer fails with `<mode> is not a permission mode of <agent>`.
+
+`session tui` without flags attaches to the latest non-archived session. Passing `--workspace`, `--agent`, `--provider`, or `--model` creates a session through the same defaults as `session create` — that create still requires `--workspace` — then attaches. `--permission` and `--title` apply when it creates. It does not support `--json`.
 
 `session tree` prints the [execution tree](/docs/desktop/#execution-tree). `fork` starts a new session from this one (`--through` cuts off after that message). `switch-agent` changes the runtime on an idle session. `handoffs` lists context transfers after a fork or agent switch. See [Fork and switch agent](/docs/desktop/#fork-and-switch-agent).
 
