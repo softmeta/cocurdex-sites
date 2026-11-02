@@ -21,23 +21,55 @@ The desktop app must be running so the daemon can serve the client. The URL incl
 
 ## Remote access
 
-Off by default. **Allow remote devices** lets paired devices on your LAN or Tailscale tailnet connect to this computer.
+Off by default. **Allow remote devices** lets paired devices on your LAN or Tailscale tailnet connect to this computer. Only paired devices can connect, with the permissions you grant.
 
 - The UI lists reachable **LAN** and **Tailscale** addresses when they exist.
 - You can set the listen **port** (default is shown in the field).
-- Connections are **not encrypted**. Use a trusted network or Tailscale.
+- **Keep this computer awake** stops idle sleep while remote access is on, so a phone can reach it away from your desk. A closed laptop lid still puts it to sleep.
+
+Traffic between a paired device and this computer is end-to-end encrypted. To reach the computer away from its network, install Tailscale on both devices, or use a [relay](#relay).
 
 From the CLI:
 
 ```bash
 cocurdex host status
-cocurdex host remote enable [--port <port>]
+cocurdex host remote enable [--port <port>] [--keep-awake on|off]
 cocurdex host remote disable
+```
+
+### Relay
+
+**Relay** reaches this computer from anywhere through a `cocurdex-relay` service. The relay forwards end-to-end encrypted traffic and cannot read it. It takes effect while remote access is on.
+
+| Setting | Meaning |
+| --- | --- |
+| **Relay address** | The official Cocurdex relay (**Use official**) or a self-hosted `cocurdex-relay` address. Leave empty to turn the relay off |
+| **Invite credential** | The credential from the relay operator. Pasting it fills in the relay address. The official relay admits only invited computers; a self-hosted relay without invites does not need one |
+| **Relay only** | Accept connections only through the relay and stop listening on local network ports |
+
+**Status** shows **Online**, **Connecting**, **Offline**, or **Off**. Without **Relay only**, the LAN and Tailscale listener stays on. Paired devices use a direct address when one answers and fall back to the relay.
+
+```bash
+cocurdex host relay set [official|<url>] [--relay-only on|off] [--credential <file>]
+cocurdex host relay off
+```
+
+### Phone notifications
+
+A push gateway (the `cocurdex-push` service) lets this computer notify paired phones when an agent asks for approval, asks a question, or has a plan to review, and when a turn finishes or fails. Phones that allow notifications register themselves. Each notification is encrypted to the phone's key, so the gateway, Apple, and Google see only ciphertext.
+
+```bash
+cocurdex host push set <url>
+cocurdex host push status
+cocurdex host push off
 ```
 
 ## Pair a device
 
-**Pair device** creates a one-time code. On another browser, open the pairing link or enter the code on the **Pair this browser** screen. On the iOS or Android app, paste that link into **Pair a Computer** (the field is **Pairing link**, then **Pair**). The app adds that computer, selects it, and you continue on **Sessions**.
+**Pair a device → Create pairing code** creates a one-time code, a QR code, and pairing links. Links are listed most reachable first: the relay while it is online, then Tailscale, then LAN.
+
+- **iOS or Android app:** choose **Pair a Computer**, then **Scan to Pair** and scan the QR code, or **Paste Pairing Link** and tap **Pair**. The app adds that computer, selects it, and you continue on **Sessions**. A paired phone learns every address the computer reports and switches to the one that answers.
+- **Browser on another device:** open the pairing link, or paste it on the **Pair** screen. A browser on another device connects only through a [relay](#relay), so turn one on first.
 
 | Setting | Meaning |
 | --- | --- |
@@ -70,15 +102,18 @@ You choose scopes when pairing. **Host administration** (change app settings and
 | **Destructive Git** | Discard changes, check out branches, and push |
 | **Credentials** | Manage provider logins, API keys, and MCP servers |
 
-Revoke a device at any time from **Paired devices**. It disconnects immediately and must pair again to reconnect.
+**Paired devices** lists each device with its permissions, when it was last seen, and a six-digit **safety code**. The phone shows the same **Safety Code** on that computer's detail screen. Matching codes mean no one swapped either key. If they differ, revoke the device and pair again. A device marked **Paired before encryption** must be revoked and paired again.
+
+**Edit access** changes an active device's permissions and reconnects it. Revoke a device at any time from **Paired devices**. It disconnects immediately and must pair again to reconnect.
 
 ```bash
 cocurdex host devices
 cocurdex host revoke <device-id>
+cocurdex host scopes <device-id> --scopes <list>
 cocurdex host audit [--limit <n>]
 ```
 
-**Access log** records pairing, revoke, and remote-access changes on this host.
+**Access log** records pairing, revoke, relay, and remote-access changes on this host.
 
 ## Native app
 

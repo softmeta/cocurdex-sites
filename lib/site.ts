@@ -4,6 +4,11 @@ export const site = {
   url: "https://cocurdex.com",
   github: "https://github.com/softmeta/cocurdex",
   discord: "https://discord.gg/JuRyyv5bv",
+  issues: "https://github.com/softmeta/cocurdex/issues",
+  securityAdvisory:
+    "https://github.com/softmeta/cocurdex/security/advisories/new",
+  contactEmail: "optimus@softmeta.si",
+  company: "softmeta LLC",
 } as const;
 
 const githubLatestDownload = (fileName: string) =>

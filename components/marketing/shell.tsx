@@ -84,6 +84,8 @@ export function SiteShell({ locale, path, children }: SiteShellProps) {
         },
         { label: dict.footer.agents, href: to("/docs/agents/") },
         { label: dict.footer.cli, href: to("/docs/cli/") },
+        { label: dict.footer.support, href: to("/support/") },
+        { label: dict.footer.privacy, href: to("/privacy/") },
       ],
     },
     {
@@ -114,17 +116,21 @@ export function SiteShell({ locale, path, children }: SiteShellProps) {
             <Link href={to("/docs/")} className={navLink}>
               {dict.nav.docs}
             </Link>
-            <LanguageSelect className="h-8 px-2 text-[0.875rem] text-fd-muted-foreground hover:text-fd-foreground">
+            <LanguageSelect className="hidden h-8 px-2 sm:inline-flex text-[0.875rem] text-fd-muted-foreground hover:text-fd-foreground">
               <GlobeIcon />
               <LanguageSelectText className="hidden sm:inline" />
             </LanguageSelect>
-            <a href={site.github} className={navLink} aria-label="GitHub">
+            <a
+              href={site.github}
+              className={`${navLink} hidden sm:inline-flex`}
+              aria-label="GitHub"
+            >
               <GithubIcon />
             </a>
             <ThemeSwitch className="ml-1 border-fd-border" />
             <Link
               href={to("/download/")}
-              className="ml-2 inline-flex h-8 items-center rounded-md bg-fd-foreground px-3 font-medium text-[0.875rem] text-fd-background no-underline transition-opacity hover:opacity-85"
+              className="ml-1 inline-flex h-8 shrink-0 items-center rounded-md bg-fd-foreground px-3 sm:ml-2 font-medium text-[0.875rem] text-fd-background no-underline transition-opacity hover:opacity-85"
             >
               {dict.nav.download}
             </Link>

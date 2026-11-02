@@ -175,12 +175,17 @@ Pair another device with the host daemon. Full model: [Devices and local web](/d
 
 ```bash
 cocurdex host status [--json]
-cocurdex host remote enable [--port <port>] | disable [--json]
+cocurdex host remote enable [--port <port>] [--keep-awake on|off] | disable [--json]
 cocurdex host pair --label <name> [--scopes read,interact,approvals] [--ttl <minutes>] [--json]
 cocurdex host pairings [--json]
 cocurdex host pairing cancel <pairing-id>
 cocurdex host devices [--json]
 cocurdex host revoke <device-id>
+cocurdex host scopes <device-id> --scopes <list>
+cocurdex host relay set [official|<url>] [--relay-only on|off] [--credential <file>]
+cocurdex host relay off
+cocurdex host push set <url> | off
+cocurdex host push status [--json]
 cocurdex host audit [--limit <n>] [--json]
 ```
 
