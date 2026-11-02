@@ -21,25 +21,57 @@ The desktop app must be running so the daemon can serve the client. The URL incl
 
 ## Remote access
 
-Off by default. **Allow remote devices** lets paired devices on your LAN or Tailscale tailnet connect to this computer.
+Off by default. **Allow remote devices** lets paired devices on your LAN or Tailscale tailnet connect to this computer. Only paired devices can connect, with the permissions you grant.
 
 - The UI lists reachable **LAN** and **Tailscale** addresses when they exist.
 - You can set the listen **port** (default is shown in the field).
-- Connections are **not encrypted**. Use a trusted network or Tailscale.
+- **Keep this computer awake** stops idle sleep while remote access is on, so a phone can reach it away from your desk. A closed laptop lid still puts it to sleep.
+
+Traffic between a paired device and this computer is end-to-end encrypted. To reach the computer away from its network, install Tailscale on both devices, or use a [relay](#relay).
 
 From the CLI:
 
 ```bash
 cocurdex host status
-cocurdex host remote enable [--port <port>]
+cocurdex host remote enable [--port <port>] [--keep-awake on|off]
 cocurdex host remote disable
+```
+
+### Relay
+
+**Relay** reaches this computer from anywhere through a `cocurdex-relay` service. The relay forwards end-to-end encrypted traffic and cannot read it. It takes effect while remote access is on.
+
+| Setting | Meaning |
+| --- | --- |
+| **Relay address** | The official Cocurdex relay (**Use official**) or a self-hosted `cocurdex-relay` address. Leave empty to turn the relay off |
+| **Invite credential** | The credential from the relay operator. Pasting it fills in the relay address. The official relay admits only invited computers; a self-hosted relay without invites does not need one |
+| **Relay only** | Accept connections only through the relay and stop listening on local network ports |
+
+**Status** shows **Online**, **Connecting**, **Offline**, or **Off**. Without **Relay only**, the LAN and Tailscale listener stays on. Paired devices use a direct address when one answers and fall back to the relay.
+
+```bash
+cocurdex host relay set [official|<url>] [--relay-only on|off] [--credential <file>]
+cocurdex host relay off
+```
+
+### Phone notifications
+
+A push gateway (the `cocurdex-push` service) lets this computer notify paired phones when an agent asks for approval, asks a question, or has a plan to review, and when a turn finishes or fails. Phones that allow notifications register themselves. Each notification is encrypted to the phone's key, so the gateway, Apple, and Google see only ciphertext.
+
+```bash
+cocurdex host push set <url>
+cocurdex host push status
+cocurdex host push off
 ```
 
 ## Pair a device
 
-**Pair device** creates a one-time code. On another browser, open the pairing link or enter the code on the **Pair this browser** screen. On the iOS or Android app, paste that link into **Pair a Computer** (the field is **Pairing link**, then **Pair**). **Scan to Pair** reads the same code from the QR code on the computer. The app adds that computer, selects it, and you continue on **Sessions**.
+**Pair a device → Create pairing code** creates a one-time code, a QR code, and pairing links. Links are listed most reachable first: the relay while it is online, then Tailscale, then LAN.
 
-If the phone cannot reach the computer — a different Wi-Fi network, or access-point isolation — the request times out after about 10 seconds. **Pair** and the scan screen then show **Can't reach the computer. Check that both are on the same network.**
+- **iOS or Android app:** choose **Pair a Computer**, then **Scan to Pair** and scan the QR code, or **Paste Pairing Link** and tap **Pair**. The app adds that computer, selects it, and you continue on **Sessions**. A paired phone learns every address the computer reports and switches to the one that answers.
+- **Browser on another device:** open the pairing link, or paste it on the **Pair** screen. A browser on another device connects only through a [relay](#relay), so turn one on first.
+
+If no address of the computer answers — a different Wi-Fi network, or access-point isolation — **Pair** and the scan screen show **Can't reach the computer. Check that it is online and reachable on your network or through its relay.**
 
 | Setting | Meaning |
 | --- | --- |
@@ -72,21 +104,26 @@ You choose scopes when pairing. **Host administration** (change app settings and
 | **Destructive Git** | Discard changes, check out branches, and push |
 | **Credentials** | Manage provider logins, API keys, and MCP servers |
 
-Revoke a device at any time from **Paired devices**. It disconnects immediately and must pair again to reconnect.
+**Paired devices** lists each device with its permissions, when it was last seen, and a six-digit **safety code**. The phone shows the same **Safety Code** on that computer's detail screen. Matching codes mean no one swapped either key. If they differ, revoke the device and pair again. A device marked **Paired before encryption** must be revoked and paired again.
+
+**Edit access** changes an active device's permissions and reconnects it. Revoke a device at any time from **Paired devices**. It disconnects immediately and must pair again to reconnect.
 
 ```bash
 cocurdex host devices
 cocurdex host revoke <device-id>
+cocurdex host scopes <device-id> --scopes <list>
 cocurdex host audit [--limit <n>]
 ```
 
-**Access log** records pairing, revoke, and remote-access changes on this host.
+**Access log** records pairing, revoke, relay, and remote-access changes on this host.
 
 ## Native app
 
-The iOS and Android app has four tabs: **Sessions**, **Issues**, **Notes**, and **Computers**. On Android, every tab label stays visible, selected or not, so the tabs keep one height. **Computers** lists paired computers. **Sessions**, **Issues**, and **Notes** are the lists for the computer named in the toolbar.
+The iOS and Android app has four tabs: **Sessions**, **Issues**, **Notes**, and **Computers**. **Computers** lists paired computers. **Sessions**, **Issues**, and **Notes** are for the computer named in the toolbar.
 
-With no computer paired yet, **Sessions** shows **No Computers** and **Pair a Computer**. After you pair, open the computer name in the toolbar to switch hosts, or choose **Pair a Computer** to add another.
+With no computer paired yet, those tabs show **No Computers** and **Pair a Computer**. After you pair, open the computer name in the toolbar to switch hosts, or choose **Pair a Computer** to add another.
+
+**Issues** and **Notes** are read-only on the phone. See [Notes and issues](/docs/notes-and-issues/#on-the-phone).
 
 Rows are grouped by workspace. **Search sessions** filters the list. A child session rolls its state up to the root row:
 
@@ -99,6 +136,27 @@ Rows are grouped by workspace. **Search sessions** filters the list. A child ses
 The line under the title shows the model name, or a run status when that is more relevant — for example **Waiting for your approval**, **Has a question for you**, **Plan ready for review**, **Working…**, **Connecting…**, **Working in the background**, or **Finished**. A failed run shows **Run failed**.
 
 If the phone cannot reach the computer but already has a list, it keeps that list and shows **Can't reach** the computer's name. **Showing the last update.** With nothing loaded yet, the screen is **Can't reach** that computer, **Check that the computer is awake and on the same network.**, and **Try Again**. A computer with no sessions shows **No Sessions** — **Sessions you start on** that computer **appear here.** A search with no matches shows **No sessions match** the query.
+
+### Start a session
+
+The **Sessions** toolbar shows a **New session** button when this computer was paired with **Start work** (`execute`). It opens a sheet titled **New session**.
+
+The prompt placeholder is **What should the agent do?**. **Start** stays disabled until that prompt has text, and reads **Starting…** while the session is opening. Under **Run on**:
+
+| Row | Opens |
+| --- | --- |
+| **Workspace** | Workspaces on this computer |
+| **Agent** | **Agent**, **Model**, and **Mode** |
+
+Both pickers push inside the sheet. The **Agent** row shows the model and permission mode that **Start** will use. The line under the rows is **Runs on** the computer's name.
+
+**Workspace** leads with the workspace that had the latest session, and that one is selected until you pick another. **Search workspaces** filters the list. Each row includes a count, such as **1 session** or **3 sessions**. The footer is **Add new workspaces on the computer.**
+
+On **Agent**, a row you can choose says **Ready**. The others say **Not installed on the computer**, **Not supported on the computer**, or **Failed to start on the computer**. **Model** lists models from the providers on the computer (**Models come from the providers set up on the computer.**). If the agent has none, that section says **No provider models for this agent; it uses its own default model.** **Mode** lists that agent's permission modes. An agent with none, such as Pi, says **This agent has no permission modes to choose from.** Mode ids are on [Agents](/docs/agents/#permission-modes).
+
+**Start** creates the session with the workspace, agent, model, and mode on screen, sends the prompt, names the session from that prompt the same way the desktop app does, and opens it. If **Start** fails after that session exists, the sheet says **Couldn't start the session. Check the connection and try again.** Another **Start** on that sheet sends the prompt into the session already created.
+
+### Notes, issues, and transcripts
 
 On **Notes**, the line under a title is a plain-text excerpt of the body. On **Issues**, the identifier is monospace. On the issue screen, each row under **Sub-issues** opens that issue.
 
@@ -123,6 +181,7 @@ Paired without **Approvals**, that dock shows **Approve this on your computer** 
 ## Related
 
 - [Desktop workspace](/docs/desktop/)
+- [Notes and issues](/docs/notes-and-issues/#on-the-phone)
 - [Providers and settings](/docs/providers-and-settings/)
 - [CLI](/docs/cli/#devices-and-local-web)
 - [Workspaces and data](/docs/concepts/workspaces-and-data/)

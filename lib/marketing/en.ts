@@ -21,6 +21,8 @@ export const dict = {
     cli: "CLI reference",
     agents: "Agents",
     releases: "Releases",
+    support: "Support",
+    privacy: "Privacy",
   },
   home: {
     badge: "Pre-release · macOS · Windows · Linux",
@@ -222,6 +224,181 @@ export const dict = {
     sourceHeading: "Run from source",
     sourceBody: "Node.js 24 and pnpm required.",
     readDocs: "Getting started guide",
+  },
+  privacy: {
+    pageTitle: "Privacy Policy",
+    metaDescription:
+      "How Cocurdex handles data in the desktop app, CLI, iOS and Android apps, and on cocurdex.com.",
+    updatedLabel: "Last updated",
+    updated: "2026-11-02",
+    heading: "Privacy Policy",
+    intro:
+      "Cocurdex runs on your own computer. Your projects, sessions, transcripts, notes, settings, and credentials stay on your devices. This policy covers the Cocurdex desktop app, the cocurdex CLI, the Cocurdex apps for iOS and Android, and cocurdex.com. Cocurdex is published by softmeta LLC, a company based in the United States (“we”).",
+    sections: [
+      {
+        heading: "The short version",
+        body: [],
+        items: [
+          "There are no Cocurdex accounts. You do not sign up or sign in to use the apps.",
+          "The apps do not contain analytics, advertising, or tracking SDKs, and they do not upload crash reports.",
+          "A phone or browser you pair talks to your own computer. That connection is end-to-end encrypted.",
+          "We do not sell personal information or share it for advertising.",
+        ],
+      },
+      {
+        heading: "Data that stays on your devices",
+        body: [
+          "The desktop app and CLI store workspaces, sessions, agent transcripts, memories, notes, issues, decks, settings, provider credentials, and logs on your computer. We do not receive a copy.",
+          "The mobile app stores the computers you paired and the keys for those pairings on your phone, using the operating system’s secure storage. Everything it shows comes from your computer.",
+          "The desktop app records crashes locally to help you troubleshoot. These reports are not uploaded. If you choose to send logs to us, remove credentials and personal data first.",
+        ],
+      },
+      {
+        heading: "Optional memory sync",
+        body: [
+          "Memories the desktop app saves stay on your computer. Multi-device sync is off by default. If you turn it on, memories sync through an account you create with rsrs (rsrs.rs), a separate service. Records are encrypted before they reach the rsrs servers, and the keys stay on your device. rsrs handles that account under its own terms and privacy policy.",
+        ],
+      },
+      {
+        heading: "AI providers and agent tools you choose",
+        body: [
+          "When you run an agent, your computer sends your prompts, the files and context the agent reads, and tool results directly to the model provider or agent CLI you configured, such as Anthropic, OpenAI, or Google. That data goes from your computer to that provider under the provider’s own terms and privacy policy. It does not pass through us.",
+        ],
+      },
+      {
+        heading: "Mobile app permissions",
+        body: [
+          "The iOS and Android app asks for a permission only when you use the feature that needs it:",
+        ],
+        items: [
+          "Camera: to scan the pairing QR code shown on your computer. Images are not stored or sent anywhere.",
+          "Photos: to attach a photo you pick to a message for an agent. The photo goes to your computer only.",
+          "Local network (iOS): to reach the computers you paired on your network.",
+          "Notifications: to alert you when an agent needs you or finishes. This is optional.",
+        ],
+      },
+      {
+        heading: "Push notifications",
+        body: [
+          "If you allow notifications, your phone obtains a push token from Apple or Google and gives it to your paired computer. Your computer registers that token with a Cocurdex push gateway, which returns an encrypted handle for your computer to keep. The gateway does not keep a database of tokens.",
+          "Each notification is encrypted on your computer with your phone’s key. Our push gateway, Apple Push Notification service, and Firebase Cloud Messaging see only the encrypted payload and the delivery details they need, such as the token and timing. They cannot read what an agent did.",
+          "To stop notifications, turn them off for Cocurdex in your phone’s settings, revoke the phone on your computer, or run cocurdex host push off.",
+        ],
+      },
+      {
+        heading: "Remote access and relays",
+        body: [
+          "Remote access is off by default. When you turn it on, paired devices connect to your computer over your local network or Tailscale. Tailscale is a separate service with its own privacy policy.",
+          "You can also route remote access through a relay. A relay forwards only encrypted traffic and cannot read or change it. Our official relay is available by invitation only. If you use it, it processes your computer’s IP address, a route identifier, the account identifier in your invite credential, and the amount of traffic, to operate the service and enforce limits. A relay you host yourself is run by you.",
+        ],
+      },
+      {
+        heading: "App updates",
+        body: [
+          "The desktop app checks updates.cocurdex.com for new versions and downloads releases from GitHub. These requests include your IP address and standard request details such as the app version, platform, and update channel. We use them only to deliver updates.",
+        ],
+      },
+      {
+        heading: "This website",
+        body: [
+          "cocurdex.com is a static site hosted on Cloudflare Pages. We use Cloudflare Web Analytics to count page views. It does not use cookies or track you across sites. Cloudflare processes your IP address to deliver and protect the site.",
+          "The site remembers your theme choice in your browser’s local storage. Docs search runs on this site and is not sent to a third party. Downloads are served from GitHub.",
+        ],
+      },
+      {
+        heading: "When you contact us",
+        body: [
+          "If you email us, we receive your email address and what you write, and use them to reply. GitHub Issues and Discord are public or community spaces run under their own terms. Do not post credentials, private code, or personal data there.",
+        ],
+      },
+      {
+        heading: "Retention and your choices",
+        body: [
+          "Data on your devices is under your control. Delete a workspace or session in the app, revoke a paired device, or uninstall the app to remove its data. Uninstalling the mobile app removes its pairings from the phone; revoke the phone on your computer as well.",
+          "We keep support email only as long as needed to help you. Push gateway and relay technical logs are kept only as long as needed to run and secure those services.",
+          "Depending on where you live, including the EEA, the UK, and California, you may have rights to access, correct, delete, or object to processing of your personal information. Email us to make a request. We will not discriminate against you for doing so. You may also complain to your local data protection authority.",
+        ],
+      },
+      {
+        heading: "Children",
+        body: [
+          "Cocurdex is a developer tool and is not directed to children under 13, or under 16 in the EEA and UK. We do not knowingly collect their personal information.",
+        ],
+      },
+      {
+        heading: "International transfers",
+        body: [
+          "We are based in the United States. Where our services process personal information, it may be processed in the United States and in other countries where our service providers operate.",
+        ],
+      },
+      {
+        heading: "Changes",
+        body: [
+          "If this policy changes, we will update it here and change the date above. If a change materially affects how we handle your data, we will say so on this site before it takes effect.",
+        ],
+      },
+    ],
+    contactHeading: "Contact",
+    contactBody: "Questions or requests about privacy: softmeta LLC,",
+  },
+  support: {
+    pageTitle: "Support",
+    metaDescription:
+      "Get help with Cocurdex on desktop, CLI, iOS, and Android.",
+    eyebrow: "Support",
+    heading: "Get help with Cocurdex",
+    intro:
+      "Cocurdex is pre-release and has no support SLA. These channels reach the people who build it.",
+    channels: [
+      {
+        id: "email" as const,
+        title: "Email",
+        body: "Questions about the desktop, iOS, or Android app, privacy requests, and anything you would rather not post in public.",
+        linkLabel: "Email",
+      },
+      {
+        id: "issues" as const,
+        title: "Bug reports and feature requests",
+        body: "Include the Cocurdex version, operating system, agent, and steps to reproduce. Do not attach credentials, private code, or transcripts.",
+        linkLabel: "GitHub Issues",
+      },
+      {
+        id: "discord" as const,
+        title: "Community",
+        body: "Usage questions, quick feedback, and discussion.",
+        linkLabel: "Join Discord",
+      },
+      {
+        id: "security" as const,
+        title: "Security vulnerabilities",
+        body: "Report privately through a GitHub Security Advisory. Do not open a public issue.",
+        linkLabel: "Report a vulnerability",
+      },
+    ],
+    faqHeading: "Common questions",
+    faq: [
+      {
+        question: "How do I connect the phone app to my computer?",
+        answer:
+          "On the computer, open Settings → Devices → Pair a device and choose Create pairing code. In the iOS or Android app, choose Pair a Computer, then Scan to Pair or Paste Pairing Link.",
+        docPath: "/docs/devices-and-web/",
+      },
+      {
+        question: "The app says it can’t reach my computer.",
+        answer:
+          "Check that the computer is awake, the Cocurdex desktop app is running, remote access is on, and both devices are on the same network or Tailscale tailnet.",
+        docPath: "/docs/devices-and-web/",
+      },
+      {
+        question: "How do I remove a phone or delete my data?",
+        answer:
+          "There is no Cocurdex account to delete. Revoke the phone under Paired devices on your computer, then uninstall the app. Your sessions and settings live on your computer, and you can delete them there.",
+        docPath: "/docs/concepts/workspaces-and-data/",
+      },
+    ],
+    readMore: "Docs",
+    privacyNote: "How we handle data:",
+    privacyLink: "Privacy Policy",
   },
 };
 
