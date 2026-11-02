@@ -71,6 +71,8 @@ cocurdex host push off
 - **iOS or Android app:** choose **Pair a Computer**, then **Scan to Pair** and scan the QR code, or **Paste Pairing Link** and tap **Pair**. The app adds that computer, selects it, and you continue on **Sessions**. A paired phone learns every address the computer reports and switches to the one that answers.
 - **Browser on another device:** open the pairing link, or paste it on the **Pair** screen. A browser on another device connects only through a [relay](#relay), so turn one on first.
 
+If no address of the computer answers — a different Wi-Fi network, or access-point isolation — **Pair** and the scan screen show **Can't reach the computer. Check that it is online and reachable on your network or through its relay.**
+
 | Setting | Meaning |
 | --- | --- |
 | **Device name** | Label shown in the paired-devices list |
@@ -131,7 +133,7 @@ Rows are grouped by workspace. **Search sessions** filters the list. A child ses
 | **Running** | The session is still working |
 | **Unread** | A result is finished and not yet opened |
 
-The line under the title is more specific — for example **Waiting for your approval**, **Has a question for you**, **Plan ready for review**, **Working…**, **Connecting…**, **Working in the background**, or **Finished**. A failed run shows **Run failed**.
+The line under the title shows the model name, or a run status when that is more relevant — for example **Waiting for your approval**, **Has a question for you**, **Plan ready for review**, **Working…**, **Connecting…**, **Working in the background**, or **Finished**. A failed run shows **Run failed**.
 
 If the phone cannot reach the computer but already has a list, it keeps that list and shows **Can't reach** the computer's name. **Showing the last update.** With nothing loaded yet, the screen is **Can't reach** that computer, **Check that the computer is awake and on the same network.**, and **Try Again**. A computer with no sessions shows **No Sessions** — **Sessions you start on** that computer **appear here.** A search with no matches shows **No sessions match** the query.
 
@@ -154,9 +156,17 @@ On **Agent**, a row you can choose says **Ready**. The others say **Not installe
 
 **Start** creates the session with the workspace, agent, model, and mode on screen, sends the prompt, names the session from that prompt the same way the desktop app does, and opens it. If **Start** fails after that session exists, the sheet says **Couldn't start the session. Check the connection and try again.** Another **Start** on that sheet sends the prompt into the session already created.
 
-Open a row and the tab bar hides. The back button reads **Sessions**. The header is the session title, with the workspace and model under it. The transcript updates as the agent runs: your messages, the assistant's messages, and tool calls.
+### Notes, issues, and transcripts
 
-Assistant messages are Markdown. Tables render. A fenced code block shows the language, a copy button, and syntax highlighting. Math is disabled.
+On **Notes**, the line under a title is a plain-text excerpt of the body. On **Issues**, the identifier is monospace. On the issue screen, each row under **Sub-issues** opens that issue.
+
+Open a session and the tab bar hides. The back button reads **Sessions**. The header is the session title, with the workspace and model under it. The transcript updates as the agent runs: your messages, the assistant's messages, and tool calls.
+
+Assistant messages are Markdown. Tables render. A fenced code block shows the language, a copy button, and syntax highlighting. A fenced `mermaid` block renders as a diagram, in the same theme family as the desktop app. If rendering fails, or the phone is offline and the diagram cannot be drawn, the source is shown as a normal code block. Math is disabled.
+
+Tap an image in the transcript to open a full-screen viewer. Pinch-zoom works on iOS. On Android the viewer is full screen, and pinch-zoom is not available yet. **Close** leaves the viewer.
+
+Tap a tool-call row to open its detail screen. The header shows the status — **Done**, **Failed**, or **Running** — and the duration in seconds after the call finishes. **Input** and **Output** follow. A long output shows the tail, labeled **Last 64 KB**. When output is on screen, **Copy Output** copies it. If the output cannot be loaded, the screen shows **Couldn't load the output**. The formatting matches the desktop app.
 
 The composer placeholder is **Reply to the agent**. **Send** posts the message. While the session is running and the field is empty, that control is **Stop**. Sending and stopping need the **Interact** permission from pairing.
 
