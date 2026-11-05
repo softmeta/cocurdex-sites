@@ -71,7 +71,7 @@ cocurdex workspace list
 
 受支持的 Agent id 与权限模式见 [Agent](/zh-cn/docs/agents/)。
 
-从 CLI 查看 provider 配置（daemon 必须已运行——打开桌面应用即会启动）：
+从 CLI 查看 provider 配置（daemon 必须已运行）。打开桌面应用会启动它；随安装包提供的 CLI 也会在它没在跑时启动它：
 
 ```bash
 cocurdex provider list
@@ -93,7 +93,7 @@ cocurdex provider models <provider-id>
 
 ## 第一个会话（CLI TUI）
 
-在 daemon 可用时（桌面已打开或 daemon 可达）：
+在 daemon 运行时（桌面应用已打开、**后台常驻**已开启，或打包的 CLI 可以启动它）：
 
 ```bash
 cocurdex session tui \
@@ -150,8 +150,8 @@ cocurdex skills install --scope global
 | --- | --- |
 | 某个 Agent 显示不可用 | 安装并登录它的 CLI，然后查看 **设置 → Agent CLI**(它也会标出需要升级的版本) |
 | Agent 提示需要登录 | 在输入框的模型菜单中选择**登录 …**，然后重新发送 |
-| CLI 数据命令失败 | 打开桌面应用以启动 daemon；运行 `cocurdex daemon status` |
-| 笔记、Issue 或 Agent 无响应 | **设置 → 常规** 中**重启** daemon |
+| CLI 数据命令失败 | 运行 `cocurdex daemon status`。打包的 CLI 会在 daemon 没在跑时启动它；如果启动不了，再打开桌面应用。**后台常驻**会在退出后让 daemon 继续运行 |
+| 笔记、Issue 或 Agent 无响应 | **设置 → 常规 → Daemon** 中**重启** daemon |
 | 浏览器要求配对 | 在运行 Cocurdex 的电脑上打开 **设置 → 设备**，生成配对码，然后打开链接或输入配对码。见[设备与本地网页](/zh-cn/docs/devices-and-web/) |
 | 手机上只有电脑、没有会话 | 打开**会话**标签。列表对应当前工具栏里的那台电脑。见[设备与本地网页](/zh-cn/docs/devices-and-web/#原生应用) |
 | 其他问题 | **帮助 → 导出诊断日志…**，把文件附到 [GitHub Issue](https://github.com/softmeta/cocurdex/issues)，或到 [Discord](https://discord.gg/JuRyyv5bv) 提问 |

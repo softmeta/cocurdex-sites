@@ -7,6 +7,8 @@ The desktop app is the host. **Settings → Devices** lets you use that same hos
 
 Nothing here replaces the daemon. The browser and the phone app talk to the Cocurdex instance already running on the machine; that connection does not create a second workspace or a cloud account.
 
+Opening the desktop app starts that daemon. **Keep running in the background** (**Settings → General → Daemon**) keeps it running after you quit and starts it at login, so the browser and paired devices keep working with the desktop window closed. The CLI packaged with the app can start the daemon when it is down. See [Daemon](/docs/providers-and-settings/#daemon).
+
 ## Open in browser (this computer)
 
 **Settings → Devices → Open in browser** loads the local web client against the same workspaces and sessions as the desktop app.
@@ -17,7 +19,7 @@ The CLI prints that URL:
 cocurdex web
 ```
 
-The desktop app must be running so the daemon can serve the client. The URL includes a local token; treat it like access to this machine.
+The daemon must be running to serve the client. The URL includes a local token; treat it like access to this machine.
 
 ## Remote access
 
@@ -25,7 +27,7 @@ Off by default. **Allow remote devices** lets paired devices on your LAN or Tail
 
 - The UI lists reachable **LAN** and **Tailscale** addresses when they exist.
 - You can set the listen **port** (default is shown in the field).
-- **Keep this computer awake** stops idle sleep while remote access is on, so a phone can reach it away from your desk. A closed laptop lid still puts it to sleep.
+- **Keep this computer awake** stops idle sleep while remote access is on, so a phone can reach it away from your desk. It stays in effect while the daemon is running, including after you quit the desktop app with **Keep running in the background** on. A closed laptop lid still puts it to sleep.
 
 Traffic between a paired device and this computer is end-to-end encrypted. To reach the computer away from its network, install Tailscale on both devices, or use a [relay](#relay).
 
