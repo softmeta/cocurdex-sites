@@ -1,0 +1,69 @@
+---
+title: 记忆
+description: Cocurdex 的长期记忆——回答前召回、保存一段对话，以及可选的加密多设备同步。
+---
+
+**记忆**让 Cocurdex 召回你保存过的内容，并在你要求时把一段对话写入这份存储。默认关闭。条目放在本机的 [rsrs](https://rsrs.rs) 存储（`~/.rsrs`）里，不在 `cocurdex.sqlite` 中。打开多设备同步之前，不会有内容被上传。
+
+Intel Mac 没有 rsrs 构建，这台机器上记忆保持关闭，状态行会说明这一点。
+
+## 打开
+
+在输入框的 **+** 菜单里选择 **记忆**：
+
+| 项 | 作用 |
+| --- | --- |
+| **启用记忆** | 打开或关闭召回与保存 |
+| **多设备同步** | 连接 rsrs 账号。记忆已开启且 rsrs 已安装之前，这一项不可用 |
+| **记忆设置** | 打开 **设置 → 记忆** |
+
+同一页在缺少 rsrs 时提供 **安装**，**运行体检**用来检查安装。**rsrs 可执行文件**可选；留空则使用 `PATH` 上的二进制。
+
+**设置 → 记忆**里还有：
+
+| 设置 | 作用 |
+| --- | --- |
+| **Agent 会话自动召回** | 每一轮 Agent 回答前，把相关记忆加进提示词 |
+| **Agent 记忆工具** | 给会话提供 `memory_recall`、`memory_show`、`memory_remember`、`memory_policy` |
+| **Chat 会话自动召回** | 每次 Chat 回答前召回 |
+| **每轮对话保存** | 把完成的一轮 Chat 追加到当天的记忆日记 |
+| **会话结束时保存** | 归档或删除 Chat 会话时总结整段对话 |
+
+在 Chat 会话里，输入框旁的大脑按钮是 **保存到记忆**。这段对话已经存过时，应用会说明。当前轮召回失败时，同一个控件会报出原因。
+
+## 多设备同步
+
+默认关闭。打开 **多设备同步**会进入 **连接云端记忆**，可以 **创建账号**或 **登录**。
+
+- 用户名和登录密码属于 rsrs 账号。Cocurdex 不保存密码。
+- 创建账号时，对话框里会显示一次 **恢复密钥**。请保存。它用来在另一台设备上解密记忆，Cocurdex 和服务端都不能重新生成。之后可以在 **设置 → 记忆 → 恢复密钥**再次查看。
+- 在另一台设备登录需要同样的用户名、密码和恢复密钥。
+- 记录在这台设备上加密后才会上传。页面会显示有多少条记忆等待上传，以及同步失败的原因。
+- **退出登录**停止自动同步，这台设备上的记忆保持原样。重新登录需要同样的用户名、密码和恢复密钥。
+
+这一页链到 Respire 的官网和源码，说明 rsrs 是什么。
+
+## CLI
+
+```bash
+cocurdex memory status [--refresh]
+cocurdex memory on | off
+cocurdex memory install [--force]
+cocurdex memory doctor [--remote] [--check-update]
+cocurdex memory recall <query> [--limit <n>] [--project <name>]
+cocurdex memory show <id>
+cocurdex memory remember --title <title> [--content <text> | --file <path> | <text>] [--importance important|trivial] [--tags a,b]
+cocurdex memory save-session <session-id> [--force] [--importance important|trivial]
+cocurdex memory sync on | off
+cocurdex memory cloud register|signin --user <name>
+cocurdex memory cloud signout | keys
+cocurdex memory policy
+```
+
+`cloud register` 和 `cloud signin` 从隐藏提示读取密码（登录时还读取恢复密钥）。标准输入不是终端时，改为从管道读取这些密钥。`cloud keys` 打印恢复密钥。`memory policy` 打印记忆工具遵循的规则。
+
+## 相关
+
+- [Provider 与设置](/zh-cn/docs/providers-and-settings/)
+- [工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)
+- [CLI](/zh-cn/docs/cli/#记忆)

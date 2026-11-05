@@ -7,7 +7,13 @@ Cocurdex 的大部分配置位于桌面应用的**设置**中。本页覆盖会�
 
 ## Agent CLI
 
-**设置 → Agent CLI** 列出新建会话时可以选用的所有 Agent。每一项会显示探测到的版本和状态（**内置**、**可用**、**未安装**、**需要升级**）、可复制的安装命令、文档链接，以及——对能上报的 Agent——你的套餐用量。**从 ACP Registry 添加**可以安装更多 Agent,或用你自己的命令注册一个。见 [Agent](/zh-cn/docs/agents/#acp-registry-agent)。
+**设置 → Agent CLI** 列出新建会话时可以选用的所有 Agent。每一项会显示探测到的版本和状态（**内置**、**可用**、**未安装**、**需要升级**、**有更新**、**需要登录**）、可复制的安装命令、文档链接，以及——对能上报的 Agent——你的套餐用量。未安装的 Agent 收在 **未安装（N）** 里，展开才看得到。新建会话的 Agent 菜单会藏起这些未安装的 Agent；你已经选中的 Agent 即使后来被卸掉，仍会留在菜单里。**更新到 v…** 安装 ACP Registry 上更新的构建。支持登录的 Registry Agent 提供**登录**和**退出登录**。**从 ACP Registry 添加**可以安装更多 Agent,或用你自己的命令注册一个。见 [Agent](/zh-cn/docs/agents/#acp-registry-agent)。
+
+```bash
+cocurdex agent updates
+cocurdex agent update <agent>
+cocurdex agent login <agent>
+```
 
 同一页的**运行上限**限制同时执行的 agent 运行数量。超出上限的委派运行（队友和脚本编排的子 Agent）会排队等待；你自己发起的运行不受限制。
 
@@ -32,6 +38,8 @@ Cocurdex 的大部分配置位于桌面应用的**设置**中。本页覆盖会�
 | 模型 | 每个模型的 id、显示名、能力（agent / chat / reasoning / vision）、上下文与输出上限、每百万 token 成本 |
 | 高级 | 自定义请求头、兼容性 JSON、思考等级映射 |
 
+模型一行上的**模型参数**可以改 API 运行时、上下文和输出上限、能力、推理，以及高级 JSON。内置目录里的模型也可以改：你改过的字段在目录更新后仍然保留，这一行会标为**已修改**。**恢复默认**还原目录里的值。不能在这里添加或删除内置模型。
+
 模板可为常见 Provider 自动填充端点；**Import JSON** 可批量导入 Provider 定义。一切在 UI 中管理，之后可用 CLI 验证：
 
 ```bash
@@ -45,13 +53,22 @@ Provider 配置与模型同样可以脚本化：`cocurdex provider add|update|lo
 
 ## MCP 服务器
 
-**设置 → MCP** 配置可供内置 **Pi** Agent 使用的 Model Context Protocol 服务器。Pi 会在会话启动时通过其内置的 MCP 支持连接它们。
+**设置 → MCP** 是 Cocurdex 提供给你的 Agent 的工具服务器。新会话会用上改动；正在运行的会话保留它已经有的工具。
 
-- 两种编辑方式：**表单**（名称、连接方式、命令/URL、参数、环境变量）和原始 **JSON**。
-- JSON 结构是标准的 `mcpServers` 对象。
-- 连接方式：**local** stdio(`command` + `args` + `env`)和 **remote** HTTP(`url`)。
+- **表单**（名称、本地命令或远程 URL、参数、环境变量或请求头）和原始 **JSON**。JSON 结构是标准的 `mcpServers` 对象。
 - 服务器名称只能包含字母、数字、`_` 和 `-`。
-- 变更在 Pi 会话启动时生效；已运行的会话保留其当前工具。
+- **Agent** 选择哪些 Agent 会拿到这台服务器。它们自己的 MCP 配置不会被改动。有些服务器只有 Pi 能用——例如设置了工作目录、用命令取值，或通过 Pi 的服务商登录。这一行会写明原因。
+- **从其他 Agent 导入**读取这台电脑上 Claude Code、Codex、Cursor、OpenCode 或 Antigravity 已经配置的服务器，包括项目级配置。每一项都要你确认。也可以拖入或粘贴 JSON。
+- 服务器要求登录时使用**登录**。**测试连接**列出它的工具。
+- 定义在磁盘文件里的项目服务器在这里是只读的；要改就去改那个文件。
+- **高级 → 工具暴露方式**可以是**直接暴露**（每个工具都在 Agent 的工具列表里）、**按需加载**（Agent 搜索时才加载）、**代码模式**（Pi 从生成的代码里调用），或**隐藏**。
+
+```bash
+cocurdex mcp list
+cocurdex mcp import --from codex
+```
+
+其余命令见 [CLI](/zh-cn/docs/cli/#mcp-服务器)。
 
 ## 网络代理
 
@@ -103,7 +120,7 @@ Provider 配置与模型同样可以脚本化：`cocurdex provider add|update|lo
 
 ## 诊断
 
-**设置 → 诊断**（或菜单 **帮助 → 导出诊断日志…**）会把脱敏后的应用日志与运行时信息打包成一个文件，方便附到 GitHub Issue 中。复现问题时可以打开**详细诊断日志**记录更多细节；无论开关与否，日志都会脱敏。
+**设置 → 诊断**（或菜单 **帮助 → 导出诊断日志…**）会把脱敏后的应用日志与运行时信息打包成一个文件，方便附到 GitHub Issue 中。复现问题时可以打开**详细诊断日志**记录更多细节；无论开关与否，日志都会脱敏。同一组操作是 `cocurdex diagnostics export` 和 `cocurdex diagnostics level debug|info`。`cocurdex daemon health` 打印进程、内存和正在进行的工作。
 
 **设置 → 常规** 还会显示本地 daemon 的状态（socket、协议版本、启动时间）并提供**重启**——当笔记、Issue、演示文稿或 Agent 无响应时使用。
 
@@ -119,8 +136,9 @@ Provider 配置与模型同样可以脚本化：`cocurdex provider add|update|lo
 | **Agent CLI** | 已安装的 Agent、版本、安装提示、ACP Registry 与[运行上限](#agent-cli)（见上文） |
 | **角色** | 编辑或删除保存的 Agent 预设及其头像和描述；见 [Agent](/zh-cn/docs/agents/#agent-角色) |
 | **团队** | 可复用的[团队模板](/zh-cn/docs/teams/#团队模板) |
-| **MCP** | 供 Pi 使用的 MCP 服务器（见上文） |
-| **Skills** | 安装 / 移除 `cocurdex-*` 产品 skill 包 |
+| **MCP** | 提供给 Agent 的工具服务器，含导入（见上文） |
+| **记忆** | 长期召回和可选的多设备同步；见[记忆](/zh-cn/docs/memory/) |
+| **Skills** | `cocurdex-*` 包，以及来自 skills.sh、GitHub 仓库或文件夹的其他 skill |
 | **网络** | 出站代理（见上文） |
 | **Git** | 提交信息模型（见上文） |
 | **工作树** / **工作区** | 托管工作树根目录与清单；按工作区的脚本与 Actions(见上文) |
@@ -132,6 +150,7 @@ Provider 配置与模型同样可以脚本化：`cocurdex provider add|update|lo
 
 ## 相关
 
+- [记忆](/zh-cn/docs/memory/)
 - [Agents](/zh-cn/docs/agents/)
 - [设备与本地网页](/zh-cn/docs/devices-and-web/)
 - [CLI](/zh-cn/docs/cli/)

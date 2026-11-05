@@ -32,7 +32,13 @@ Common registry agents:
 | `acp:devin` | Devin | `devin acp` | Streaming, native write; login via Devin |
 | `acp:grok-build` | Grok Build | `grok agent stdio` | Plan mode, steering, native write; plan usage meter |
 
-External agents must be installed and authenticated on your machine. **Settings → Agent CLIs** shows each agent's detected version and status (**Ready**, **Not installed**, **Update required**), a copyable install command, and a docs link. An agent below its minimum version stays usable, but some capabilities may not work until you update.
+External agents must be installed and authenticated on your machine. **Settings → Agent CLIs** shows each agent's detected version and status (**Ready**, **Not installed**, **Update required**, **Update available**, **Login required**), a copyable install command, and a docs link. Agents that are not installed are folded under **Not installed (N)**, and the session's agent menu hides them. An agent below its minimum version stays usable, but some capabilities may not work until you update. **Update to v…** installs a newer registry build. **Log in** and **Log out** are on the same page when the agent supports them.
+
+```bash
+cocurdex agent updates
+cocurdex agent update acp:cursor
+cocurdex agent login acp:cursor
+```
 
 <Callout title="Upgrading from an earlier build">
 Cursor, Devin, and Grok Build used to be built in with the ids `cursor`, `devin`, and `grok-build`. They now run through the ACP Registry as `acp:cursor`, `acp:devin`, and `acp:grok-build`. Existing sessions and roles are migrated automatically; update any scripts that pass the old ids to `--agent`.

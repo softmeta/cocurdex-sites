@@ -32,7 +32,13 @@ Cocurdex 内置四个 Agent，并可以添加 [ACP Registry](#acp-registry-agent
 | `acp:devin` | Devin | `devin acp` | 流式输出、本地写入；通过 Devin 登录 |
 | `acp:grok-build` | Grok Build | `grok agent stdio` | 计划模式、引导、本地写入；显示套餐用量 |
 
-外部 Agent 必须在你的机器上安装并完成授权。**设置 → Agent CLI** 会显示每个 Agent 探测到的版本和状态（**可用**、**未安装**、**需要升级**）、可复制的安装命令和文档链接。低于最低版本的 Agent 仍可使用，但在更新前部分能力可能无法工作。
+外部 Agent 必须在你的机器上安装并完成授权。**设置 → Agent CLI** 会显示每个 Agent 探测到的版本和状态（**可用**、**未安装**、**需要升级**、**有更新**、**需要登录**）、可复制的安装命令和文档链接。未安装的 Agent 收在 **未安装（N）** 里，会话的 Agent 菜单会藏起它们。低于最低版本的 Agent 仍可使用，但在更新前部分能力可能无法工作。**更新到 v…** 安装 ACP Registry 上更新的构建。Agent 支持登录时，同一页提供**登录**和**退出登录**。
+
+```bash
+cocurdex agent updates
+cocurdex agent update acp:cursor
+cocurdex agent login acp:cursor
+```
 
 <Callout title="从旧版本升级">
 Cursor、Devin 和 Grok Build 过去是内置 Agent，id 为 `cursor`、`devin`、`grok-build`。现在它们通过 ACP Registry 运行，id 变为 `acp:cursor`、`acp:devin`、`acp:grok-build`。已有会话和角色会自动迁移；如果脚本里用旧 id 传 `--agent`，请一并更新。

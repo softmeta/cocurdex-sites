@@ -86,8 +86,11 @@ The composer starts every session and every follow-up:
 | `/` | Pick a skill or an agent-advertised slash command |
 | `@` | Mention workspace files as context |
 | **+ → Skill / Issue / Note** | Insert a skill, or attach an issue or note as a pill; the agent gets its full content in the prompt |
-| Model menu | Agent, provider, model, reasoning effort, permission mode; **Save as role** stores the setup as an [agent role](/docs/agents/#agent-roles) |
+| Model menu | Agent, provider, model, reasoning effort, permission mode; **Save as role** stores the setup as an [agent role](/docs/agents/#agent-roles). A saved role leads that control: its avatar and name sit with the model |
+| **+ → Memory** | Turn [memory](/docs/memory/) on, sync it, or open its settings |
 | **Worktree** checkbox (new session) | Run the session in a fresh [managed worktree](#worktrees) |
+
+With no folder open, the work-session placeholder is **Open a folder, then describe the task**. Sending still works: Cocurdex opens the folder picker and keeps what you typed if you cancel.
 
 Follow-ups sent while a turn runs are steered into it when the agent supports steering, or queued until the turn finishes (**Settings → General → Follow-up behavior**). When a turn settles, its tool calls fold behind a label that shows how long the turn worked; expand it to review every step.
 
@@ -119,7 +122,7 @@ The commit popover offers **Commit** and **Commit and push**. Leave the message 
 
 - A session pane's **Split session** menu offers **Split Right**, **Split Down**, **Close Pane**, and **Close All**.
 - **Open in a separate window** moves chat into its own window; **Move back to main window** returns it. The editor panel must be open to detach chat.
-- The terminal supports multiple tabs with **New terminal**, **Find in terminal**, and **Restart**.
+- The terminal supports multiple tabs with **New terminal**, **Find in terminal**, and **Restart**. Editor, PDF, terminal, and browser tabs each have a close button at the trailing edge: it stays visible on the active tab and appears when you hover the others.
 - Use **Search files** in the editor's file tree. Its context menu offers **Add to Chat**, **Reveal in Finder** (where file-manager support is available), **Copy Path**, and **Copy Relative Path**.
 - Workspace `.md` files in the editor toggle **Preview** / **Source** in the tab bar. (App-owned [notes](/docs/notes-and-issues/) use the notes editor, not this toggle.)
 - For workspaces with several folders, **Edit workspace** manages **Source folders** with **Add folder**, **Make primary**, and **Remove folder**. Drop a folder onto the window to open it as a workspace.
@@ -149,6 +152,10 @@ Defaults are VS Code / Cursor-adjacent where that helps muscle memory. **Primary
 | Toggle chat dock | `Primary+J` |
 | Toggle workspace search | `Primary+Shift+F` |
 | Toggle browser design mode | `Primary+Shift+D` |
+| Go back | `Primary+[` on macOS, `Alt+Left` on Windows and Linux |
+| Go forward | `Primary+]` on macOS, `Alt+Right` on Windows and Linux |
+
+**Back** and **Forward** sit in the title bar, next to Settings. They walk through the session, note, issue, deck, or panel view you had open, and through each settings section. In settings, **Back to app** leaves settings. Mouse side buttons do the same. The history is kept for this launch. In the browser client, the browser's own Back button is separate from these.
 
 Send-key behavior for chat (Enter vs Primary+Enter for multiline) is configurable in settings. Keys for moving through a slide deck are listed on [Slide decks](/docs/decks/#presenting).
 

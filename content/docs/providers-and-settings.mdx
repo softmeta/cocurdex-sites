@@ -7,7 +7,13 @@ Most Cocurdex configuration lives in the desktop app's **Settings**. This page c
 
 ## Agent CLIs
 
-**Settings → Agent CLIs** lists every agent you can pick when starting a session. For each one it shows the detected version and status (**Built in**, **Ready**, **Not installed**, **Update required**), a copyable install command, a docs link, and — for agents that report it — your plan usage. **Add from ACP Registry** installs more agents, or registers one with your own command. See [Agents](/docs/agents/#acp-registry-agents).
+**Settings → Agent CLIs** lists every agent you can pick when starting a session. For each one it shows the detected version and status (**Built in**, **Ready**, **Not installed**, **Update required**, **Update available**, **Login required**), a copyable install command, a docs link, and — for agents that report it — your plan usage. Agents that are not installed are folded under **Not installed (N)** until you expand that group. The agent menu on a new session hides those missing agents; an agent you already selected stays visible if it is later uninstalled. **Update to v…** installs a newer ACP Registry build. Registry agents that support it offer **Log in** and **Log out**. **Add from ACP Registry** installs more agents, or registers one with your own command. See [Agents](/docs/agents/#acp-registry-agents).
+
+```bash
+cocurdex agent updates
+cocurdex agent update <agent>
+cocurdex agent login <agent>
+```
 
 **Run limits** on the same page cap how many agent runs execute at once. Delegated runs (teammates and script-run subagents) past a limit wait in the queue; runs you start yourself are never held back.
 
@@ -32,6 +38,8 @@ A provider config holds:
 | Models | Per-model id, display name, capabilities (agent / chat / reasoning / vision), context and output limits, cost per 1M tokens |
 | Advanced | Custom headers, compatibility JSON, thinking-level maps |
 
+**Model parameters** on a model row edits the API runtime, context and output limits, capabilities, reasoning, and the advanced JSON. Built-in catalog models can be edited too: the fields you change are kept when the catalog updates, and the row is marked **Edited**. **Reset to default** restores the catalog values. Adding or deleting a built-in model is not offered.
+
 Templates fill the endpoint for common providers; **Import JSON** bulk-loads a provider definition. Manage everything in the UI, then verify from the CLI:
 
 ```bash
@@ -45,13 +53,22 @@ External agent CLIs (`claude`, `codex`, `opencode`, and ACP Registry agents such
 
 ## MCP servers
 
-**Settings → MCP** configures the Model Context Protocol servers available to the built-in **Pi** agent. Pi connects to them when a session starts, through its built-in MCP support.
+**Settings → MCP** is the tool servers Cocurdex gives to your agents. New sessions pick up changes; a running session keeps the tools it already has.
 
-- Two editing modes: a **form** (name, transport, command/URL, arguments, environment) and raw **JSON**.
-- The JSON shape is the standard `mcpServers` object.
-- Transports: **local** stdio (`command` + `args` + `env`) and **remote** HTTP (`url`).
+- A **form** (name, local command or remote URL, arguments, environment or headers) and raw **JSON**. The JSON shape is the standard `mcpServers` object.
 - Server names may contain only letters, digits, `_`, and `-`.
-- Changes apply when a Pi session starts; running sessions keep their current tools.
+- **Agents** chooses which agents receive the server. Their own MCP configs are left untouched. Some servers can only be used by Pi — for example one that sets a working directory, runs a command value, or signs in through a Pi provider. The row says so.
+- **Import from other agents** reads servers already configured for Claude Code, Codex, Cursor, OpenCode, or Antigravity, including project configs. You confirm each one. You can also drop or paste JSON.
+- **Sign in** when a server asks for it. **Test connection** lists its tools.
+- A project server defined in a file on disk is read-only here; edit that file to change it.
+- **Advanced → Tool exposure** is **Direct** (every tool on the agent's list), **On demand** (tools load when the agent searches), **Code mode** (Pi calls them from generated code), or **Hidden**.
+
+```bash
+cocurdex mcp list
+cocurdex mcp import --from codex
+```
+
+The rest of the commands are on [CLI](/docs/cli/#mcp-servers).
 
 ## Network proxy
 
@@ -103,7 +120,7 @@ After an update downloads, an **Update available** card offers **Update and Rest
 
 ## Diagnostics
 
-**Settings → Diagnostics** (or **Help → Export Diagnostics…**) bundles sanitized app logs and runtime info into a file you can attach to a GitHub issue. Turn on **Verbose diagnostics** to record more detail while you reproduce a problem; logs stay sanitized either way.
+**Settings → Diagnostics** (or **Help → Export Diagnostics…**) bundles sanitized app logs and runtime info into a file you can attach to a GitHub issue. Turn on **Verbose diagnostics** to record more detail while you reproduce a problem; logs stay sanitized either way. The same actions are `cocurdex diagnostics export` and `cocurdex diagnostics level debug|info`. `cocurdex daemon health` prints the process, memory, and active work.
 
 **Settings → General** also shows the local daemon (socket, protocol version, start time) with **Restart** — use it if notes, issues, decks, or agents stop responding.
 
@@ -119,8 +136,9 @@ After an update downloads, an **Update available** card offers **Update and Rest
 | **Agent CLIs** | Installed agents, versions, install hints, ACP Registry, and [run limits](#agent-clis) (above) |
 | **Roles** | Edit or delete saved agent presets, their avatars and descriptions; see [Agents](/docs/agents/#agent-roles) |
 | **Teams** | Reusable [team templates](/docs/teams/#team-templates) |
-| **MCP** | MCP servers for Pi (above) |
-| **Skills** | Install/remove the `cocurdex-*` product skill pack |
+| **MCP** | Tool servers for your agents, including import (above) |
+| **Memory** | Long-term recall and optional multi-device sync; see [Memory](/docs/memory/) |
+| **Skills** | The `cocurdex-*` pack, plus other skills from skills.sh, a GitHub repo, or a folder |
 | **Network** | Outbound proxy (above) |
 | **Git** | Commit-message model (above) |
 | **Worktrees** / **Workspaces** | Managed worktree root and inventory; per-workspace scripts and actions (above) |
@@ -132,6 +150,7 @@ After an update downloads, an **Update available** card offers **Update and Rest
 
 ## Related
 
+- [Memory](/docs/memory/)
 - [Agents](/docs/agents/)
 - [Devices and local web](/docs/devices-and-web/)
 - [CLI](/docs/cli/)

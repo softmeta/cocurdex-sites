@@ -1,6 +1,6 @@
 ---
 title: CLI
-description: cocurdex CLI reference — open the desktop app, manage notes, issues, and slide decks, sessions, teams, script runs, devices, providers, and skills.
+description: cocurdex CLI reference — open the desktop app, manage notes, issues, memory, and slide decks, sessions, teams, script runs, devices, providers, MCP, and skills.
 ---
 
 The **`cocurdex` CLI** is the supported command-line boundary for app-owned product data and daemon operations. External tools and agents should use the CLI rather than reading private database files.
@@ -97,8 +97,23 @@ cocurdex issue delete <id> [--view <id>] [--json]
 cocurdex issue views [--json]
 ```
 
-Default **status** columns: `backlog`, `doing`, `review`, `done`.  
+Default **status** values: `backlog` (Backlog), `todo` (Todo), `doing` (In Progress), `review` (In Review), `done` (Done), `canceled` (Canceled). Each status has a category: `backlog`, `unstarted`, `started`, `completed`, or `canceled`.  
 Default **priority** columns: `urgent`, `high`, `medium`, `low`, `none`.
+
+Statuses, labels, and saved views:
+
+```bash
+cocurdex issue statuses [--json]
+cocurdex issue status create --name <name> --category backlog|unstarted|started|completed|canceled [--color <color>]
+cocurdex issue status update <id|name> [--name <name>] [--category <category>] [--color <color>]
+cocurdex issue status move <id|name> --position <n>
+cocurdex issue status delete <id|name>
+cocurdex issue label update <id|name> [--name <name>] [--color <color>]
+cocurdex issue view update <id> [--title <title>] [--group-by status|priority|label|workspace|parent] [--layout board|list] [--show-empty true|false] [--properties <a,b>]
+cocurdex issue move <id> <column> [--from <column>]
+```
+
+`--from` names the label a card was under, and only that label changes. `--properties` accepts `identifier`, `status`, `priority`, `labels`, `workspace`, `parent`, `description`, `created`, and `updated`. See [Notes and issues](/docs/notes-and-issues/#issues).
 
 Examples:
 
@@ -136,6 +151,39 @@ cocurdex deck delete <id> [--json]
 | `--slide` / `--file` / `--alt` / `--replace` | Add a PNG or JPEG (up to 20 MB), or swap one and keep its frame |
 
 `deck list` prints id, title, slide count, revision, and updated time. `deck show` includes checker issues. `deck read` prints the PowerPoint file as Markdown and does not create a deck. `deck import` creates a deck and leaves the file untouched. A line that is only `---` splits slides; a paragraph starting with `Notes:` or `备注：` starts speaker notes.
+
+## Links and images
+
+```bash
+cocurdex link list <ref> [--json]
+cocurdex link add <ref> <ref> [--json]
+cocurdex link remove <ref> <ref> [--json]
+cocurdex image import <path.png|jpg|gif|webp> [--name <alt text>] [--json]
+cocurdex image locate <cocurdex://image/...> [--json]
+```
+
+A ref is `<kind>:<id>` or `cocurdex://<kind>/<id>`, with kind `session`, `note`, `issue`, or `deck`. An issue also accepts its identifier (`issue:ACME-12`). `image import` prints Markdown for a note or issue body. See [Notes and issues](/docs/notes-and-issues/).
+
+## Memory
+
+Long-term memory, recall, and optional rsrs sync. Full model: [Memory](/docs/memory/).
+
+```bash
+cocurdex memory status [--refresh] [--json]
+cocurdex memory on | off [--json]
+cocurdex memory install [--force] [--json]
+cocurdex memory doctor [--remote] [--check-update] [--json]
+cocurdex memory recall <query> [--limit <n>] [--project <name>] [--json]
+cocurdex memory show <id> [--json]
+cocurdex memory remember --title <title> [--content <text> | --file <path> | <text>] [--importance important|trivial] [--parent <id>] [--tags a,b] [--force] [--json]
+cocurdex memory save-session <session-id> [--force] [--importance important|trivial] [--json]
+cocurdex memory sync on | off [--json]
+cocurdex memory cloud register|signin --user <name> [--json]
+cocurdex memory cloud signout | keys [--json]
+cocurdex memory policy
+```
+
+Account secrets are read from a hidden prompt, or from piped stdin when the process is not a terminal. Sign-in reads the password, then the recovery key.
 
 ## Search
 
@@ -180,8 +228,10 @@ cocurdex host pair --label <name> [--scopes read,interact,approvals] [--ttl <min
 cocurdex host pairings [--json]
 cocurdex host pairing cancel <pairing-id>
 cocurdex host devices [--json]
+cocurdex host approve <device-id> --code <safety code>
 cocurdex host revoke <device-id>
 cocurdex host scopes <device-id> --scopes <list>
+cocurdex host traffic [--reset] [--json]
 cocurdex host relay set [official|<url>] [--relay-only on|off] [--credential <file>]
 cocurdex host relay off
 cocurdex host push set <url> | off
@@ -189,7 +239,7 @@ cocurdex host push status [--json]
 cocurdex host audit [--limit <n>] [--json]
 ```
 
-`--scopes` is a comma-separated list of `read`, `interact`, `execute`, `files.read`, `files.write`, `git.destructive`, `approvals`, and `credentials`. Default pairing scopes are `read,interact,approvals`.
+`--scopes` is a comma-separated list of `read`, `interact`, `execute`, `files.read`, `files.write`, `git.destructive`, `approvals`, `credentials`, and `devices`. Default pairing scopes are `read,interact,approvals`. `host.admin` cannot be granted. `host approve` types the safety code shown on the device that is waiting.
 
 ## Worktrees
 
@@ -208,7 +258,9 @@ cocurdex worktree remove --workspace <id|path> --path <worktree-path> [--json]
 
 ```bash
 cocurdex session list
-cocurdex session create --workspace <id|path> [--agent <agent>] [--provider <provider> --model <model>] [--permission <mode>] [--title <title>]
+cocurdex session create --workspace <id|path> [--agent <agent>] [--provider <provider> --model <model>] [--permission <mode>] [--role <role-id>] [--title <title>]
+cocurdex session runtime <session-id> [--json]
+cocurdex session configure <session-id> [--provider <id> --model <id>] [--effort <level|default>] [--thinking <level|off|default>] [--fast on|off|default] [--service-tier <tier|default>] [--opencode-agent <name|default>] [--opencode-variant <name|default>] [--json]
 cocurdex session tui [session-id]
 cocurdex session tui --workspace <id|path> [--agent <agent>] [--provider <provider> --model <model>] [--permission <mode>] [--title <title>]
 cocurdex session send <session-id> <prompt>
@@ -230,6 +282,9 @@ cocurdex session stop <session-id>
 | `--model` | optional, with `--provider` | Model id from `provider models` |
 | `--permission` | optional | Permission mode id for that agent. Ids: [Agents](/docs/agents/#permission-modes) |
 | `--title` | optional | Session title. Omit it and the title is the agent's name |
+| `--role` | optional | Saved [agent role](/docs/agents/#agent-roles). It supplies the agent, model, and permissions |
+
+`session runtime` prints the model and runtime axes the session is using. `session configure` changes them on that session. `default` on a flag clears that axis back to the agent's own default. `--fast` is `on`, `off`, or `default`.
 
 The daemon fills in whatever you leave out. Omit `--agent` and the session uses the agent from the workspace's most recently updated session. If that agent is not available, or the workspace has no session yet, it uses the first agent available on this computer. Omit `--permission` and it uses the mode from the most recently updated session of that agent in the workspace, when the model still allows it; otherwise the first mode the model allows. An agent with no permission modes, such as Pi, leaves the mode unset. Omit `--provider` and `--model` together and the model is the agent's default, then the model that agent last used in the workspace, then the first compatible model. If the agent has no compatible model, the session is still created and the model is left unset. A command that still passes `--agent`, `--provider`, and `--model` keeps working.
 
@@ -311,6 +366,60 @@ cocurdex provider export [--output <file>]
 | `models --refresh` | Fetches the catalog from the provider instead of the stored list |
 | `model add --api` | One of `openai-completions`, `openai-responses`, `openai-codex-responses`, `anthropic-messages`, `google-generative-ai`, `mistral-conversations` |
 | `default` | Without flags, lists the default provider and model per agent; with `--agent --provider --model`, sets one |
+| `model set` | Edits one model's parameters. A built-in catalog model keeps the fields you did not change. `--context` and `--output` take a token count or `none` |
+| `model reset` | Drops those edits and restores the catalog values. The model row in Settings shows **Edited** until you reset it |
+
+```bash
+cocurdex provider model set <id> <model-id> [--enable|--disable] [--api <api>] [--context <tokens>|none] [--output <tokens>|none] [--capabilities <a,b>] [--reasoning on|off]
+cocurdex provider model reset <id> <model-id>
+```
+
+## Agents
+
+Sign-in and updates for ACP Registry agents. The desktop screen is [Agent CLIs](/docs/providers-and-settings/#agent-clis).
+
+```bash
+cocurdex agent auth <agent> [--json]
+cocurdex agent login <agent> [--method <method-id>]
+cocurdex agent login cancel <agent>
+cocurdex agent logout <agent>
+cocurdex agent updates [--refresh] [--json]
+cocurdex agent update <agent> [--json]
+```
+
+`agent auth` lists login methods. A star marks the one in use. `agent updates` lists installed registry agents that have a newer version. `agent update` installs that version.
+
+## MCP servers
+
+Servers Cocurdex gives to agents. The desktop screen is [MCP servers](/docs/providers-and-settings/#mcp-servers).
+
+```bash
+cocurdex mcp list [--workspace <id|path>] [--json]
+cocurdex mcp show [<name>]
+cocurdex mcp add <name> [--env KEY=VALUE]... [--cwd <dir>] [--description <text>] [--disabled] [--agent <id>]... -- <command> [args...]
+cocurdex mcp add <name> --url <url> [--header KEY=VALUE]... [--bearer-token-env-var <NAME>] [--description <text>] [--disabled] [--agent <id>]...
+cocurdex mcp remove <name>
+cocurdex mcp enable|disable <name>
+cocurdex mcp agents <name> [<agent>...|--none] [--json]
+cocurdex mcp test <name> [--workspace <id|path>] [--json]
+cocurdex mcp login <name> [--workspace <id|path>]
+cocurdex mcp logout <name> [--workspace <id|path>]
+cocurdex mcp import <file|-> [--overwrite]
+cocurdex mcp import --from claude|claude-project|codex|codex-project|cursor|opencode|opencode-project|antigravity [--name <name>]... [--overwrite] [--workspace <id|path>]
+```
+
+`--agent` may be repeated. `agents <name> --none` clears the agent list. `import --from` reads servers that agent already has on this computer; repeat `--name` to import only those servers.
+
+## Diagnostics
+
+```bash
+cocurdex daemon status [--json]
+cocurdex daemon health [--json]
+cocurdex diagnostics export [--json]
+cocurdex diagnostics level debug|info [--json]
+```
+
+`daemon health` prints the process, memory, active work, and where logs are. `diagnostics export` writes the same sanitized bundle as **Settings → Diagnostics**. `diagnostics level` is **Verbose diagnostics**: `debug` records more, `info` is the normal level. See [Diagnostics](/docs/providers-and-settings/#diagnostics).
 
 ## Agent roles
 
@@ -333,7 +442,8 @@ Do not point scripts at `cocurdex.sqlite` or private schema paths. Those are imp
 
 ## Related
 
-- [Notes and issues](/docs/notes-and-issues/)  
+- [Notes and issues](/docs/notes-and-issues/)
+- [Memory](/docs/memory/)  
 - [Slide decks](/docs/decks/)  
 - [Devices and local web](/docs/devices-and-web/)  
 - [Agents](/docs/agents/)  

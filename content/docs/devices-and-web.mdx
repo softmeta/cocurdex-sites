@@ -47,12 +47,15 @@ cocurdex host remote disable
 | **Invite credential** | The credential from the relay operator. Pasting it fills in the relay address. The official relay admits only invited computers; a self-hosted relay without invites does not need one |
 | **Relay only** | Accept connections only through the relay and stop listening on local network ports |
 
-**Status** shows **Online**, **Connecting**, **Offline**, or **Off**. Without **Relay only**, the LAN and Tailscale listener stays on. Paired devices use a direct address when one answers and fall back to the relay.
+**Status** shows **Online** (with the round-trip in milliseconds when it is known), **Connecting**, **Offline**, **Off**, or **Turn on remote access to connect**. Without **Relay only**, the LAN and Tailscale listener stays on. Paired devices use a direct address when one answers and fall back to the relay.
 
 ```bash
 cocurdex host relay set [official|<url>] [--relay-only on|off] [--credential <file>]
 cocurdex host relay off
+cocurdex host traffic [--reset]
 ```
+
+`host traffic` prints how much remote traffic this computer has sent and received since the counter started. `--reset` clears that counter.
 
 ### Phone notifications
 
@@ -81,6 +84,12 @@ If no address of the computer answers — a different Wi-Fi network, or access-p
 
 Turn remote access on first if you want a link the other device can open. Codes work once. Pending pairings appear under **Pending pairings** until they expire or you **Cancel** them.
 
+Redeeming a code does not connect the device yet. It stays pending until this computer approves it. The new device shows a six-digit **safety code**. On the computer, **Allow &#123;name&#125; to use this computer?** asks you to type that code. **Allow** connects it. **Deny** revokes it. Closing the dialog leaves the request pending; **Paired devices** lists it as waiting, without the code, so the code has to be read off the device. Five wrong codes revoke the device. The request expires after 10 minutes.
+
+A browser that is waiting shows **Waiting for approval** and the same code, and opens the workspace once the computer allows it. On the phone, that computer reads **Waiting for approval on the computer** until then. Approve from the dialog, from **Paired devices**, or with `cocurdex host approve` (below).
+
+A paired device with **Manage devices** can approve or revoke other devices. **Host administration** (change app settings) stays on this computer and cannot be granted.
+
 ```bash
 cocurdex host pair --label "My phone" [--scopes read,interact,approvals] [--ttl <minutes>]
 cocurdex host pairings
@@ -91,18 +100,21 @@ Default CLI scopes are `read`, `interact`, and `approvals`.
 
 ## What a paired device may do
 
-You choose scopes when pairing. **Host administration** (change app settings and manage devices) stays on this computer and cannot be granted to a paired device.
+You choose scopes when pairing.
 
 | Permission | Lets the device |
 | --- | --- |
 | **Read** | See sessions, messages, notes, issues, and decks |
 | **Interact** | Send messages, stop sessions, and edit notes, issues, and decks |
 | **Approvals** | Answer permission requests, questions, and plan approvals |
-| **Start work** | Start sessions, teams, and script runs |
+| **Start work** | Start sessions, teams, and script runs; change or run MCP servers; message a session that runs tools without asking, and switch it into such a mode. The phone labels this **Start tasks** |
 | **Read files** | Read workspace files, diffs, and Git status, and outline a PowerPoint file inside a workspace |
 | **Write files** | Edit workspace files, stage, commit, and write a deck export into a workspace |
 | **Destructive Git** | Discard changes, check out branches, and push |
-| **Credentials** | Manage provider logins, API keys, and MCP servers |
+| **Credentials** | Manage provider logins and API keys, and view MCP servers |
+| **Manage devices** | See, approve, and revoke paired devices |
+
+**Start work** is what a paired device needs before it can drive an agent that does not ask. That includes a Pi session that can run tools (a Pi chat does not), and a permission mode that approves every tool call. Changing the mode away from the ordinary or plan choice needs the same permission. Changing the model or the reasoning effort does not. On the phone the composer then says **This agent runs commands without asking for approval. Messaging it needs the “Start tasks” permission for this device. Grant it on the computer.** A paired browser shows the refusal in the session.
 
 **Paired devices** lists each device with its permissions, when it was last seen, and a six-digit **safety code**. The phone shows the same **Safety Code** on that computer's detail screen. Matching codes mean no one swapped either key. If they differ, revoke the device and pair again. A device marked **Paired before encryption** must be revoked and paired again.
 
@@ -110,6 +122,7 @@ You choose scopes when pairing. **Host administration** (change app settings and
 
 ```bash
 cocurdex host devices
+cocurdex host approve <device-id> --code <safety code>
 cocurdex host revoke <device-id>
 cocurdex host scopes <device-id> --scopes <list>
 cocurdex host audit [--limit <n>]
@@ -123,9 +136,11 @@ The iOS and Android app has four tabs: **Sessions**, **Issues**, **Notes**, and 
 
 With no computer paired yet, those tabs show **No Computers** and **Pair a Computer**. After you pair, open the computer name in the toolbar to switch hosts, or choose **Pair a Computer** to add another.
 
-**Issues** and **Notes** are read-only on the phone. See [Notes and issues](/docs/notes-and-issues/#on-the-phone).
+Each computer row shows **Connected** with the round-trip in milliseconds, **Checking**, **Unreachable**, **Waiting for approval on the computer**, or **Access revoked**. Open a computer for **Permissions and Connection**, including the **Safety Code**. **Rename** changes the name on this phone only. **Remove This Computer** drops the pairing; if the computer is offline, revoke it later under **Settings → Devices**.
 
-Rows are grouped by workspace. **Search sessions** filters the list. A child session rolls its state up to the root row:
+**Issues** and **Notes** can be edited when the phone was paired with **Interact**. See [Notes and issues](/docs/notes-and-issues/#on-the-phone).
+
+**Display Options** on the list matches the desktop controls that fit on a phone: **Group By** (workspace, status, agent, last updated, or none), **Sort By**, filters for agent, status, and environment (local or worktree), **Sessions per Group**, and **Archived Sessions**. **Pin** keeps a row at the top. A row's menu can **Rename**, **Fork Session**, **Mark as Unread**, **Archive**, or **Delete**. **Search sessions** filters the list. A child session rolls its state up to the root row:
 
 | Status | Meaning |
 | --- | --- |
@@ -135,7 +150,7 @@ Rows are grouped by workspace. **Search sessions** filters the list. A child ses
 
 The line under the title shows the model name, or a run status when that is more relevant — for example **Waiting for your approval**, **Has a question for you**, **Plan ready for review**, **Working…**, **Connecting…**, **Working in the background**, or **Finished**. A failed run shows **Run failed**.
 
-If the phone cannot reach the computer but already has a list, it keeps that list and shows **Can't reach** the computer's name. **Showing the last update.** With nothing loaded yet, the screen is **Can't reach** that computer, **Check that the computer is awake and on the same network.**, and **Try Again**. A computer with no sessions shows **No Sessions** — **Sessions you start on** that computer **appear here.** A search with no matches shows **No sessions match** the query.
+If the phone cannot reach the computer but already has a list, it keeps that list and shows **Can't reach** the computer's name. **Showing the last update.** With nothing loaded yet, the screen is **Can't reach** that computer, **Check that the computer is awake and online, and reachable on your network or through its relay.**, and **Try Again**. A computer with no sessions shows **No Sessions** — **Sessions you start on** that computer **appear here.** A search with no matches shows **No sessions match** the query.
 
 ### Start a session
 
@@ -148,7 +163,7 @@ The prompt placeholder is **What should the agent do?**. **Start** stays disable
 | **Workspace** | Workspaces on this computer |
 | **Agent** | **Agent**, **Model**, and **Mode** |
 
-Both pickers push inside the sheet. The **Agent** row shows the model and permission mode that **Start** will use. The line under the rows is **Runs on** the computer's name.
+Both pickers push inside the sheet. **Role** lists roles saved on the computer; picking one fills in its agent, model, and permissions. The **Agent** row shows the model and permission mode that **Start** will use. Agents that are not installed on the computer are left out of this list. The line under the rows is **Runs on** the computer's name.
 
 **Workspace** leads with the workspace that had the latest session, and that one is selected until you pick another. **Search workspaces** filters the list. Each row includes a count, such as **1 session** or **3 sessions**. The footer is **Add new workspaces on the computer.**
 
@@ -168,7 +183,11 @@ Tap an image in the transcript to open a full-screen viewer. Pinch-zoom works on
 
 Tap a tool-call row to open its detail screen. The header shows the status — **Done**, **Failed**, or **Running** — and the duration in seconds after the call finishes. **Input** and **Output** follow. A long output shows the tail, labeled **Last 64 KB**. When output is on screen, **Copy Output** copies it. If the output cannot be loaded, the screen shows **Couldn't load the output**. The formatting matches the desktop app.
 
-The composer placeholder is **Reply to the agent**. **Send** posts the message. While the session is running and the field is empty, that control is **Stop**. Sending and stopping need the **Interact** permission from pairing.
+The composer placeholder is **Reply to the agent**. **Attach Photo** adds a PNG, JPEG, GIF, or WebP image up to 10 MB. **Send** posts the message. While the session is running and the field is empty, that control is **Stop**. Sending and stopping need the **Interact** permission from pairing.
+
+A file link in the transcript, or a file a tool call names, opens a preview. Markdown can switch between **Show Preview** and **Show Source**. **Copy Contents** copies the text. A long file says **Showing the first 512 KB of this file.** A binary file says **This file can't be previewed.** A path outside the computer's workspaces says **This file is outside the computer's workspaces.**
+
+**Jump to latest** and **Jump to first message** skip a long transcript. The header menu's agent settings show the model, reasoning effort, fast mode, and — when the agent has them — collaboration mode and variant, plus the session's MCP servers. **Save as Role…** stores the current setup on the computer. Forking from a message is **Fork From Here**.
 
 When the agent is waiting, a dock at the bottom replaces the composer:
 

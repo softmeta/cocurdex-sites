@@ -1,0 +1,69 @@
+---
+title: Memory
+description: Long-term memory in Cocurdex — recall before a turn, save a conversation, and optional encrypted sync across your devices.
+---
+
+**Memory** lets Cocurdex recall things you have saved and, when you ask, write a conversation into that store. It is off until you turn it on. Entries live in the local [rsrs](https://rsrs.rs) store (`~/.rsrs`), not in `cocurdex.sqlite`. Nothing is uploaded until you turn on multi-device sync.
+
+Intel Macs have no rsrs build, so memory stays off on those machines. The status line says so.
+
+## Turn it on
+
+Open the composer's **+** menu and choose **Memory**:
+
+| Item | Does |
+| --- | --- |
+| **Enable memory** | Turn recall and saving on or off |
+| **Multi-device sync** | Connect an rsrs account. Off until memory is on and rsrs is installed |
+| **Memory settings** | Opens **Settings → Memory** |
+
+The same page installs rsrs when it is missing (**Install**), and **Run doctor** checks the install. **rsrs executable** is optional; leave it empty to use the binary on your `PATH`.
+
+**Settings → Memory** also has:
+
+| Setting | Does |
+| --- | --- |
+| **Recall for agent sessions** | Adds relevant memories to the prompt before each agent turn |
+| **Memory tools for agents** | Gives sessions `memory_recall`, `memory_show`, `memory_remember`, and `memory_policy` |
+| **Recall for chat sessions** | Recalls before each chat answer |
+| **Save chat turns** | Appends each finished chat exchange to today's memory diary |
+| **Save chat sessions on end** | Summarizes a chat session when you archive or delete it |
+
+On a chat session, the brain button beside the composer is **Save to memory**. If that conversation is already stored, the app says so. A failed recall for the current turn is reported on the same control.
+
+## Multi-device sync
+
+Off by default. **Multi-device sync** opens **Connect cloud memory**, where you **Create account** or **Sign in**.
+
+- The username and login password belong to the rsrs account. Cocurdex does not store the password.
+- Creating an account shows a **recovery key** once in the dialog. Save it. It decrypts your memories on another device, and neither Cocurdex nor the server can recreate it. You can show it again from **Settings → Memory → Recovery key**.
+- Signing in on another device needs the same username, password, and recovery key.
+- Records are encrypted on this device before they are uploaded. The page says how many memories are waiting to upload, and when sync fails.
+- **Sign out** stops automatic sync and leaves the memories on this device where they are. Signing back in needs the same username, password, and recovery key.
+
+The page links to the Respire site and source for what rsrs is.
+
+## CLI
+
+```bash
+cocurdex memory status [--refresh]
+cocurdex memory on | off
+cocurdex memory install [--force]
+cocurdex memory doctor [--remote] [--check-update]
+cocurdex memory recall <query> [--limit <n>] [--project <name>]
+cocurdex memory show <id>
+cocurdex memory remember --title <title> [--content <text> | --file <path> | <text>] [--importance important|trivial] [--tags a,b]
+cocurdex memory save-session <session-id> [--force] [--importance important|trivial]
+cocurdex memory sync on | off
+cocurdex memory cloud register|signin --user <name>
+cocurdex memory cloud signout | keys
+cocurdex memory policy
+```
+
+`cloud register` and `cloud signin` read the password from a hidden prompt (and the recovery key on sign-in). When stdin is not a terminal, they read those secrets from the pipe instead. `cloud keys` prints the recovery key. `memory policy` prints the rules the memory tools follow.
+
+## Related
+
+- [Providers and settings](/docs/providers-and-settings/)
+- [Workspaces and data](/docs/concepts/workspaces-and-data/)
+- [CLI](/docs/cli/#memory)
