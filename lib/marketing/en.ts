@@ -226,44 +226,71 @@ export const dict = {
     sourceBody: "Node.js 24 and pnpm required.",
     readDocs: "Getting started guide",
   },
+  legalEntity: {
+    heading: "Business information",
+    legalNameLabel: "Legal name",
+    legalName: "softmeta LLC",
+    jurisdictionLabel: "Organized in",
+    jurisdiction: "Wyoming, United States",
+    productLabel: "Product",
+    product: "Cocurdex",
+    websiteLabel: "Website",
+    emailLabel: "Email",
+    addressLabel: "Address",
+    supportLabel: "Help and complaints",
+    supportLink: "Support",
+  },
   privacy: {
     pageTitle: "Privacy Policy",
     metaDescription:
-      "How Cocurdex handles data in the desktop app, CLI, iOS and Android apps, and on cocurdex.com.",
+      "How Cocurdex handles data in the desktop app, CLI, iOS and Android apps, the services they connect to, and on cocurdex.com.",
     updatedLabel: "Last updated",
-    updated: "2026-11-02",
+    updated: "2026-11-05",
     heading: "Privacy Policy",
     intro:
-      "Cocurdex runs on your own computer. Your projects, sessions, transcripts, notes, settings, and credentials stay on your devices. This policy covers the Cocurdex desktop app, the cocurdex CLI, the Cocurdex apps for iOS and Android, and cocurdex.com. Cocurdex is published by softmeta LLC, a company based in the United States (“we”).",
+      "Cocurdex runs on your own computer and is designed to keep your work data, such as projects, sessions, transcripts, notes, settings, and credentials, on your own devices. This policy explains what that means in practice, including the data that does leave your devices. It covers the Cocurdex desktop app, the cocurdex CLI, the Cocurdex apps for iOS and Android, the online services they connect to, and cocurdex.com. Cocurdex is published by softmeta LLC, a Wyoming limited liability company in the United States (“we”).",
     sections: [
       {
         heading: "The short version",
         body: [],
         items: [
-          "There are no Cocurdex accounts. You do not sign up or sign in to use the apps.",
-          "The apps do not contain analytics, advertising, or tracking SDKs, and they do not upload crash reports.",
-          "A phone or browser you pair talks to your own computer. That connection is end-to-end encrypted.",
+          "The apps have no Cocurdex user accounts. You do not sign up or sign in to use them.",
+          "We have not added analytics, advertising, or tracking SDKs to the apps, and the apps do not upload crash reports to us.",
+          "A phone or browser you pair talks to your own computer. That connection is end-to-end encrypted, including when it passes through a relay.",
+          "Prompts and files that agents work with go from your computer to the AI providers you choose, not to us.",
           "We do not sell personal information or share it for advertising.",
         ],
       },
       {
-        heading: "Data that stays on your devices",
+        heading: "Data stored on your devices",
         body: [
-          "The desktop app and CLI store workspaces, sessions, agent transcripts, memories, notes, issues, decks, settings, provider credentials, and logs on your computer. We do not receive a copy.",
-          "The mobile app stores the computers you paired and the keys for those pairings on your phone, using the operating system’s secure storage. Everything it shows comes from your computer.",
-          "The desktop app records crashes locally to help you troubleshoot. These reports are not uploaded. If you choose to send logs to us, remove credentials and personal data first.",
-        ],
-      },
-      {
-        heading: "Optional memory sync",
-        body: [
-          "Memories the desktop app saves stay on your computer. Multi-device sync is off by default. If you turn it on, memories sync through an account you create with rsrs (rsrs.rs), a separate service. Records are encrypted before they reach the rsrs servers, and the keys stay on your device. rsrs handles that account under its own terms and privacy policy.",
+          "The desktop app and CLI store workspaces, sessions, agent transcripts, memories, notes, issues, decks, settings, provider credentials, and logs on your computer. The apps do not upload this data to us.",
+          "The mobile app stores the computers you paired and the keys for those pairings on your phone, using the operating system’s secure storage. Sessions, transcripts, and other content it shows come from your computer.",
+          "The desktop app records crashes locally to help you troubleshoot. Crash reports are not uploaded. If you choose to send logs to us, remove credentials and personal data first.",
         ],
       },
       {
         heading: "AI providers and agent tools you choose",
         body: [
-          "When you run an agent, your computer sends your prompts, the files and context the agent reads, and tool results directly to the model provider or agent CLI you configured, such as Anthropic, OpenAI, or Google. That data goes from your computer to that provider under the provider’s own terms and privacy policy. It does not pass through us.",
+          "When you run an agent, your computer sends your prompts, the files and context the agent reads, and tool results to the model provider or agent CLI you configured, such as Anthropic, OpenAI, or Google. That data goes from your computer to that provider under the provider’s own terms and privacy policy. It does not pass through us.",
+        ],
+      },
+      {
+        heading: "Other requests the apps make",
+        body: [
+          "Some features fetch public information from third-party services. These requests do not include your workspace content, but like any internet request they reveal your IP address and standard request details to the service:",
+        ],
+        items: [
+          "Model and agent catalogs: the desktop app reads model details from models.dev and the agent list from the Agent Client Protocol registry (cdn.agentclientprotocol.com). The desktop and mobile apps load agent icons from that registry.",
+          "Skills: searching for skills queries skills.sh, and installing a skill downloads it from GitHub.",
+          "Agent installs: installing an agent from the registry downloads its package from the source the registry lists.",
+          "Proxy check: if you run the network proxy check in Settings, the app sends one request to ipinfo.io to report your outbound address.",
+        ],
+      },
+      {
+        heading: "Optional memory sync",
+        body: [
+          "Memories the desktop app saves stay on your computer. Multi-device sync is off until you register or sign in to an account with rsrs (rsrs.rs), a separate service. rsrs states that records are encrypted on your device before they reach its servers, and that the keys stay on your device. rsrs handles that account and your synced records under its own terms and privacy policy.",
         ],
       },
       {
@@ -272,7 +299,7 @@ export const dict = {
           "The iOS and Android app asks for a permission only when you use the feature that needs it:",
         ],
         items: [
-          "Camera: to scan the pairing QR code shown on your computer. Images are not stored or sent anywhere.",
+          "Camera: to scan the pairing QR code shown on your computer. The app does not store or send the camera images.",
           "Photos: to attach a photo you pick to a message for an agent. The photo goes to your computer only.",
           "Local network (iOS): to reach the computers you paired on your network.",
           "Notifications: to alert you when an agent needs you or finishes. This is optional.",
@@ -281,8 +308,9 @@ export const dict = {
       {
         heading: "Push notifications",
         body: [
-          "If you allow notifications, your phone obtains a push token from Apple or Google and gives it to your paired computer. Your computer registers that token with a Cocurdex push gateway, which returns an encrypted handle for your computer to keep. The gateway does not keep a database of tokens.",
-          "Each notification is encrypted on your computer with your phone’s key. Our push gateway, Apple Push Notification service, and Firebase Cloud Messaging see only the encrypted payload and the delivery details they need, such as the token and timing. They cannot read what an agent did.",
+          "Phone notifications are off until you set a push gateway on your computer, for example with cocurdex host push set. The gateway can be one we operate or one you run yourself from the open-source cocurdex-push service.",
+          "If you allow notifications, your phone obtains a push token from Apple or Google and gives it to your paired computer. Your computer sends the token to the gateway, which seals it into an encrypted handle and returns it for your computer to keep. The cocurdex-push gateway does not store tokens or handles.",
+          "Each notification is encrypted on your computer with your phone’s key. The gateway, Apple Push Notification service, and Firebase Cloud Messaging see only the encrypted payload and the delivery details they need, such as the token, priority, and expiry. They cannot read what an agent did. The cocurdex-push gateway uses IP addresses and computer identifiers in memory to enforce rate limits and does not write them to its logs.",
           "To stop notifications, turn them off for Cocurdex in your phone’s settings, revoke the phone on your computer, or run cocurdex host push off.",
         ],
       },
@@ -290,19 +318,20 @@ export const dict = {
         heading: "Remote access and relays",
         body: [
           "Remote access is off by default. When you turn it on, paired devices connect to your computer over your local network or Tailscale. Tailscale is a separate service with its own privacy policy.",
-          "You can also route remote access through a relay. A relay forwards only encrypted traffic and cannot read or change it. Our official relay is available by invitation only. If you use it, it processes your computer’s IP address, a route identifier, the account identifier in your invite credential, and the amount of traffic, to operate the service and enforce limits. A relay you host yourself is run by you.",
+          "You can also route remote access through a relay. Traffic between your devices and your computer is end-to-end encrypted, so a relay forwards it without being able to read or change its content.",
+          "Our official relay is available by invitation only. To operate it and enforce limits, it processes the IP addresses of your computer and of the devices that connect through it, a route identifier, and the account identifier in your invite credential. It uses IP addresses in memory for rate limiting and does not write them to its logs. It keeps daily usage totals (traffic volume, number of connections, and last-seen time) per account for 90 days, and its logs record connection events with the account identifier. A relay you host yourself is run by you.",
         ],
       },
       {
         heading: "App updates",
         body: [
-          "The desktop app checks updates.cocurdex.com for new versions and downloads releases from GitHub. These requests include your IP address and standard request details such as the app version, platform, and update channel. We use them only to deliver updates.",
+          "The desktop app checks updates.cocurdex.com for new versions and downloads releases from GitHub. These requests include your IP address and standard request details, such as the app version, platform, and update channel. We use them only to deliver updates.",
         ],
       },
       {
         heading: "This website",
         body: [
-          "cocurdex.com is a static site hosted on Cloudflare Pages. We use Cloudflare Web Analytics to count page views. It does not use cookies or track you across sites. Cloudflare processes your IP address to deliver and protect the site.",
+          "cocurdex.com is a static site hosted on Cloudflare Pages. We do not add analytics scripts or set cookies on it. Cloudflare processes your IP address and request details to deliver and protect the site, and may give us aggregated traffic statistics.",
           "The site remembers your theme choice in your browser’s local storage. Docs search runs on this site and is not sent to a third party. Downloads are served from GitHub.",
         ],
       },
@@ -316,8 +345,14 @@ export const dict = {
         heading: "Retention and your choices",
         body: [
           "Data on your devices is under your control. Delete a workspace or session in the app, revoke a paired device, or uninstall the app to remove its data. Uninstalling the mobile app removes its pairings from the phone; revoke the phone on your computer as well.",
-          "We keep support email only as long as needed to help you. Push gateway and relay technical logs are kept only as long as needed to run and secure those services.",
+          "We keep support email only as long as needed to help you. The official relay keeps usage totals for 90 days. Other technical logs from our services are kept only as long as needed to run and secure them.",
           "Depending on where you live, including the EEA, the UK, and California, you may have rights to access, correct, delete, or object to processing of your personal information. Email us to make a request. We will not discriminate against you for doing so. You may also complain to your local data protection authority.",
+        ],
+      },
+      {
+        heading: "Security",
+        body: [
+          "We use measures such as end-to-end encryption for remote connections and notifications, and secure storage for pairing keys. No system is perfectly secure, and we cannot guarantee that data will never be accessed without authorization.",
         ],
       },
       {
@@ -350,24 +385,25 @@ export const dict = {
     updated: "2026-11-05",
     heading: "Terms of Service",
     intro:
-      "These terms apply when you use the Cocurdex desktop app, the cocurdex CLI, the Cocurdex apps for iOS and Android, the online services they connect to (updates, the push gateway, and the official relay), and cocurdex.com. Cocurdex is published by softmeta LLC, a Wyoming limited liability company (“we”). By using Cocurdex, you agree to these terms. If you do not agree, do not use it.",
+      "These terms apply when you use the Cocurdex desktop app, the cocurdex CLI, the Cocurdex apps for iOS and Android, the online services they connect to, and cocurdex.com. Cocurdex is published by softmeta LLC, a Wyoming limited liability company (“we”). By using Cocurdex, you agree to these terms. If you do not agree, do not use it.",
     sections: [
       {
         heading: "The short version",
         body: [],
         items: [
-          "Cocurdex is pre-release software, provided as is. Features may change or break.",
-          "Your code, prompts, transcripts, notes, and other content stay yours and stay on your devices.",
-          "Agents you run act on your computer with the access you give them. Review what they do and keep backups.",
-          "The model providers and agent tools you connect are separate services with their own terms.",
+          "Cocurdex is pre-release software. Features may change or break.",
+          "Your code, prompts, transcripts, notes, and other content stay yours. Cocurdex is designed to keep them on your devices.",
+          "Agents you run act on your computer with the access you give them, including when you control them from a paired device. Review what they do and keep backups.",
+          "The model providers and agent tools you connect are separate services with their own terms and fees.",
           "There is no charge today. If we ever charge for something, we will tell you the price before you pay.",
+          "If you are a consumer, you keep the rights that the law where you live gives you.",
         ],
       },
       {
         heading: "Source code license",
         body: [
-          "The Cocurdex source code is available under the Functional Source License, Version 1.1, ALv2 Future License (FSL-1.1-ALv2), published in the Cocurdex repository on GitHub. That license governs copying, modifying, and redistributing the code. These terms govern your use of the apps we distribute and the services we run. If these terms and the license conflict for the code itself, the license controls.",
-          "Subject to these terms, we give you a personal, non-exclusive, non-transferable, revocable license to install and use the apps we distribute on devices you own or control.",
+          "The Cocurdex source code is available under the Functional Source License, Version 1.1, ALv2 Future License (FSL-1.1-ALv2), published in the Cocurdex repository on GitHub. That license, not these terms, governs your rights to use, copy, modify, and redistribute the source code. Third-party components keep their own licenses.",
+          "Subject to these terms, we also give you a personal, non-exclusive license to install and use the apps we distribute on devices you own or control. This license adds to, and does not limit, any rights you have under the source code license. These terms otherwise govern the apps we distribute and the online services we run.",
         ],
       },
       {
@@ -379,21 +415,29 @@ export const dict = {
       {
         heading: "Your content and your responsibility",
         body: [
-          "You keep all rights to the code, files, prompts, transcripts, notes, issues, decks, and other content you create or process with Cocurdex. We do not receive a copy, and we claim no rights in it.",
-          "Cocurdex starts AI agents that can read and change files, run commands, and use the network on your computer, within the permissions you set. You are responsible for choosing the agents, models, permissions, and workspaces you use, for reviewing what agents do, and for keeping backups of anything that matters. Output from an AI model can be wrong, insecure, or infringe someone else’s rights; check it before you rely on it.",
-          "You are responsible for keeping your devices, pairing codes, invite credentials, and provider credentials secure. Anyone you pair a device with, or give edit access to, can act on your computer within that access.",
+          "You keep all rights to the code, files, prompts, transcripts, notes, issues, decks, and other content you create or process with Cocurdex. We do not claim ownership of your content. The apps are designed to keep it on your devices and do not upload it to us, except as the Privacy Policy describes.",
+          "Cocurdex starts AI agents that can read and change files, run commands, and use the network on your computer, within the permissions you set. You choose the agents, models, permissions, and workspaces you use. Agents can make mistakes, run the wrong command, or damage files, and output from an AI model can be wrong, insecure, or infringe someone else’s rights. Review what agents do, check their output before you rely on it, and keep backups of anything that matters.",
+        ],
+      },
+      {
+        heading: "Remote access and device authorization",
+        body: [
+          "Remote access lets a paired phone or browser view and control your computer. Pair only devices you own or are authorized to use, and use Cocurdex only to access computers that you own or are authorized to control.",
+          "A paired device can, depending on the access you grant, start agents that run commands and change files on your computer, approve their requests, and read your files. Keep pairing codes, safety codes, invite credentials, and paired devices secure. You can limit what each device may do and revoke a device at any time under Paired devices, or with cocurdex host revoke.",
+          "We protect remote connections with end-to-end encryption and device approval, but no security measure is perfect, and we cannot guarantee that unauthorized access will never happen. This does not limit any responsibility we have under applicable law for our own failures.",
         ],
       },
       {
         heading: "Third-party services",
         body: [
-          "Cocurdex works with services we do not run, such as model providers (for example Anthropic, OpenAI, and Google), agent CLIs, GitHub, Tailscale, rsrs, Apple, and Google. Your use of them is governed by their own terms and privacy policies, and you are responsible for any accounts, fees, and usage limits with them. We are not responsible for their availability, output, or conduct.",
+          "Cocurdex works with services we do not run, such as model providers (for example Anthropic, OpenAI, and Google), agent CLIs, GitHub, Tailscale, rsrs, Apple, and Google. Many of them need your own account, API key, or subscription and may charge you separately. They process the content you send them under their own terms and privacy policies, and you are responsible for your accounts, fees, and usage limits with them.",
+          "We do not control third-party services and do not guarantee their availability, accuracy, or output. To the extent permitted by applicable law, we are not responsible for them, except where a loss is caused by our own breach of these terms or of applicable law.",
         ],
       },
       {
         heading: "Our online services",
         body: [
-          "The apps use a few services we run: update checks, a push gateway that delivers end-to-end encrypted notifications to your phone, and an official relay, available by invitation, that forwards encrypted remote-access traffic. We may set usage limits, and may change, suspend, or discontinue any of these services. We may suspend or revoke access for anyone who breaks these terms or puts the services or other users at risk. Our Privacy Policy explains what these services process.",
+          "The apps use some services we run: update checks, the official relay, which is available by invitation and forwards end-to-end encrypted remote-access traffic, and, if you choose to use one we operate, a push gateway that delivers end-to-end encrypted notifications to your phone. We may set usage limits, and may change, suspend, or discontinue any of these services. Where we can, we will give reasonable notice before discontinuing a service. We may suspend or revoke access for anyone who breaks these terms or puts the services or other users at risk. Our Privacy Policy explains what these services process.",
         ],
       },
       {
@@ -410,7 +454,7 @@ export const dict = {
       {
         heading: "Fees",
         body: [
-          "Cocurdex and its services are free of charge today. If we introduce a paid plan or paid service, we will show the price and any additional terms before you are charged, and nothing will be charged without your agreement.",
+          "Cocurdex and its services are free of charge today. If we introduce a paid plan or paid service, we will show the price, what it includes, and any additional terms, including billing, renewal, cancellation, and refunds, before you are charged. Nothing will be charged without your agreement. Changes to the price or terms of a paid service will be communicated before they apply to you, as the law where you live requires.",
         ],
       },
       {
@@ -430,20 +474,20 @@ export const dict = {
       {
         heading: "Disclaimer",
         body: [
-          "To the extent permitted by law, Cocurdex and our services are provided “as is” and “as available”, without warranties of any kind, express or implied, including merchantability, fitness for a particular purpose, and non-infringement. We do not warrant that Cocurdex will be error-free or uninterrupted, that it will not lose data, or that any agent or model output will be accurate or safe.",
+          "To the maximum extent permitted by applicable law, Cocurdex and our services are provided “as is” and “as available”, without warranties of any kind, express or implied, including merchantability, fitness for a particular purpose, and non-infringement. To the same extent, we do not warrant that Cocurdex will be error-free or uninterrupted, that it will not lose data, or that any agent or model output will be accurate or safe.",
         ],
       },
       {
         heading: "Limitation of liability",
         body: [
-          "To the extent permitted by law, softmeta LLC will not be liable for any indirect, incidental, special, consequential, or punitive damages, or for lost data, code, profits, or revenue, arising from or related to Cocurdex or these terms, even if we were told they were possible. Our total liability for all claims related to Cocurdex or these terms is limited to the greater of the amount you paid us for Cocurdex in the 12 months before the claim and US$100.",
-          "Some places do not allow these exclusions or limits. Nothing in these terms limits liability for death or personal injury caused by negligence, for fraud, or for anything else that cannot be limited by law.",
+          "To the maximum extent permitted by applicable law, softmeta LLC will not be liable for any indirect, incidental, special, consequential, or punitive damages, or for lost data, code, profits, or revenue, arising from or related to Cocurdex or these terms, even if we were told they were possible. To the same extent, our total liability for all claims related to Cocurdex or these terms is limited to the greater of the amount you paid us for Cocurdex in the 12 months before the claim and US$100.",
+          "These limits apply only as far as the law where you live allows, and may not apply to you. Nothing in these terms limits or excludes any liability or statutory consumer rights that cannot lawfully be limited or excluded, including liability for death or personal injury caused by negligence, or for fraud.",
         ],
       },
       {
         heading: "Consumers in the EEA, the UK, and elsewhere",
         body: [
-          "If you use Cocurdex as a consumer, you keep every right that the mandatory consumer protection laws of your country give you. Nothing in these terms, including the disclaimer, the limitation of liability, and the choice of law and courts, takes those rights away.",
+          "If you use Cocurdex as a consumer, you keep every right and remedy that the mandatory consumer protection laws of your country give you. Nothing in these terms, including the disclaimer, the limitation of liability, and the choice of law and courts, takes those rights away.",
         ],
       },
       {
@@ -461,24 +505,27 @@ export const dict = {
       {
         heading: "Governing law and disputes",
         body: [
-          "These terms are governed by the laws of the State of Wyoming and applicable United States federal law, without regard to conflict of laws rules. Any dispute arising from or related to these terms or Cocurdex will be resolved exclusively in the state or federal courts located in Wyoming, and you and we consent to their jurisdiction. If you are a consumer in the EEA, the UK, or another country whose laws give you the right, you may also bring a claim in the courts where you live.",
+          "These terms are governed by the laws of the State of Wyoming and applicable United States federal law, without regard to conflict of laws rules. To the extent permitted by applicable law, disputes arising from or related to these terms or Cocurdex will be resolved in the state or federal courts located in Wyoming, and you and we consent to their jurisdiction.",
+          "If you are a consumer, this choice of law does not deprive you of the protection of the mandatory laws of the country where you live, and you may bring a claim in the courts where you live if those laws allow it.",
         ],
       },
       {
         heading: "General",
         body: [
-          "These terms, together with the Privacy Policy and the source code license, are the whole agreement between you and us about Cocurdex. If any part is found unenforceable, the rest stays in effect. If we do not enforce a term right away, we do not give up the right to enforce it later. You may not transfer your rights under these terms without our consent; we may transfer ours as part of a merger, acquisition, or sale of assets.",
+          "These terms, together with the Privacy Policy and the source code license, are the whole agreement between you and us about Cocurdex. If any part is found unenforceable, the rest stays in effect. If we do not enforce a term right away, we do not give up the right to enforce it later. You may not transfer your rights under these terms without our consent; we may transfer ours as part of a merger, acquisition, or sale of assets, provided this does not reduce your rights as a consumer.",
         ],
       },
       {
         heading: "Changes",
         body: [
-          "If these terms change, we will update them here and change the date above. If a change is material, we will say so on this site before it takes effect. Continuing to use Cocurdex after a change takes effect means you accept the updated terms.",
+          "We may change these terms when we change Cocurdex or our services, for legal, regulatory, or security reasons, or to make them clearer. We will publish the new terms here and change the date above. If a change is material, we will say so on this site a reasonable time before it takes effect.",
+          "Changes take effect on the date stated and do not apply to anything that happened before. If you do not agree to a change, stop using Cocurdex and uninstall it before the change takes effect; continuing to use it afterwards means you accept the updated terms. This does not affect any right you have under consumer protection law to end the agreement or to other remedies.",
         ],
       },
     ],
     contactHeading: "Contact",
-    contactBody: "Questions about these terms: softmeta LLC,",
+    contactBody:
+      "Questions or complaints about these terms or Cocurdex: softmeta LLC,",
   },
   support: {
     pageTitle: "Support",
