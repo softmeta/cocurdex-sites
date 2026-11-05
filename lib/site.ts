@@ -9,6 +9,10 @@ export const site = {
     "https://github.com/softmeta/cocurdex/security/advisories/new",
   contactEmail: "optimus@softmeta.si",
   company: "softmeta LLC",
+  // TODO(legal): set the verified geographic business address shown in
+  // Google Play Console and the Google Payments profile. The EU e-Commerce
+  // Directive (Art. 5) and UK E-Commerce Regulations 2002 (reg. 6) require it.
+  postalAddress: null as string | null,
 } as const;
 
 const githubLatestDownload = (fileName: string) =>
