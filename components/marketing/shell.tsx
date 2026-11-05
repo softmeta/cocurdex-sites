@@ -86,6 +86,7 @@ export function SiteShell({ locale, path, children }: SiteShellProps) {
         { label: dict.footer.cli, href: to("/docs/cli/") },
         { label: dict.footer.support, href: to("/support/") },
         { label: dict.footer.privacy, href: to("/privacy/") },
+        { label: dict.footer.terms, href: to("/terms/") },
       ],
     },
     {

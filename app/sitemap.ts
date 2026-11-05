@@ -9,10 +9,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/",
     "/download/",
     "/privacy/",
+    "/terms/",
     "/support/",
     "/zh-cn/",
     "/zh-cn/download/",
     "/zh-cn/privacy/",
+    "/zh-cn/terms/",
     "/zh-cn/support/",
   ];
   for (const page of source.getPages()) paths.push(`${page.url}/`);

@@ -23,6 +23,7 @@ export const dict = {
     releases: "Releases",
     support: "Support",
     privacy: "Privacy",
+    terms: "Terms",
   },
   home: {
     badge: "Pre-release · macOS · Windows · Linux",
@@ -340,6 +341,144 @@ export const dict = {
     ],
     contactHeading: "Contact",
     contactBody: "Questions or requests about privacy: softmeta LLC,",
+  },
+  terms: {
+    pageTitle: "Terms of Service",
+    metaDescription:
+      "Terms for using the Cocurdex desktop app, CLI, iOS and Android apps, their online services, and cocurdex.com.",
+    updatedLabel: "Last updated",
+    updated: "2026-11-05",
+    heading: "Terms of Service",
+    intro:
+      "These terms apply when you use the Cocurdex desktop app, the cocurdex CLI, the Cocurdex apps for iOS and Android, the online services they connect to (updates, the push gateway, and the official relay), and cocurdex.com. Cocurdex is published by softmeta LLC, a Wyoming limited liability company (“we”). By using Cocurdex, you agree to these terms. If you do not agree, do not use it.",
+    sections: [
+      {
+        heading: "The short version",
+        body: [],
+        items: [
+          "Cocurdex is pre-release software, provided as is. Features may change or break.",
+          "Your code, prompts, transcripts, notes, and other content stay yours and stay on your devices.",
+          "Agents you run act on your computer with the access you give them. Review what they do and keep backups.",
+          "The model providers and agent tools you connect are separate services with their own terms.",
+          "There is no charge today. If we ever charge for something, we will tell you the price before you pay.",
+        ],
+      },
+      {
+        heading: "Source code license",
+        body: [
+          "The Cocurdex source code is available under the Functional Source License, Version 1.1, ALv2 Future License (FSL-1.1-ALv2), published in the Cocurdex repository on GitHub. That license governs copying, modifying, and redistributing the code. These terms govern your use of the apps we distribute and the services we run. If these terms and the license conflict for the code itself, the license controls.",
+          "Subject to these terms, we give you a personal, non-exclusive, non-transferable, revocable license to install and use the apps we distribute on devices you own or control.",
+        ],
+      },
+      {
+        heading: "Pre-release software",
+        body: [
+          "Cocurdex is under active development. We may add, change, or remove features, and an update may change how something works. Some builds are labeled beta. We do not promise that any feature, platform, or service will remain available.",
+        ],
+      },
+      {
+        heading: "Your content and your responsibility",
+        body: [
+          "You keep all rights to the code, files, prompts, transcripts, notes, issues, decks, and other content you create or process with Cocurdex. We do not receive a copy, and we claim no rights in it.",
+          "Cocurdex starts AI agents that can read and change files, run commands, and use the network on your computer, within the permissions you set. You are responsible for choosing the agents, models, permissions, and workspaces you use, for reviewing what agents do, and for keeping backups of anything that matters. Output from an AI model can be wrong, insecure, or infringe someone else’s rights; check it before you rely on it.",
+          "You are responsible for keeping your devices, pairing codes, invite credentials, and provider credentials secure. Anyone you pair a device with, or give edit access to, can act on your computer within that access.",
+        ],
+      },
+      {
+        heading: "Third-party services",
+        body: [
+          "Cocurdex works with services we do not run, such as model providers (for example Anthropic, OpenAI, and Google), agent CLIs, GitHub, Tailscale, rsrs, Apple, and Google. Your use of them is governed by their own terms and privacy policies, and you are responsible for any accounts, fees, and usage limits with them. We are not responsible for their availability, output, or conduct.",
+        ],
+      },
+      {
+        heading: "Our online services",
+        body: [
+          "The apps use a few services we run: update checks, a push gateway that delivers end-to-end encrypted notifications to your phone, and an official relay, available by invitation, that forwards encrypted remote-access traffic. We may set usage limits, and may change, suspend, or discontinue any of these services. We may suspend or revoke access for anyone who breaks these terms or puts the services or other users at risk. Our Privacy Policy explains what these services process.",
+        ],
+      },
+      {
+        heading: "Acceptable use",
+        body: ["You may not use Cocurdex or our services to:"],
+        items: [
+          "break the law or infringe anyone else’s rights;",
+          "access computers, accounts, or data without permission;",
+          "probe, overload, or disrupt our services, or get around their limits or access controls;",
+          "send spam, malware, or harmful content through our services;",
+          "share, sell, or resell an invite credential or access to our relay without our permission.",
+        ],
+      },
+      {
+        heading: "Fees",
+        body: [
+          "Cocurdex and its services are free of charge today. If we introduce a paid plan or paid service, we will show the price and any additional terms before you are charged, and nothing will be charged without your agreement.",
+        ],
+      },
+      {
+        heading: "Trademarks and feedback",
+        body: [
+          "Cocurdex, its logos, and its icons are trademarks of softmeta LLC. The Trademark Policy in the Cocurdex repository explains how you may refer to them. These terms do not give you any right to use them otherwise.",
+          "If you send us feedback or suggestions, we may use them without any obligation to you. Code contributions are covered by the contribution terms in the repository.",
+        ],
+      },
+      {
+        heading: "Apps from the App Store and Google Play",
+        body: [
+          "If you got the mobile app from the Apple App Store or Google Play, these terms are between you and softmeta LLC, not Apple or Google. We, not Apple or Google, are responsible for the app and its support. Your use must also follow the store’s usage rules.",
+          "For the iOS app: Apple has no obligation to provide maintenance or support. If the app fails to conform to an applicable warranty, you may notify Apple, and Apple will refund the purchase price, if any; to the extent permitted by law, Apple has no other warranty obligation. Apple is not responsible for addressing claims relating to the app, including product liability claims, claims that the app fails to meet legal or regulatory requirements, consumer protection claims, or claims that the app infringes third-party intellectual property. Apple and its subsidiaries are third-party beneficiaries of these terms and may enforce them against you.",
+        ],
+      },
+      {
+        heading: "Disclaimer",
+        body: [
+          "To the extent permitted by law, Cocurdex and our services are provided “as is” and “as available”, without warranties of any kind, express or implied, including merchantability, fitness for a particular purpose, and non-infringement. We do not warrant that Cocurdex will be error-free or uninterrupted, that it will not lose data, or that any agent or model output will be accurate or safe.",
+        ],
+      },
+      {
+        heading: "Limitation of liability",
+        body: [
+          "To the extent permitted by law, softmeta LLC will not be liable for any indirect, incidental, special, consequential, or punitive damages, or for lost data, code, profits, or revenue, arising from or related to Cocurdex or these terms, even if we were told they were possible. Our total liability for all claims related to Cocurdex or these terms is limited to the greater of the amount you paid us for Cocurdex in the 12 months before the claim and US$100.",
+          "Some places do not allow these exclusions or limits. Nothing in these terms limits liability for death or personal injury caused by negligence, for fraud, or for anything else that cannot be limited by law.",
+        ],
+      },
+      {
+        heading: "Consumers in the EEA, the UK, and elsewhere",
+        body: [
+          "If you use Cocurdex as a consumer, you keep every right that the mandatory consumer protection laws of your country give you. Nothing in these terms, including the disclaimer, the limitation of liability, and the choice of law and courts, takes those rights away.",
+        ],
+      },
+      {
+        heading: "Ending use",
+        body: [
+          "You can stop using Cocurdex at any time by uninstalling it and revoking your paired devices. We may end your access to our services if you break these terms. The sections on your content, trademarks and feedback, the disclaimer, limitation of liability, and governing law continue to apply after you stop.",
+        ],
+      },
+      {
+        heading: "Export and sanctions",
+        body: [
+          "You may not use Cocurdex or our services in violation of United States export control or sanctions laws, or if you are a person those laws prohibit from receiving them.",
+        ],
+      },
+      {
+        heading: "Governing law and disputes",
+        body: [
+          "These terms are governed by the laws of the State of Wyoming and applicable United States federal law, without regard to conflict of laws rules. Any dispute arising from or related to these terms or Cocurdex will be resolved exclusively in the state or federal courts located in Wyoming, and you and we consent to their jurisdiction. If you are a consumer in the EEA, the UK, or another country whose laws give you the right, you may also bring a claim in the courts where you live.",
+        ],
+      },
+      {
+        heading: "General",
+        body: [
+          "These terms, together with the Privacy Policy and the source code license, are the whole agreement between you and us about Cocurdex. If any part is found unenforceable, the rest stays in effect. If we do not enforce a term right away, we do not give up the right to enforce it later. You may not transfer your rights under these terms without our consent; we may transfer ours as part of a merger, acquisition, or sale of assets.",
+        ],
+      },
+      {
+        heading: "Changes",
+        body: [
+          "If these terms change, we will update them here and change the date above. If a change is material, we will say so on this site before it takes effect. Continuing to use Cocurdex after a change takes effect means you accept the updated terms.",
+        ],
+      },
+    ],
+    contactHeading: "Contact",
+    contactBody: "Questions about these terms: softmeta LLC,",
   },
   support: {
     pageTitle: "Support",

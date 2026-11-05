@@ -3,13 +3,21 @@ import { getMarketingDict } from "@/lib/marketing";
 import { site } from "@/lib/site";
 import { LegalSections, TextPage } from "./legal-page";
 
-export function PrivacyPage({ locale }: { locale: SiteLocale }) {
-  const t = getMarketingDict(locale).privacy;
+export type LegalDocument = "privacy" | "terms";
+
+export function LegalDocumentPage({
+  locale,
+  document,
+}: {
+  locale: SiteLocale;
+  document: LegalDocument;
+}) {
+  const t = getMarketingDict(locale)[document];
 
   return (
     <TextPage
       locale={locale}
-      path={localizedPath(locale, "/privacy/")}
+      path={localizedPath(locale, `/${document}/`)}
       eyebrowText={`${t.updatedLabel} ${t.updated}`}
       heading={t.heading}
       intro={<p className="m-0">{t.intro}</p>}
