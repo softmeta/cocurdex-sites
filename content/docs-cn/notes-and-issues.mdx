@@ -43,9 +43,28 @@ Markdown 之后仍可用于**显式**导入导出。在此之前，请把 CLI �
 | 引用 / 代码块 / 分隔线 | 常见 Markdown 块 |
 | **表格** | 可编辑表格 |
 
+代码块有**代码语言**选择，并带语法高亮。把 PNG、JPEG、GIF 或 WebP 图片（不超过 10 MB）粘贴或拖进正文即可嵌入。事项描述里也可以同样粘贴和拖放。
+
 表格边缘有点击/拖动手柄（**点击添加，拖动可添加多个**）。行、列菜单覆盖插入、删除、**复制**、**清空内容**、对齐（左对齐 / 居中 / 右对齐）、**升序排列** / **降序排列**，以及**删除表格**。如果笔记的最后一块是表格，点击它下方的空白会插入一个空行，方便继续写。
 
-保存状态显示为 **保存中…** / **已保存**。保持稳定的笔记标题和链接，这样 Agent 和人之后能找到同一条记录。
+保存状态显示为 **保存中…** / **已保存**。编辑器还会显示笔记**创建于**何时、**编辑于**何时。保持稳定的笔记标题和链接，这样 Agent 和人之后能找到同一条记录。
+
+笔记和事项页上的**关联内容**列出与这条记录相连的会话、笔记、事项和演示文稿。**关联条目**可以搜索这四类。在同一列表里可以移除关联。CLI 使用同一套链接：
+
+```bash
+cocurdex link list <ref>
+cocurdex link add <ref> <ref>
+cocurdex link remove <ref> <ref>
+```
+
+ref 是 `<kind>:<id>` 或 `cocurdex://<kind>/<id>`，kind 为 `session`、`note`、`issue` 或 `deck`。事项也可以用标识符，例如 `issue:ACME-12`。
+
+```bash
+cocurdex image import <path.png|jpg|gif|webp> [--name <alt text>]
+cocurdex image locate <cocurdex://image/...>
+```
+
+`image import` 打印可放进笔记或事项的 Markdown。`image locate` 打印已嵌入图片的本地文件路径。
 
 在 [PDF 阅读器](/zh-cn/docs/desktop/#pdf-阅读器)里看文档时，选中文字并选择**加入笔记**，即可把它摘录进笔记。
 
@@ -81,14 +100,30 @@ Issue 是产品中的 **todo / ticket / 看板卡片**模型。叫法不同，�
 | todo | issue |
 | ticket | issue |
 
-### 默认看板列（状态）
+### 状态
 
-| Id | 标题 |
-| --- | --- |
-| `backlog` | Backlog |
-| `doing` | Doing |
-| `review` | Review |
-| `done` | Done |
+每个状态属于一个**类别**。类别决定它出现在哪个范围里，以及其中的事项算不算已经结束。界面上的类别名称是：
+
+| 类别 id | 界面名称 | 含义 |
+| --- | --- | --- |
+| `backlog` | 待规划 | 待规划 |
+| `unstarted` | 未开始 | 还没开始 |
+| `started` | 进行中 | 正在处理 |
+| `completed` | 已完成 | 已结束 |
+| `canceled` | 已取消 | 已结束 |
+
+新建的数据库带有这些状态。名称是数据本身，中文界面里仍是这些英文标题：
+
+| Id | 标题 | 类别 |
+| --- | --- | --- |
+| `backlog` | Backlog | `backlog` |
+| `todo` | Todo | `unstarted` |
+| `doing` | In Progress | `started` |
+| `review` | In Review | `started` |
+| `done` | Done | `completed` |
+| `canceled` | Canceled | `canceled` |
+
+**管理状态**（从列菜单或**视图显示**打开）可以在一个类别里添加、重命名和调整顺序。删除一个状态时，其中的事项会移到同类别的另一个状态；该类别没有其他状态时，移到第一个状态。状态由所有视图共用。
 
 ### 默认优先级
 
@@ -100,30 +135,61 @@ Issue 是产品中的 **todo / ticket / 看板卡片**模型。叫法不同，�
 | `low` | Low |
 | `none` | No priority |
 
-### 视图
+### 范围和已保存的视图
 
-内置视图 id 是 **`project`**。Issue 侧栏列出**视图**，以及快捷入口：**进行中**、**全部 Issue**、**Backlog** 和 **Agent 在做**。视图可以按**状态**或**优先级**分组，布局可以是**看板**或**列表**。拖动卡片（和列）会更新被分组的字段。**视图显示**只作用于该视图。用**添加视图**再建视图；删除视图不会删除 Issue。
+事项顶栏是三个范围：**全部事项**、**进行中**和 **Backlog**。**进行中**只保留未开始和进行中类别的状态。**Backlog** 只保留待规划类别。每个范围也会把看板的列限制在这些类别里，不可能命中的列不会出现。
 
-打开一条 Issue 可编辑标题、描述、**标签**、**父 issue** / **子 issue**、**关联**（阻塞 / 相关 / 重复）、已链接的 **Agent 会话**、评论，以及**动态**记录。筛选可以隐藏已完成和已取消的卡片，或按工作区和标签收窄。
+侧栏只列出你保存的**视图**。一开始是空的：**筛选事项后可保存为视图。** **保存为视图**记下当前范围和筛选。重命名或删除视图不会删除事项。选中一个已保存的视图时，范围标签不再选中。CLI 的默认视图 id 仍是 **`project`**，除非传入 `--view`。
+
+**视图显示**只作用于该视图：
+
+| 控件 | 选项 |
+| --- | --- |
+| **布局** | **看板**或**列表** |
+| **分组** | **状态**、**优先级**、**标签**、**父事项**或**工作区** |
+| **显示属性** | 卡片或行显示哪些字段：编号、状态、优先级、标签、工作区、父事项、描述、创建时间、更新时间 |
+| **显示空分组** | 关闭时，空列收进**隐藏的列**，那里仍然可以放下卡片 |
+
+拖动卡片会更新被分组的字段。按**标签**分组时，一个事项每个标签出现一次，拖动只改它原来所在的那个标签。没有值的分组是**无标签**、**无父事项**和**无工作区**。
+
+**筛选视图**可以按状态、工作区、标签、父事项（**仅顶层事项**），以及**创建时间**或**更新时间**在最近 1、7 或 30 天内收窄。每个生效的筛选是一枚可以去掉的标签。**隐藏已完成和已取消**仍然可用。
+
+### 事项页
+
+打开一条事项后，它占满事项面板（看板留在下面，返回时滚动位置还在）。顶栏是返回该视图的面包屑、标识符，以及它在当前列表中的位置。**上一个事项**和**下一个事项**沿这份列表移动；`J` 和 `K` 同样如此。
+
+标题在离开输入框或按 **Enter** 时保存。描述在你停止输入后不久保存，离开页面时再保存一次。状态、优先级、标签、工作区和父事项一改就保存。找不到这条事项时显示**该事项已不存在。**
+
+页面上还有**标签**、**父事项** / **子事项**、**事项关系**（阻塞 / 相关 / 重复）、**关联内容**、已链接的 **Agent 会话**、评论和**动态**。
 
 列表视图以及创建/移动操作都经由 daemon（桌面 UI 或 CLI）——不要手工编造 issue id。
 
 ```bash
 cocurdex issue views
+cocurdex issue view update <id> [--title <title>] [--group-by status|priority|label|workspace|parent] [--layout board|list] [--show-empty true|false] [--properties identifier,status,priority]
 cocurdex issue list
 cocurdex issue list --status doing [--label <name>] [--parent <id>] [--open]
 cocurdex issue create --title "Wire download artifacts" --status backlog --priority high [--labels <ids>] [--parent <id>]
 cocurdex issue update <id> [--title <title>] [--body <text>] [--status <column>] [--priority <id>]
 cocurdex issue move <id> doing
+cocurdex issue move <id> <label> --from <label>
 cocurdex issue show <id> [--detail]
 cocurdex issue comment <id> --body "Shipped on main"
 cocurdex issue relate <id> blocks|related|duplicate <id>
 cocurdex issue unrelate <id> blocks|related|duplicate <id>
 cocurdex issue labels
 cocurdex issue label create --name "release" [--color <color>]
+cocurdex issue label update <id|name> [--name <name>] [--color <color>]
 cocurdex issue label delete <id|name>
+cocurdex issue statuses
+cocurdex issue status create --name "Waiting" --category unstarted [--color <color>]
+cocurdex issue status update <id|name> [--name <name>] [--category <category>] [--color <color>]
+cocurdex issue status move <id|name> --position <n>
+cocurdex issue status delete <id|name>
 cocurdex issue delete <id>
 ```
+
+`--from` 用于按标签移动：它指出卡片原来所在的标签，并且只改那一个标签。状态类别是 `backlog`、`unstarted`、`started`、`completed` 和 `canceled`。`--properties` 接受 `identifier`、`status`、`priority`、`labels`、`workspace`、`parent`、`description`、`created` 和 `updated`。
 
 ## 搜索
 
@@ -149,23 +215,27 @@ PRD 和 spec 就是普通笔记，默认存为**私有笔记**。要发布到仓
 
 ## 在手机上
 
-iOS 与 Android 应用可以阅读工具栏里那台电脑上的笔记和 Issue。配对时需要**读取**权限。这一版里两个标签都是只读的：不能新建，没有收件箱标签，没有看板，也没有**动态**和评论。手机上也不能把笔记或 Issue 交给 Agent。要附加给 Agent，仍在桌面输入框里用 **+ → 笔记** 或 **+ → Issue**。应用的配对见[设备与本地网页](/zh-cn/docs/devices-and-web/#原生应用)。
+iOS 与 Android 应用可以阅读工具栏里那台电脑上的笔记和事项；配对带有**交互**时还可以编辑。只查看仍然需要**读取**。手机上没有看板、没有收件箱，也没有**动态**和评论。手机上也不能把笔记或事项交给 Agent。要附加给 Agent，仍在桌面输入框里用 **+ → 笔记** 或 **+ → Issue**。应用的配对见[设备与本地网页](/zh-cn/docs/devices-and-web/#原生应用)。
 
-### Issues 标签
+### 事项标签
 
-**Issues** 按状态分组，进行中的在前。默认看板上，**Doing** 和 **Review** 排在 **Backlog** 和 **Done** 上面。分组标题是状态名加数量，例如 **Doing 2**。工具栏菜单按工作区筛选，标题是工作区名称，或**全部工作区**。**搜索 issue** 按标题或标识符匹配。下拉可以刷新。
+**事项**按状态分组，进行中类别在前，然后是未开始、待规划、已完成和已取消。空状态不显示。默认这组状态会把 **In Progress** 和 **In Review** 放在 **Todo**、**Backlog**、**Done** 和 **Canceled** 上面。分组标题是状态名加数量，例如 **In Progress 2**。**筛选**可以收窄列表。**搜索事项**按标题或标识符匹配。下拉可以刷新。
 
-还没有跟踪任何 Issue 时显示**没有 issue**——**在**该电脑**上跟踪的 issue 会显示在这里。** 搜索没有命中时显示**没有与“…”匹配的 issue**。列表加载失败时，画面是**无法从**该电脑**加载 issue**，并提供**重试**。
+这台手机有**交互**权限时，工具栏上有**新建事项**。表单要求填写标题，描述可选。
 
-每一行显示标题，下面是标识符和标签。打开后，顶栏是标识符。页面显示标题、有描述时按 Markdown 渲染的描述，然后是**状态**、**优先级**和**标签**（没有标签时为**无**）。有已链接的会话时，**Agent 会话**会列出它们，点一条即可打开。没有标题的会话显示**未命名会话**。有子 issue 时，标题是已完成数比总数，例如 **子 issue 1/3**，页面会列出这些子 issue。已删除的 Issue 显示**这个 issue 已在电脑上删除。**
+还没有跟踪任何事项时显示**没有事项**——**在**该电脑**上跟踪的事项会显示在这里。** 搜索没有命中时显示**没有与“…”匹配的事项**。筛选没有命中时显示**没有符合筛选的事项**。列表加载失败时，画面是**无法从**该电脑**加载事项**，并提供**重试**。
+
+每一行有状态标记和标题，下面是标识符和标签。长按一行可以**移动**，用来改状态。打开后，顶栏是标识符。页面显示标题、有描述时按 Markdown 渲染的描述，然后是**状态**、**优先级**、**标签**（没有标签时为**无**）和**工作区**。有**交互**时，这些行会打开选择器并立即保存，**编辑**可以改标题和描述。有已链接的会话时，**Agent 会话**会列出它们，点一条即可打开。没有标题的会话显示**未命名会话**。有子事项时，标题是已完成数比总数，例如 **子事项 1/3**，页面会列出这些子事项。已删除的事项显示**这个事项已在电脑上删除。**
 
 ### 笔记标签
 
 **笔记**按工作区收成一棵缩进的树。没有工作区的笔记归在**未归属工作区**下。文件夹留在树里；打开一篇笔记即可阅读。**搜索笔记**按标题匹配。每个工作区里的命中项是一份平铺列表，最新的在前。下拉可以刷新。
 
+这台手机有**交互**权限时，工具栏上有**新建笔记**。
+
 这台电脑还没有笔记时显示**没有笔记**——**在**该电脑**上写的笔记会显示在这里。** 搜索没有命中时显示**没有与“…”匹配的笔记**。列表加载失败时，画面是**无法从**该电脑**加载笔记**，并提供**重试**。
 
-笔记页显示标题、工作区、距上次修改的时间，以及 Markdown 正文——渲染方式和会话记录相同。空笔记显示**这篇笔记是空的。** 已删除的笔记显示**这篇笔记已在电脑上删除。**
+笔记页显示标题、工作区、距上次修改的时间，以及 Markdown 正文——渲染方式和会话记录相同。有**交互**时，**编辑**打开正文：占位符是**写点什么，或输入 / 插入标题、列表和待办**。格式栏包括**粗体**、列表和**文本样式**（正文和标题）。**插入**可以加入引用、代码块、分割线、列表、待办清单或表格。保存状态是**正在保存…** / **已保存**，失败时是**未保存**。**完成编辑**离开编辑。**笔记属性**可以设置**上级笔记**。已删除的笔记显示**这篇笔记已在电脑上删除。**
 
 ## 不要做的事
 

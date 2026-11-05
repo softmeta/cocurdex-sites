@@ -117,7 +117,7 @@ export const dict = {
       },
       {
         title: "Local-first data",
-        body: "Notes, issues, slide decks, and search live in app-owned storage on your machine. No account required. Open the same workspace in a browser on this computer, or pair another device with the permissions you choose.",
+        body: "Notes, issues, slide decks, and search live in app-owned storage on your machine. No account required. Open the same workspace in a browser on this computer, or pair another device — on your network, or through a relay when you are away. Optional long-term memory stays on this computer until you turn on multi-device sync.",
         tag: "data",
       },
     ],
