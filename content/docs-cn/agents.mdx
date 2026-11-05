@@ -152,7 +152,7 @@ Cursor、Devin 及其他 Registry Agent 在 Cocurdex 侧没有独立的权限模
 
 ## Agent 角色
 
-**Agent 角色**是保存好的预设：Agent + provider/模型 + 权限模式 + 协作与推理轴，外加可选的指令和 skills。每个角色还有一个**头像**（彩色底上的 emoji 或首字母，并带有 Agent 图标角标）和可选的**描述**，说明它擅长什么——团队 lead 挑选队友时会参考描述。
+**Agent 角色**是保存好的预设：Agent + provider/模型 + 权限模式 + 协作与推理轴，外加可选的指令和 skills。每个角色还有一个**头像**和可选的**描述**，说明它擅长什么——团队 lead 挑选队友时会参考描述。头像可以是 emoji，也可以是带**表情**（**平静**、**开心**、**眨眼**、**困倦**、**好奇**）和**颜色**的**形状**。没有头像的角色会得到自己的形状、表情和颜色。助理使用同一套角色，见[助理](/zh-cn/docs/assistants/)。
 
 在输入框中保存角色：在新会话里打开模型菜单，选择**保存为角色**。在 **设置 → 角色** 中编辑或删除，并从 CLI 列出：
 
@@ -173,6 +173,7 @@ daemon 为每个会话挂载一个本地 MCP 工具服务。工具按组划分�
 | `messaging` | `list_agents`、`send_message` | 主会话与队友 |
 | `script_run` | `propose` | 主会话 |
 | `settings` | `list`、`get`、`set`、`propose` | 主会话（也驱动[设置助手](/zh-cn/docs/providers-and-settings/#设置助手)） |
+| `routine` | `list`、`create`、`update`、`run`、`runs`、`delete` | [助理](/zh-cn/docs/assistants/#例行任务)线程。助理不能授予**完全权限**，也不能修改或运行已经是完全权限的任务 |
 
 脚本编排启动的子 Agent 不获得以上任何工具。能够委派工作的会话还会收到指引：同一 provider、只要结果的工作用 Agent 自带的原生子 Agent；需要其他 provider、已保存角色、独立工作树或任务依赖时，用 Cocurdex 团队或脚本编排。具体用法见[团队与编排](/zh-cn/docs/teams/)。
 

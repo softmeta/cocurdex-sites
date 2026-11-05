@@ -46,6 +46,7 @@ cocurdex workspace list
 | --- | --- |
 | 笔记、Issue、演示文稿、视图、标签、链接、FTS 索引 | Daemon + `cocurdex.sqlite` |
 | Agent 角色、团队任务、工作树设置、会话记录 | Daemon + `cocurdex.sqlite` |
+| 助理和例行任务 | Daemon + `cocurdex.sqlite`。删除助理后，它的记忆仍留在 rsrs 存储里 |
 | 已安装的 ACP Registry Agent | 记录在应用设置中；下载的二进制位于应用数据目录 |
 | 托管的 git 工作树 | 由 daemon 在配置的工作树根目录下创建 |
 | 项目源文件 | 磁盘上你的工作区目录 |
@@ -73,7 +74,7 @@ Daemon 负责：
 
 - 掌管数据库连接
 - 通过文档化的 RPC 契约为桌面端和 CLI 服务
-- 运行会话、团队、脚本编排和工作树 setup
+- 运行会话、助理例行任务、团队、脚本编排和工作树 setup
 
 ```bash
 cocurdex daemon status

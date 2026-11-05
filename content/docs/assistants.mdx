@@ -1,0 +1,153 @@
+---
+title: Assistants
+description: The Assistants form — personal assistants, home threads, routines, the inbox, and today's brief.
+---
+
+**Assistants** is a form in the desktop sidebar, next to **Work** and **Chat**. Each assistant is a saved role (name, agent, model, instructions, avatar) with one long-lived home thread. The app always keeps a default assistant, named **Assistant** until you rename it.
+
+Open the form from the sidebar switcher. With nothing else selected, it opens the default assistant, so the composer is already there.
+
+## Roster
+
+The **Assistants** list shows each assistant's latest reply, or **Working…** while its home thread is running. The default assistant stays first. **Pin** keeps another one above the rest.
+
+Right-click a row:
+
+| Action | Does |
+| --- | --- |
+| **Edit** | Opens **Edit assistant** for the name, agent, model, instructions, description, and avatar |
+| **Pin** / **Unpin** | Keeps the assistant above the unpinned ones. Not offered on the default |
+| **Mute** / **Unmute** | Hides the unread mark on that row. A muted row shows **Muted** |
+| **Duplicate** | Copies the assistant, adds **copy** to the name, and opens the copy |
+| **Delete** | Deletes the assistant, its home thread, and its routines. Memories stay. Not offered on the default |
+
+**New assistant** (the compose button on the switcher's row) starts from the default assistant's agent and model, then opens **Edit assistant**.
+
+The assistant's role and home thread cannot be deleted or archived on their own. Deleting the role from **Settings → Roles** fails with `Delete the personal agent instead of its role`. Deleting or archiving the home thread fails with `A personal agent's home thread cannot be removed`. `cocurdex persona delete` on the default fails with `The default personal agent cannot be deleted`.
+
+Changing the model in **Edit assistant** also moves the home thread and that assistant's routine threads onto the new model. Archived threads stay as they are, and so do threads that run on a different agent.
+
+The avatar can be an emoji or a shape. The picker has **Shape**, **Expression** (**Calm**, **Happy**, **Wink**, **Sleepy**, **Curious**), and **Color**. A role with no avatar gets a shape, expression, and color of its own. In this list the shape looks up and to the right, follows the pointer across the row, and blinks when you hover it. The avatar in the thread header stays still.
+
+In an assistant thread, your message bubbles take a soft tint of that avatar color. Other messages stay neutral.
+
+## Home thread
+
+An assistant thread uses the chat layout: the name and avatar sit in the middle of an empty thread, and the composer docks at the bottom. The placeholder is **Message** followed by the assistant's name. Until you write a description, the empty thread says **Your personal assistant. It remembers you and keeps an eye on your day.** Three suggestions fill the composer:
+
+- **What needs my attention today?**
+- **Send me a brief every morning at 8**
+- **What do you remember about me?**
+
+The pane title shows the assistant's avatar. These threads do not appear in the **Work** session list.
+
+A **soul** is standing text for who the assistant is to you, separate from its job instructions. Set it from the CLI with `--soul` or `--soul-file`. It is included when a thread starts, so an edit applies to the next new thread.
+
+Messages the app posts into the home thread are marked with a source line. **Today's brief** is the daily brief. **From routine** plus the routine's name is a routine result; choose it to open that run's thread.
+
+## Routines
+
+**Routines** in the right panel schedules work for an assistant. Each routine has its own thread. Filter the list with **All assistants** or one assistant.
+
+| Field | Does |
+| --- | --- |
+| **Assistant** | Which assistant runs it |
+| **Name** | The name in the list and on the source line |
+| **Instruction** | What to do on every run. Each run starts from this text alone |
+| **Schedule** | **Repeat** every N minutes (at least 5), or **At a time** (`HH:MM`, 24-hour). **Repeat on** picks the days of the week; all of them means every day |
+| **Time zone** | The routine's zone. A new routine starts in this computer's zone |
+| **Access** | How much the run may do (below) |
+| **Notify** | Where the result goes (below) |
+
+**Access** defaults to **Read and draft**.
+
+| Access | Meaning |
+| --- | --- |
+| **Read and draft** | Reads and drafts only; nothing is sent or changed |
+| **Ask first** | Uses the assistant's own mode and waits for your approval |
+| **Full access** | Runs unattended with every permission |
+
+Pi has no permission modes, so this choice does not switch a mode on a Pi routine. On Claude Agent, Codex, and OpenCode it selects that agent's restricted, current, or full-access mode.
+
+**Notify** defaults to **Inbox**.
+
+| Notify | Meaning |
+| --- | --- |
+| **Inbox** | Results land in the inbox; failures notify you |
+| **Push** | Also notifies your phone on every result |
+| **Silent** | Only records the run |
+
+A permission, question, or plan still notifies you, including on a silent routine. A successful run that is not silent is also posted into that assistant's home thread, with **From routine** and the routine's name, and a link to the run's thread.
+
+**Run now** starts a run. **Pause** and **Resume** are manual. After three failed runs in a row the routine pauses on its own: **Paused after three failed runs in a row. Resume it once the cause is fixed.** A run missed while the computer slept runs once after the computer is awake, not once for every missed interval. A routine runs at most 24 times a day; further runs are recorded as **Skipped** with `The daily run limit was reached.`
+
+**Open thread** opens the routine's thread in the Assistants form. **Delete** removes the routine and its thread. The confirmation says this cannot be undone.
+
+You can ask the assistant to manage its own routines. It cannot grant **Full access**, and it cannot change or run a routine that already has it. The same actions are the `routine_list`, `routine_create`, `routine_update`, `routine_run`, `routine_runs`, and `routine_delete` tools, and the [CLI](#cli).
+
+## Inbox and the daily brief
+
+**Inbox** sits under the roster. It is one list for every form: permissions, questions, and plans that need you, finished and failed sessions, and routine results, failures, and pauses.
+
+| Kind | Label |
+| --- | --- |
+| Approval | **Needs approval** |
+| Question | **Has a question** |
+| Plan | **Plan ready** |
+| Finished session | **Done** |
+| Failed session | **Failed** |
+| Routine result | **New result** |
+| Routine failure | **Routine failed** |
+| Routine paused | **Paused after failures** |
+
+The heading shows the count, as in **Inbox · 3**. Opening an item leaves the sidebar on **Assistants** and opens that session.
+
+The daily brief is no longer a dialog. **Today's brief** on the switcher's row posts the latest brief into the default assistant's home thread and opens that thread. The message is an ordinary reply marked **Today's brief**, with **Needs you**, **Routine results**, and **Failures**. Posting again skips a brief that has not changed. The button is hidden when there is nothing to report. Silent routine results are left out of **Routine results**.
+
+## CLI
+
+A `<persona>` or `<routine>` argument is the id, a unique id prefix, or the name (case-insensitive). `persona create` uses Pi unless you pass `--agent`. Full reference: [CLI](/docs/cli/#assistants).
+
+```bash
+cocurdex persona list
+cocurdex persona show <persona>
+cocurdex persona create --name <name> [--agent <agent>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>]
+cocurdex persona update <persona> [--name <name>] [--agent <agent>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--pin|--unpin] [--mute|--unmute]
+cocurdex persona duplicate <persona> --name <name>
+cocurdex persona delete <persona>
+cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>]
+cocurdex persona thread <persona> [--limit <n>]
+```
+
+`--provider` and `--model` are passed together. `persona send` posts to the home thread. `--wait` prints the reply when the turn settles (the default wait is 600 seconds). `persona thread` prints the latest messages (default 20).
+
+```bash
+cocurdex routine list [--persona <persona>]
+cocurdex routine show <routine>
+cocurdex routine create --persona <persona> --name <name> (--prompt <text>|--prompt-file <path>) (--every <minutes>|--at <HH:MM> [--days <mon,wed|weekdays|weekends>]) [--tz <zone>] [--access read-and-draft|ask|full] [--deliver inbox|push|silent]
+cocurdex routine update <routine> [--name <name>] [--prompt <text>|--prompt-file <path>] [--every <minutes>|--at <HH:MM> [--days <days>]] [--tz <zone>] [--access read-and-draft|ask|full] [--deliver inbox|push|silent]
+cocurdex routine pause|resume <routine>
+cocurdex routine run <routine> [--wait] [--timeout <seconds>]
+cocurdex routine runs [<routine>] [--limit <n>]
+cocurdex routine delete <routine>
+```
+
+`--every` and `--at` are alternatives. `--days` needs `--at`. `--access` is `read-and-draft` (default), `ask`, or `full`. `--deliver` is `inbox` (default), `push`, or `silent`.
+
+```bash
+cocurdex inbox
+cocurdex inbox read <item-id>
+cocurdex inbox brief [--tz <zone>]
+```
+
+`inbox` lists what needs you. `inbox read` marks that item's thread visited, which clears it. `inbox brief` prints today's brief, or `Nothing to brief today.`
+
+The product skill is [`cocurdex-persona`](/docs/skills/). Memory for these assistants is documented on [Memory](/docs/memory/).
+
+## Related
+
+- [Desktop workspace](/docs/desktop/)
+- [Memory](/docs/memory/)
+- [Devices and local web](/docs/devices-and-web/#assistant)
+- [CLI](/docs/cli/#assistants)
+- [Skills](/docs/skills/)

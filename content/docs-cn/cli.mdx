@@ -1,6 +1,6 @@
 ---
 title: CLI
-description: cocurdex CLI 参考——打开桌面应用，管理笔记、事项、记忆、演示文稿、会话、团队、脚本编排、设备、provider、MCP 与 skills。
+description: cocurdex CLI 参考——打开桌面应用，管理笔记、事项、记忆、助理、例行任务、演示文稿、会话、团队、脚本编排、设备、provider、MCP 与 skills。
 ---
 
 **`cocurdex` CLI** 是应用私有产品数据和 daemon 操作受支持的命令行边界。外部工具和 Agent 应该使用 CLI,而不是读取私有数据库文件。
@@ -178,6 +178,13 @@ cocurdex memory doctor [--remote] [--check-update] [--json]
 cocurdex memory recall <query> [--limit <n>] [--project <name>] [--json]
 cocurdex memory show <id> [--json]
 cocurdex memory remember --title <title> [--content <text> | --file <path> | <text>] [--importance important|trivial] [--parent <id>] [--tags a,b] [--force] [--json]
+cocurdex memory list [--partition me|agent:<persona-id>] [--since <date>] [--limit <n>] [--json]
+cocurdex memory update <id> [--title <title>] [--content <text> | --file <path>] [--tags a,b] [--importance important|trivial] [--json]
+cocurdex memory forget <id> [--json]
+cocurdex memory restore <full-id> [--json]
+cocurdex memory history [<id>] [--limit <n>] [--json]
+cocurdex memory export <file> [--json]
+cocurdex memory import <file> [--json]
 cocurdex memory save-session <session-id> [--force] [--importance important|trivial] [--json]
 cocurdex memory sync on | off [--json]
 cocurdex memory cloud register|signin --user <name> [--json]
@@ -186,6 +193,36 @@ cocurdex memory policy
 ```
 
 账号密钥从隐藏提示读取；进程不是终端时，从管道读入。登录先读密码，再读恢复密钥。
+
+`memory list --partition me` 是你保存的关于自己的内容。`agent:<persona-id>` 是某一个助理自己的记忆。`forget` 删除一条；`history` 打印完整 id，`restore` 使用这个 id。`export` 把整份记忆库写成明文 JSON。
+
+## 助理
+
+个人助理、例行任务和收件箱。完整说明见[助理](/zh-cn/docs/assistants/)。`<persona>` 或 `<routine>` 可以是 id、唯一的 id 前缀或名称。
+
+```bash
+cocurdex persona list [--json]
+cocurdex persona show <persona> [--json]
+cocurdex persona create --name <name> [--agent <agent>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--json]
+cocurdex persona update <persona> [--name <name>] [--agent <agent>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--pin|--unpin] [--mute|--unmute] [--json]
+cocurdex persona duplicate <persona> --name <name> [--json]
+cocurdex persona delete <persona>
+cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>] [--json]
+cocurdex persona thread <persona> [--limit <n>] [--json]
+cocurdex routine list [--persona <persona>] [--json]
+cocurdex routine show <routine> [--json]
+cocurdex routine create --persona <persona> --name <name> (--prompt <text>|--prompt-file <path>) (--every <minutes>|--at <HH:MM> [--days <mon,wed|weekdays|weekends>]) [--tz <zone>] [--access read-and-draft|ask|full] [--deliver inbox|push|silent] [--json]
+cocurdex routine update <routine> [--name <name>] [--prompt <text>|--prompt-file <path>] [--every <minutes>|--at <HH:MM> [--days <days>]] [--tz <zone>] [--access read-and-draft|ask|full] [--deliver inbox|push|silent] [--json]
+cocurdex routine pause|resume <routine> [--json]
+cocurdex routine run <routine> [--wait] [--timeout <seconds>] [--json]
+cocurdex routine runs [<routine>] [--limit <n>] [--json]
+cocurdex routine delete <routine>
+cocurdex inbox [list] [--json]
+cocurdex inbox read <item-id> [--json]
+cocurdex inbox brief [--tz <zone>] [--json]
+```
+
+`persona create` 在不传 `--agent` 时使用 Pi。`--provider` 和 `--model` 要一起给出。`persona send --wait` 打印回复（默认超时 600 秒）。`routine create` 需要 `--prompt` 或 `--prompt-file`，以及 `--every`（至少 5）或 `--at` 其中之一。`inbox read` 把该项的线程标为已访问。没有可报告的内容时，`inbox brief` 打印 `Nothing to brief today.`
 
 ## 搜索
 
@@ -461,6 +498,7 @@ cocurdex role list [--json]
 
 - [笔记与 Issue](/zh-cn/docs/notes-and-issues/)
 - [记忆](/zh-cn/docs/memory/)
+- [助理](/zh-cn/docs/assistants/)
 - [演示文稿](/zh-cn/docs/decks/)
 - [设备与本地网页](/zh-cn/docs/devices-and-web/)
 - [Agent](/zh-cn/docs/agents/)

@@ -13,6 +13,7 @@ Typical peers in the shell:
 | --- | --- |
 | **Sessions** | Track parallel agent runs and which one needs attention |
 | **Chat** | Steer the active agent; one pane among several |
+| **Assistants** | Personal assistants, their home threads, the inbox, and today's brief (see [Assistants](/docs/assistants/)) |
 | **Terminal** | Integrated PTY for commands and agent-driven shell work |
 | **Editor** | Inspect and edit project files without leaving the app |
 | **Git** | Diff, stage, and commit workspace changes; review what each agent turn changed |
@@ -24,7 +25,7 @@ Typical peers in the shell:
 | **Team panel** | Teammates of the current lead session, their status, and replies (see [Teams](/docs/teams/)) |
 | **Script runs** | Proposed scripts awaiting approval and running subagents (see [Script runs](/docs/teams/#script-runs)) |
 
-The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. Hover an icon-only button to see its action name. On Windows and Linux the window uses themed native window controls in the title bar.
+The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. Its view switcher includes **Memory** and **Routines** as well as Git, the editor, and the other panes above. Hover an icon-only button to see its action name. On Windows and Linux the window uses themed native window controls in the title bar.
 
 Chat layout is chosen in **Settings → General → Chat layout** and restored on next launch:
 
@@ -39,6 +40,12 @@ When chat is closed in floating or pinned layout, **Hide chat button when closed
 Exact layout can change during pre-release; the product model stays multi-pane. No single pane should monopolize the product — chat is a peer, not the whole app.
 
 You can also [open the same host in a browser](/docs/devices-and-web/) on this computer, or pair another device.
+
+## Sidebar
+
+The switcher at the top of the sidebar chooses **Work**, **Chat**, or **Assistants**. **Open search** is in the title bar, after **Back** and **Forward** (`Primary+P`). The switcher's own row holds that form's action and an icon-only create button: **Add workspace** and **New session** on Work, **New chat** on Chat, and **Today's brief** (when there is one) plus **New assistant** on Assistants.
+
+The sidebar footer shows **Proxy status** and **Settings**. **Settings** also opens with `Primary+,`, including while the sidebar is collapsed. On Assistants the footer also shows **Long-term memory**.
 
 ## Sessions and attention
 
@@ -55,7 +62,7 @@ Underlying session status values include `idle`, `running`, `error`, and `exited
 
 ### Session list
 
-The sidebar **Group and filter sessions** menu controls how sessions are listed:
+On **Work**, the **Group and filter sessions** menu on the **Sessions** heading controls how sessions are listed. Chat threads and assistant home threads are not in this list:
 
 | Control | Options |
 | --- | --- |
@@ -146,6 +153,7 @@ Defaults are VS Code / Cursor-adjacent where that helps muscle memory. **Primary
 | Action | Default |
 | --- | --- |
 | File / quick open search | `Primary+P` |
+| Open settings | `Primary+,` |
 | Toggle left sidebar | `Primary+B` |
 | Toggle right panel | `Primary+\` |
 | Toggle editor fullscreen | `Primary+Shift+E` |
@@ -155,17 +163,17 @@ Defaults are VS Code / Cursor-adjacent where that helps muscle memory. **Primary
 | Go back | `Primary+[` on macOS, `Alt+Left` on Windows and Linux |
 | Go forward | `Primary+]` on macOS, `Alt+Right` on Windows and Linux |
 
-**Back** and **Forward** sit in the title bar, next to Settings. They walk through the session, note, issue, deck, or panel view you had open, and through each settings section. In settings, **Back to app** leaves settings. Mouse side buttons do the same. The history is kept for this launch. In the browser client, the browser's own Back button is separate from these.
+**Back**, **Forward**, and **Open search** sit in the title bar. **Settings** is in the sidebar footer, and also opens with `Primary+,`. Back and Forward walk through the session, note, issue, deck, or panel view you had open, and through each settings section. In settings, **Back to app** leaves settings. Mouse side buttons do the same. The history is kept for this launch. In the browser client, the browser's own Back button is separate from these.
 
 Send-key behavior for chat (Enter vs Primary+Enter for multiline) is configurable in settings. Keys for moving through a slide deck are listed on [Slide decks](/docs/decks/#presenting).
 
 ## Approvals in one place
 
-Everything that needs you surfaces inside the session that asked for it: tool permission cards, agent questions, plan reviews, script-run proposals (with **Show script**, an agent limit, **Run** and **Discard**), and teammates that need input. Nothing runs in the background without a visible state.
+Everything that needs you surfaces inside the session that asked for it: tool permission cards, agent questions, plan reviews, script-run proposals (with **Show script**, an agent limit, **Run** and **Discard**), and teammates that need input. The [Assistants inbox](/docs/assistants/#inbox-and-the-daily-brief) gathers those items from Work, Chat, and Assistants in one list. Nothing runs in the background without a visible state.
 
 ## Themes
 
-Dark and light are both first-class. Prefer **system appearance** unless you pin a theme in settings. Theme parity is a product requirement, not a fallback afterthought.
+Dark and light are both first-class. Prefer **system appearance** unless you pin a theme in settings. Theme parity is a product requirement, not a fallback afterthought. The dark theme is eased for long reading. Toasts use the neutral popover surface, and only the status icon carries color. The composer keeps rounded corners rather than a full pill.
 
 ## Browser design mode
 
@@ -193,6 +201,7 @@ See [Workspaces and data](/docs/concepts/workspaces-and-data/).
 
 ## Related
 
+- [Assistants](/docs/assistants/)  
 - [Getting started](/docs/getting-started/)  
 - [Devices and local web](/docs/devices-and-web/)  
 - [Agents](/docs/agents/)  

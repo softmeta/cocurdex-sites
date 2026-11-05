@@ -43,6 +43,26 @@ Intel Mac 没有 rsrs 构建，这台机器上记忆保持关闭，状态行会�
 
 这一页链到 Respire 的官网和源码，说明 rsrs 是什么。
 
+## 在助理表单里
+
+助理侧边栏会提供**让助理记住你**，可以选择**开启记忆**或**跳过**。开启时，如果还没有 rsrs，应用会安装它。离开这张卡片之后，同一个控件是侧边栏页脚的**长期记忆**。见[助理](/zh-cn/docs/assistants/)。
+
+助理能看到哪些记忆，仍由**Agent 会话自动召回**决定。开启后，线程只会召回这个助理自己的记忆和**关于我**，不会读另一个助理的。助理上设置的**灵魂**不属于这份记忆库，见[助理](/zh-cn/docs/assistants/#主线程)。
+
+## 浏览和编辑
+
+右侧面板的**记忆**列出已保存的内容。
+
+| 视图 | 显示 |
+| --- | --- |
+| **日记** | 按天排列的记忆 |
+| **树** | 同一批条目的树形 |
+| **历史** | 编辑、删除和恢复 |
+
+**分区**可以筛到**全部记忆**、**关于我**或某一个助理。如果安装的 rsrs 不能这样拆分记忆，分区菜单保持隐藏，所有助理共用一份记忆库。
+
+**筛选记忆**收窄列表。选中一条可以编辑**标题**、**内容**或**标签**。**删除**会要求确认；当安装的 rsrs 支持恢复时，**已删除记忆**提示上的**撤销**会把它恢复。一条记忆上的**历史**列出改过什么。
+
 ## CLI
 
 ```bash
@@ -53,6 +73,13 @@ cocurdex memory doctor [--remote] [--check-update]
 cocurdex memory recall <query> [--limit <n>] [--project <name>]
 cocurdex memory show <id>
 cocurdex memory remember --title <title> [--content <text> | --file <path> | <text>] [--importance important|trivial] [--tags a,b]
+cocurdex memory list [--partition me|agent:<persona-id>] [--since <date>] [--limit <n>]
+cocurdex memory update <id> [--title <title>] [--content <text> | --file <path>] [--tags a,b] [--importance important|trivial]
+cocurdex memory forget <id>
+cocurdex memory restore <full-id>
+cocurdex memory history [<id>] [--limit <n>]
+cocurdex memory export <file>
+cocurdex memory import <file>
 cocurdex memory save-session <session-id> [--force] [--importance important|trivial]
 cocurdex memory sync on | off
 cocurdex memory cloud register|signin --user <name>
@@ -62,8 +89,11 @@ cocurdex memory policy
 
 `cloud register` 和 `cloud signin` 从隐藏提示读取密码（登录时还读取恢复密钥）。标准输入不是终端时，改为从管道读取这些密钥。`cloud keys` 打印恢复密钥。`memory policy` 打印记忆工具遵循的规则。
 
+`memory list --partition me` 是**关于我**。`agent:<persona-id>` 是某一个助理自己的记忆。`forget` 删除一条；`history` 显示它的完整 id，`restore` 使用这个 id。`export` 把整份记忆库写成明文 JSON。`import` 再读回这个文件。
+
 ## 相关
 
 - [Provider 与设置](/zh-cn/docs/providers-and-settings/)
 - [工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/)
+- [助理](/zh-cn/docs/assistants/)
 - [CLI](/zh-cn/docs/cli/#记忆)
