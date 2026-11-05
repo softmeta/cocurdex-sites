@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PrivacyPage } from "@/components/marketing/privacy-page";
+import { LegalDocumentPage } from "@/components/marketing/legal-document-page";
 import { getMarketingDict } from "@/lib/marketing";
 
 const dict = getMarketingDict("zh-cn");
@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <PrivacyPage locale="zh-cn" />;
+  return <LegalDocumentPage locale="zh-cn" document="privacy" />;
 }
