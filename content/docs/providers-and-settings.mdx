@@ -122,13 +122,17 @@ After an update downloads, an **Update available** card offers **Update and Rest
 
 **Settings → Diagnostics** (or **Help → Export Diagnostics…**) bundles sanitized app logs and runtime info into a file you can attach to a GitHub issue. Turn on **Verbose diagnostics** to record more detail while you reproduce a problem; logs stay sanitized either way. The same actions are `cocurdex diagnostics export` and `cocurdex diagnostics level debug|info`. `cocurdex daemon health` prints the process, memory, and active work.
 
-**Settings → General** also shows the local daemon (socket, protocol version, start time) with **Restart** — use it if notes, issues, decks, or agents stop responding.
+## Daemon
+
+**Settings → General → Daemon** shows the local daemon (socket, protocol version, start time). **Start** brings it up when it is stopped. **Restart** replaces a running daemon — use it if notes, issues, decks, or agents stop responding. With **Keep running in the background** on, the status line reads **Running (…) in the background; it keeps running after Cocurdex quits.**
+
+**Keep running in the background** is off until you turn it on. On, the daemon keeps serving the CLI and paired devices after you quit the desktop app, and it starts when you log in: a LaunchAgent on macOS, a Run key on Windows, or an XDG autostart entry on Linux. Off, quitting the app stops the daemon it owns. From the terminal, `cocurdex daemon background on|off|status [--json]` is the same switch. See [CLI](/docs/cli/#daemon-and-workspaces).
 
 ## Other settings
 
 | Section | Covers |
 | --- | --- |
-| **General** | Chat layout, transcript view, HTML preview location, send shortcut, follow-up queue/steer, language, notifications (including a completion sound), **Shell command** (install `cocurdex` on your `PATH`), daemon status and restart |
+| **General** | Chat layout, transcript view, HTML preview location, send shortcut, follow-up queue/steer, language, notifications (including a completion sound), **Shell command** (install `cocurdex` on your `PATH`), daemon status, **Keep running in the background**, and restart |
 | **Appearance** | Theme (system / dark / light — parity is a product requirement), color theme presets, UI and code fonts |
 | **Editor** | Code MiniMap |
 | **Shortcuts** | Rebindable keyboard shortcuts; `null` override unbinds an action |

@@ -122,13 +122,17 @@ cocurdex mcp import --from codex
 
 **设置 → 诊断**（或菜单 **帮助 → 导出诊断日志…**）会把脱敏后的应用日志与运行时信息打包成一个文件，方便附到 GitHub Issue 中。复现问题时可以打开**详细诊断日志**记录更多细节；无论开关与否，日志都会脱敏。同一组操作是 `cocurdex diagnostics export` 和 `cocurdex diagnostics level debug|info`。`cocurdex daemon health` 打印进程、内存和正在进行的工作。
 
-**设置 → 常规** 还会显示本地 daemon 的状态（socket、协议版本、启动时间）并提供**重启**——当笔记、Issue、演示文稿或 Agent 无响应时使用。
+## Daemon
+
+**设置 → 常规 → Daemon** 显示本地 daemon（socket、协议版本、启动时间）。未运行时按钮是**启动**，运行中是**重启**。笔记、Issue、演示文稿或 Agent 无响应时，用**重启**把它换掉。打开**后台常驻**后，状态行会写**运行中（…），后台常驻，退出应用后继续运行。**
+
+**后台常驻**默认关闭。打开后，退出桌面应用时 daemon 继续为 CLI 和已配对设备服务，并在登录时启动：macOS 使用 LaunchAgent，Windows 使用 Run 键，Linux 使用 XDG autostart。关闭后，退出应用会停掉它自己管理的 daemon。终端里的同一开关是 `cocurdex daemon background on|off|status [--json]`。见 [CLI](/zh-cn/docs/cli/#daemon-与工作区)。
 
 ## 其他设置
 
 | 分区 | 内容 |
 | --- | --- |
-| **常规** | 聊天布局、对话视图、HTML 预览位置、发送快捷键、后续消息排队/引导、语言、通知（含完成提示音）、**Shell 命令**（把 `cocurdex` 安装到 `PATH`）、daemon 状态与重启 |
+| **常规** | 聊天布局、对话视图、HTML 预览位置、发送快捷键、后续消息排队/引导、语言、通知（含完成提示音）、**Shell 命令**（把 `cocurdex` 安装到 `PATH`）、daemon 状态、**后台常驻**与重启 |
 | **外观** | 主题（跟随系统 / 深色 / 浅色——双主题对齐是产品要求）、配色主题预设、界面与代码字体 |
 | **编辑器** | 代码 MiniMap |
 | **快捷键** | 可重新绑定的键盘快捷键；`null` 覆盖表示解绑 |

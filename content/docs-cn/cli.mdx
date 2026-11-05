@@ -5,7 +5,9 @@ description: cocurdex CLI 参考——打开桌面应用，管理笔记、事项
 
 **`cocurdex` CLI** 是应用私有产品数据和 daemon 操作受支持的命令行边界。外部工具和 Agent 应该使用 CLI,而不是读取私有数据库文件。
 
-大多数数据和会话命令需要**桌面 daemon**（通常在打开桌面应用时启动）。
+大多数数据和会话命令需要**桌面 daemon**。打开桌面应用会启动它。随安装包提供的 CLI 会在没有 daemon 监听时自己启动 daemon，因此桌面窗口关掉后命令仍然可用。如果这个启动器拉不起来，打开桌面应用后再试。
+
+**后台常驻**（**设置 → 常规 → Daemon**）默认关闭。打开后，退出应用时 daemon 继续为 CLI 和已配对设备服务，并在登录时启动。关闭后，退出桌面应用会停掉它自己管理的 daemon。见 [Daemon 与工作区](#daemon-与工作区)。
 
 ## 安装
 
@@ -208,12 +210,26 @@ cocurdex skills remove --scope project|global [--root <path>] [--json]
 
 ```bash
 cocurdex daemon status
+cocurdex daemon background on|off|status [--json]
 cocurdex workspace list
 ```
 
+`daemon background` 就是 **设置 → 常规 → Daemon → 后台常驻**。
+
+- `on` 让 daemon 在退出 Cocurdex 后继续运行，并登记为登录时启动：macOS 用 LaunchAgent，Windows 用 Run 键，Linux 用 XDG autostart。
+- `off` 移除该登录项。之后退出桌面应用会停掉它自己管理的 daemon。
+- `status` 打印一行。更改成功后，`on` 和 `off` 也打印这一行：
+  - 后台模式关闭：退出 Cocurdex 时 daemon 停止
+  - 后台模式开启：退出 Cocurdex 后 daemon 继续运行，并在登录时启动
+  - 后台模式已开启，但登录项缺失；再运行 `cocurdex daemon background on` 可以补回
+  - 源码构建不可用。终端原文是 `Background mode is not available for this daemon (source build)`。此时 **设置 → 常规 → Daemon** 不显示这个开关，`on` 或 `off` 会失败，原文是 `Background mode is not available for this daemon`
+- `--json` 打印 `enabled`、`available` 和 `registered`。
+
+只有这台电脑能更改这项设置。已配对设备会被拒绝，原文是 `Only this computer can change background mode`。`daemon status` 和 `daemon health` 也列在[诊断](#诊断)下。
+
 ## 设备与本地网页
 
-打印本地网页客户端 URL（桌面应用必须在运行）：
+打印本地网页客户端 URL。daemon 必须在运行。**后台常驻**让它在退出桌面应用后继续提供服务，打包的 CLI 也会在它没在跑时启动它：
 
 ```bash
 cocurdex web [--json]
@@ -415,11 +431,12 @@ cocurdex mcp import --from claude|claude-project|codex|codex-project|cursor|open
 ```bash
 cocurdex daemon status [--json]
 cocurdex daemon health [--json]
+cocurdex daemon background on|off|status [--json]
 cocurdex diagnostics export [--json]
 cocurdex diagnostics level debug|info [--json]
 ```
 
-`daemon health` 打印进程、内存、正在进行的工作，以及日志位置。`diagnostics export` 写出和 **设置 → 诊断** 相同的已脱敏打包文件。`diagnostics level` 对应**详细诊断日志**：`debug` 记录更多，`info` 是平常级别。见[诊断](/zh-cn/docs/providers-and-settings/#诊断)。
+`daemon health` 打印进程、内存、正在进行的工作，以及日志位置。`daemon background` 用来打开或关闭**后台常驻**，或打印当前状态。见 [Daemon 与工作区](#daemon-与工作区)。`diagnostics export` 写出和 **设置 → 诊断** 相同的已脱敏打包文件。`diagnostics level` 对应**详细诊断日志**：`debug` 记录更多，`info` 是平常级别。见[诊断](/zh-cn/docs/providers-and-settings/#诊断)。
 
 ## Agent 角色
 
