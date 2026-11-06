@@ -86,10 +86,10 @@ cocurdex note tags [note-id] [--json]
 ```bash
 cocurdex issue list [--status <column>] [--label <name>] [--parent <id>] [--open] [--view <id>] [--json]
 cocurdex issue show <id> [--detail] [--view <id>] [--json]
-cocurdex issue create --title <title> [--status <column>] [--priority <id>] [--body <text>] [--workspace <id>] [--parent <id>] [--labels <ids>] [--view <id>] [--json]
-cocurdex issue update <id> [--title <title>] [--body <text>] [--status <column>] [--priority <id>] [--workspace <id>|none] [--parent <id>|none] [--labels <ids>] [--view <id>] [--json]
+cocurdex issue create --title <title> [--status <column>] [--priority <id>] [--body <markdown>|--body-file <path>] [--workspace <id>] [--parent <id>] [--labels <ids>] [--view <id>] [--json]
+cocurdex issue update <id> [--title <title>] [--body <markdown>|--body-file <path>] [--status <column>] [--priority <id>] [--workspace <id>|none] [--parent <id>|none] [--labels <ids>] [--view <id>] [--json]
 cocurdex issue move <id> <column> [--view <id>] [--json]
-cocurdex issue comment <id> --body <markdown> [--json]
+cocurdex issue comment <id> --body <markdown>|--body-file <path> [--json]
 cocurdex issue relate <id> blocks|related|duplicate <id> [--json]
 cocurdex issue unrelate <id> blocks|related|duplicate <id> [--json]
 cocurdex issue labels [--json]
@@ -114,6 +114,8 @@ cocurdex issue label update <id|name> [--name <name>] [--color <color>]
 cocurdex issue view update <id> [--title <title>] [--group-by status|priority|label|workspace|parent] [--layout board|list] [--show-empty true|false] [--properties <a,b>]
 cocurdex issue move <id> <column> [--from <column>]
 ```
+
+`create`、`update` 和 `comment` 的正文与笔记相同：`--body -` 从 stdin 读取，`--body-file <path>` 从文件读取。未知参数会被拒绝，事项保持不变。错误是 `Unknown flag --<name> for "issue <action>". Accepted flags: ...`。
 
 `--from` 指出卡片原来所在的标签，并且只改那一个标签。`--properties` 接受 `identifier`、`status`、`priority`、`labels`、`workspace`、`parent`、`description`、`created` 和 `updated`。见[笔记与 Issue](/zh-cn/docs/notes-and-issues/#issue)。
 
@@ -203,16 +205,16 @@ cocurdex memory policy
 ```bash
 cocurdex persona list [--json]
 cocurdex persona show <persona> [--json]
-cocurdex persona create --name <name> [--agent <agent>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--json]
-cocurdex persona update <persona> [--name <name>] [--agent <agent>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--pin|--unpin] [--mute|--unmute] [--json]
+cocurdex persona create --name <name> [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--json]
+cocurdex persona update <persona> [--name <name>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--pin|--unpin] [--mute|--unmute] [--json]
 cocurdex persona duplicate <persona> --name <name> [--json]
 cocurdex persona delete <persona>
 cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>] [--json]
 cocurdex persona thread <persona> [--limit <n>] [--json]
 cocurdex routine list [--persona <persona>] [--json]
 cocurdex routine show <routine> [--json]
-cocurdex routine create --persona <persona> --name <name> (--prompt <text>|--prompt-file <path>) (--every <minutes>|--at <HH:MM> [--days <mon,wed|weekdays|weekends>]) [--tz <zone>] [--access read-and-draft|ask|full] [--deliver inbox|push|silent] [--json]
-cocurdex routine update <routine> [--name <name>] [--prompt <text>|--prompt-file <path>] [--every <minutes>|--at <HH:MM> [--days <days>]] [--tz <zone>] [--access read-and-draft|ask|full] [--deliver inbox|push|silent] [--json]
+cocurdex routine create --persona <persona> --name <name> (--prompt <text>|--prompt-file <path>) (--every <minutes>|--at <HH:MM> [--days <mon,wed|weekdays|weekends>]) [--tz <zone>] [--access read-and-draft|full] [--deliver inbox|push|silent] [--json]
+cocurdex routine update <routine> [--name <name>] [--prompt <text>|--prompt-file <path>] [--every <minutes>|--at <HH:MM> [--days <days>]] [--tz <zone>] [--access read-and-draft|full] [--deliver inbox|push|silent] [--json]
 cocurdex routine pause|resume <routine> [--json]
 cocurdex routine run <routine> [--wait] [--timeout <seconds>] [--json]
 cocurdex routine runs [<routine>] [--limit <n>] [--json]
@@ -220,9 +222,10 @@ cocurdex routine delete <routine>
 cocurdex inbox [list] [--json]
 cocurdex inbox read <item-id> [--json]
 cocurdex inbox brief [--tz <zone>] [--json]
+cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN] [--json]
 ```
 
-`persona create` 在不传 `--agent` 时使用 Pi。`--provider` 和 `--model` 要一起给出。`persona send --wait` 打印回复（默认超时 600 秒）。`routine create` 需要 `--prompt` 或 `--prompt-file`，以及 `--every`（至少 5）或 `--at` 其中之一。`inbox read` 把该项的线程标为已访问。没有可报告的内容时，`inbox brief` 打印 `Nothing to brief today.`
+个人助理始终跑在 Pi 上。`persona create` 和 `persona update` 没有 `--agent` 参数。`--provider` 和 `--model` 要一起给出。`persona send --wait` 打印回复（默认超时 600 秒）。`routine create` 需要 `--prompt` 或 `--prompt-file`，以及 `--every`（至少 5）或 `--at` 其中之一。`--access` 为 `read-and-draft`（默认）或 `full`。`inbox read` 把该项的线程标为已访问。没有可报告的内容时，`inbox brief` 打印 `Nothing to brief today.` `inbox brief post` 把今日简报写入默认助理的主线程。`--locale` 为 `en-US` 或 `zh-CN`；省略则沿用上次发布所用的语言。没有新内容可发布时打印 `Nothing new to post.`
 
 ## 搜索
 

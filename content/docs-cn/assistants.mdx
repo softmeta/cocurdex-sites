@@ -3,7 +3,7 @@ title: 助理
 description: 助理表单——个人助理、主线程、例行任务、收件箱和今日简报。
 ---
 
-**助理**是桌面侧边栏里的一种表单，与**工作**和**聊天**并列。每个助理是一份保存的角色（名称、Agent、模型、指令、头像），外加一条长期的主线程。应用始终保留一个默认助理，在你改名之前它叫**助理**。
+**助理**是桌面侧边栏里的一种表单，与**工作**和**聊天**并列。每个助理是一份保存在内置 **Pi** Agent 上的角色（名称、模型、指令、头像），外加一条长期的主线程。应用始终保留一个默认助理，在你改名之前它叫**助理**。
 
 从侧边栏的切换器打开这个表单。没有选中其他内容时，它会打开默认助理，输入框已经在那里。
 
@@ -15,17 +15,19 @@ description: 助理表单——个人助理、主线程、例行任务、收件�
 
 | 操作 | 作用 |
 | --- | --- |
-| **编辑** | 打开**编辑助理**，修改名称、Agent、模型、指令、描述和头像 |
+| **编辑** | 打开**编辑助理**，修改名称、模型、**指令**、**人设**、描述和头像。没有引擎选择器 |
 | **置顶** / **取消置顶** | 把这个助理留在未置顶的那些之上。默认助理不提供这项 |
-| **免打扰** / **取消免打扰** | 隐藏这一行的未读标记。免打扰的一行会显示**免打扰** |
+| **免打扰** / **取消免打扰** | 隐藏这一行的未读标记。免打扰的一行会显示**免打扰**。免打扰的助理不会向桌面或手机发提醒；它的线程仍会出现在收件箱 |
 | **复制** | 复制这个助理，名称后加上**副本**，并打开副本 |
-| **删除** | 删除这个助理、它的主线程和例行任务。记忆保留。默认助理不提供这项 |
+| **删除** | 删除这个助理、它的主线程和例行任务（包括每一次运行的线程）。记忆保留。默认助理不提供这项 |
 
-切换器那一行上的**新建助理**（撰写按钮）沿用默认助理的 Agent 和模型，然后打开**编辑助理**。
+切换器那一行上的**新建助理**（撰写按钮）沿用默认助理的模型，然后打开**编辑助理**。
 
 助理的角色和主线程不能单独删除或归档。在 **设置 → 角色** 里删除这个角色会失败，提示 `Delete the personal agent instead of its role`。删除或归档主线程会失败，提示 `A personal agent's home thread cannot be removed`。对默认助理执行 `cocurdex persona delete` 会失败，提示 `The default personal agent cannot be deleted`。
 
-在**编辑助理**里更换模型时，主线程和这个助理的例行任务线程也会改用新模型。已归档的线程保持原样，跑在另一个 Agent 上的线程也是。
+助理只在 Pi 上运行。创建、更新或保存角色时如果指定了别的 Agent，会失败，提示 `Personal agents run on pi, not <agent>`。原来用其他 Agent 的助理，连同主线程和例行任务线程，都会改到 Pi。Pi 已经提供这个模型时，模型保持不变；否则改用 Pi 的默认模型。
+
+在**编辑助理**里更换模型时，主线程和这个助理当前的例行任务线程也会改用新模型。已归档的运行线程保持原样。
 
 头像可以是 emoji，也可以是形状。选择器里有**形状**、**表情**（**平静**、**开心**、**眨眼**、**困倦**、**好奇**）和**颜色**。没有头像的角色会得到自己的形状、表情和颜色。在这份列表里，形状看着右上方，跟着指针在这一行上移动，悬停时会眨眼。线程标题上的头像保持不动。
 
@@ -41,13 +43,13 @@ description: 助理表单——个人助理、主线程、例行任务、收件�
 
 窗格标题显示助理的头像。这些线程不会出现在**工作**的会话列表里。
 
-**灵魂**是一段关于「这个助理对你是谁」的固定文字，和它的工作指令分开。用 CLI 的 `--soul` 或 `--soul-file` 设置。线程开始时会带上它，所以修改从下一条新线程起生效。
+**指令**说明这个助理负责什么、应该怎么做事。**人设**是它对你是谁：语气、性格，以及和你说话的方式（最多 20,000 个字符）。在**编辑助理**里填写，或用 CLI 的 `--instructions` / `--instructions-file` 和 `--soul` / `--soul-file`。两者每一轮都会作为系统提示里的一节带上，所以修改从下一条消息起生效。保存时如果没有带上指令或 skills，已经存下的内容会保留，包括用 CLI 设过的指令。
 
 应用贴进主线程的消息会带一行来源。**今日简报**是每日简报。**来自例行任务**加上任务名称，是一次例行任务的结果；点它打开那次运行的线程。
 
 ## 例行任务
 
-右侧面板的**例行任务**给助理安排定时工作。每个例行任务有自己的线程。列表可以用**全部助理**或某一个助理筛选。
+右侧面板的**例行任务**给助理安排定时工作。每次运行都新开一条 Pi 线程，上一次运行的线程会被归档。列表可以用**全部助理**或某一个助理筛选。
 
 | 字段 | 作用 |
 | --- | --- |
@@ -59,15 +61,12 @@ description: 助理表单——个人助理、主线程、例行任务、收件�
 | **权限** | 这次运行可以做多少（见下） |
 | **通知** | 结果送到哪里（见下） |
 
-**权限**默认是**只读加草稿**。
+**权限**默认是**只读加草稿**。选项是**只读加草稿**和**完全权限**。**先问我**已取消：以前用它的任务现在是**只读加草稿**。
 
 | 权限 | 含义 |
 | --- | --- |
-| **只读加草稿** | 只能读取和起草，不会发送或修改任何东西 |
-| **先问我** | 使用助理自己的权限模式，需要你审批 |
+| **只读加草稿** | 只能读取和起草，不会发送或修改任何东西。这次运行可以使用 `read`、`grep`、`find`、`ls`、记忆和历史，以及例行任务工具。其他工具会被拦住，包括嵌套在另一个工具里的写入 |
 | **完全权限** | 无人值守，拥有全部权限 |
-
-Pi 没有权限模式，所以这个选择不会在 Pi 的例行任务上切换模式。在 Claude Agent、Codex 和 OpenCode 上，它会选中该 Agent 的受限模式、当前模式或完全访问模式。
 
 **通知**默认是**收件箱**。
 
@@ -77,17 +76,27 @@ Pi 没有权限模式，所以这个选择不会在 Pi 的例行任务上切换�
 | **推送** | 每次有结果都推送到手机 |
 | **静默** | 只记录运行 |
 
-权限请求、提问和计划仍然会通知你，静默的任务也一样。成功且不是静默的运行，还会贴进这个助理的主线程，带来源**来自例行任务**和任务名称，并链到这次运行的线程。
+每次运行结束时调用一次 `routine_report`，状态是 `ready`、`dropped`、`needs_you`、`blocked` 或 `failed`。如果运行完成时没有报告，最后一条回复就是结果。**最近运行**显示下面的标签；有摘要或问题时一并显示。
 
-**立即运行**开始一次运行。**暂停**和**恢复**由你手动操作。连续三次运行失败后，任务会自己暂停：**连续三次运行失败，已自动暂停。排除原因后再恢复。** 电脑睡眠期间错过的运行，会在电脑醒来后补跑一次，而不是每个错过的间隔都补一次。每个例行任务一天最多运行 24 次；超出的运行记为**已跳过**，并提示 `The daily run limit was reached.`
+| 报告 | 在**最近运行**里 | 你会看到 |
+| --- | --- | --- |
+| `ready` | **成功** | 除非**通知**是**静默**，否则贴进主线程。只有**通知**是**推送**时才提醒 |
+| `dropped` | **无可汇报** | 只记录。不会贴进主线程或收件箱，也不会提醒 |
+| `needs_you` | **需要你处理** | 贴进主线程，并在收件箱里标为**需要你处理**，**通知**是**静默**时也一样。提醒一次，作为提问 |
+| `blocked` | **受阻** | 与**需要你处理**相同 |
+| `failed` | **失败** | 计入连续三次失败后的暂停。**通知**是**收件箱**或**推送**时会提醒 |
 
-**打开线程**在助理表单里打开这个任务的线程。**删除**会去掉例行任务和它的线程。确认框说明此操作无法撤销。
+贴进去的结果标为**来自例行任务**加上任务名称。点这一行打开那次运行的线程。免打扰的助理不会提醒。
 
-你也可以让助理管理它自己的例行任务。它不能授予**完全权限**，也不能修改或运行已经是完全权限的任务。同样的操作是 `routine_list`、`routine_create`、`routine_update`、`routine_run`、`routine_runs`、`routine_delete` 这些工具，以及 [CLI](#cli)。
+**打开线程**打开最近一次运行的线程。**立即运行**开始一次运行。**暂停**和**恢复**由你手动操作。连续三次运行失败后，任务会自己暂停：**连续三次运行失败，已自动暂停。排除原因后再恢复。** 电脑睡眠期间错过的运行，会在电脑醒来后补跑一次，而不是每个错过的间隔都补一次。每个例行任务一天最多运行 24 次；超出的运行记为**已跳过**，并提示 `The daily run limit was reached.` 一次运行在 20 分钟后停止，提示 `The run hit its 20-minute limit and was stopped.` 被重启打断的运行记为失败，提示 `The daemon stopped during the run.` 任务等到下一个档期，不会重放这次运行。
+
+**删除**会去掉例行任务和每一次运行的线程。确认框写着**例行任务和它的线程都会被删除，无法撤销。**
+
+你也可以让助理管理它自己的例行任务。它不能授予**完全权限**，也不能修改或运行已经是完全权限的任务。同样的操作是 `routine_list`、`routine_create`、`routine_update`、`routine_run`、`routine_runs`、`routine_delete` 这些工具。`routine_report` 只在一次运行进行中可用。也可以用 [CLI](#cli)。
 
 ## 收件箱与今日简报
 
-**收件箱**在名单下面。它是所有表单共用的一份列表：需要你处理的权限、提问和计划，已完成和失败的会话，以及例行任务的结果、失败和暂停。
+**收件箱**在名单下面。它是所有表单共用的一份列表：需要你处理的权限、提问和计划，已完成和失败的会话，以及例行任务的结果、需要你处理的运行、失败和暂停。
 
 | 类型 | 标签 |
 | --- | --- |
@@ -97,50 +106,52 @@ Pi 没有权限模式，所以这个选择不会在 Pi 的例行任务上切换�
 | 已完成的会话 | **已完成** |
 | 失败的会话 | **失败了** |
 | 例行任务结果 | **有新结果** |
+| 例行任务需要你 | **需要你处理** |
 | 例行任务失败 | **例行任务失败** |
 | 例行任务暂停 | **连续失败已暂停** |
 
-标题会带上数量，例如**收件箱 · 3**。打开一项时，侧边栏留在**助理**，并打开那个会话。
+标题会带上数量，例如**收件箱 · 3**。打开一项时，侧边栏留在**助理**，并打开那个会话。在手机上，需要你处理或受阻的例行任务使用同一个**需要你处理**标签。
 
-每日简报不再是对话框。切换器那一行上的**今日简报**会把最新简报贴进默认助理的主线程，并打开那条线程。这条消息是普通回复，标为**今日简报**，里面有**需要你处理**、**例行任务结果**和**失败**。没有变化时，再次发布会跳过。没有可报告的内容时，这个按钮不显示。静默例行任务的结果不会出现在**例行任务结果**里。
+每日简报不再是对话框。应用按你的语言来写。切换器那一行上的**今日简报**会在你回来时把最新简报贴进默认助理的主线程，并打开那条线程。这条消息是普通回复，标为**今日简报**，里面有**需要你处理**、**例行任务结果**和**失败**。没有变化时，再次发布会跳过。没有可报告的内容时，这个按钮不显示。静默例行任务的结果不会出现在**例行任务结果**里。需要你处理的运行仍会出现在**需要你处理**下面。
 
 ## CLI
 
-`<persona>` 或 `<routine>` 参数可以是 id、唯一的 id 前缀，或名称（不区分大小写）。`persona create` 在不传 `--agent` 时使用 Pi。完整参考见 [CLI](/zh-cn/docs/cli/#助理)。
+`<persona>` 或 `<routine>` 参数可以是 id、唯一的 id 前缀，或名称（不区分大小写）。个人助理始终跑在 Pi 上。完整参考见 [CLI](/zh-cn/docs/cli/#助理)。
 
 ```bash
 cocurdex persona list
 cocurdex persona show <persona>
-cocurdex persona create --name <name> [--agent <agent>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>]
-cocurdex persona update <persona> [--name <name>] [--agent <agent>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--pin|--unpin] [--mute|--unmute]
+cocurdex persona create --name <name> [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>]
+cocurdex persona update <persona> [--name <name>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--pin|--unpin] [--mute|--unmute]
 cocurdex persona duplicate <persona> --name <name>
 cocurdex persona delete <persona>
 cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>]
 cocurdex persona thread <persona> [--limit <n>]
 ```
 
-`--provider` 和 `--model` 要一起给出。`persona send` 发到主线程。`--wait` 在这一轮结束时打印回复（默认等待 600 秒）。`persona thread` 打印最近的消息（默认 20 条）。
+`--provider` 和 `--model` 要一起给出。没有 `--agent` 参数。`persona send` 发到主线程。`--wait` 在这一轮结束时打印回复（默认等待 600 秒）。`persona thread` 打印最近的消息（默认 20 条）。`--mute` 停止这个助理的桌面和手机提醒。
 
 ```bash
 cocurdex routine list [--persona <persona>]
 cocurdex routine show <routine>
-cocurdex routine create --persona <persona> --name <name> (--prompt <text>|--prompt-file <path>) (--every <minutes>|--at <HH:MM> [--days <mon,wed|weekdays|weekends>]) [--tz <zone>] [--access read-and-draft|ask|full] [--deliver inbox|push|silent]
-cocurdex routine update <routine> [--name <name>] [--prompt <text>|--prompt-file <path>] [--every <minutes>|--at <HH:MM> [--days <days>]] [--tz <zone>] [--access read-and-draft|ask|full] [--deliver inbox|push|silent]
+cocurdex routine create --persona <persona> --name <name> (--prompt <text>|--prompt-file <path>) (--every <minutes>|--at <HH:MM> [--days <mon,wed|weekdays|weekends>]) [--tz <zone>] [--access read-and-draft|full] [--deliver inbox|push|silent]
+cocurdex routine update <routine> [--name <name>] [--prompt <text>|--prompt-file <path>] [--every <minutes>|--at <HH:MM> [--days <days>]] [--tz <zone>] [--access read-and-draft|full] [--deliver inbox|push|silent]
 cocurdex routine pause|resume <routine>
 cocurdex routine run <routine> [--wait] [--timeout <seconds>]
 cocurdex routine runs [<routine>] [--limit <n>]
 cocurdex routine delete <routine>
 ```
 
-`--every` 和 `--at` 二选一。`--days` 需要 `--at`。`--access` 为 `read-and-draft`（默认）、`ask` 或 `full`。`--deliver` 为 `inbox`（默认）、`push` 或 `silent`。
+`--every` 和 `--at` 二选一。`--days` 需要 `--at`。`--access` 为 `read-and-draft`（默认）或 `full`。`--deliver` 为 `inbox`（默认）、`push` 或 `silent`。`routine runs` 列出每次运行的状态、开始时间和摘要。`--json` 还会带上 `outcome` 和 `question`。
 
 ```bash
 cocurdex inbox
 cocurdex inbox read <item-id>
 cocurdex inbox brief [--tz <zone>]
+cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN]
 ```
 
-`inbox` 列出需要你处理的事项。`inbox read` 把该项的线程标为已访问，从而把它从列表里清掉。`inbox brief` 打印今日简报；没有内容时打印 `Nothing to brief today.`
+`inbox` 列出需要你处理的事项。`inbox read` 把该项的线程标为已访问，从而把它从列表里清掉。`inbox brief` 打印今日简报；没有内容时打印 `Nothing to brief today.` `inbox brief post` 把这份简报按你传入的语言贴进默认助理的主线程。`--locale` 为 `en-US` 或 `zh-CN`；省略则沿用上次发布所用的语言。没有新内容可发布时打印 `Nothing new to post.`
 
 对应的产品 skill 是 [`cocurdex-persona`](/zh-cn/docs/skills/)。这些助理的记忆见[记忆](/zh-cn/docs/memory/)。
 

@@ -86,10 +86,10 @@ Default view id is `project` unless you pass `--view`.
 ```bash
 cocurdex issue list [--status <column>] [--label <name>] [--parent <id>] [--open] [--view <id>] [--json]
 cocurdex issue show <id> [--detail] [--view <id>] [--json]
-cocurdex issue create --title <title> [--status <column>] [--priority <id>] [--body <text>] [--workspace <id>] [--parent <id>] [--labels <ids>] [--view <id>] [--json]
-cocurdex issue update <id> [--title <title>] [--body <text>] [--status <column>] [--priority <id>] [--workspace <id>|none] [--parent <id>|none] [--labels <ids>] [--view <id>] [--json]
+cocurdex issue create --title <title> [--status <column>] [--priority <id>] [--body <markdown>|--body-file <path>] [--workspace <id>] [--parent <id>] [--labels <ids>] [--view <id>] [--json]
+cocurdex issue update <id> [--title <title>] [--body <markdown>|--body-file <path>] [--status <column>] [--priority <id>] [--workspace <id>|none] [--parent <id>|none] [--labels <ids>] [--view <id>] [--json]
 cocurdex issue move <id> <column> [--view <id>] [--json]
-cocurdex issue comment <id> --body <markdown> [--json]
+cocurdex issue comment <id> --body <markdown>|--body-file <path> [--json]
 cocurdex issue relate <id> blocks|related|duplicate <id> [--json]
 cocurdex issue unrelate <id> blocks|related|duplicate <id> [--json]
 cocurdex issue labels [--json]
@@ -114,6 +114,8 @@ cocurdex issue label update <id|name> [--name <name>] [--color <color>]
 cocurdex issue view update <id> [--title <title>] [--group-by status|priority|label|workspace|parent] [--layout board|list] [--show-empty true|false] [--properties <a,b>]
 cocurdex issue move <id> <column> [--from <column>]
 ```
+
+`create`, `update`, and `comment` take the body the same way notes do: `--body -` reads stdin, and `--body-file <path>` reads a file. An unknown flag is rejected and the issue is left unchanged. The error is `Unknown flag --<name> for "issue <action>". Accepted flags: ...`.
 
 `--from` names the label a card was under, and only that label changes. `--properties` accepts `identifier`, `status`, `priority`, `labels`, `workspace`, `parent`, `description`, `created`, and `updated`. See [Notes and issues](/docs/notes-and-issues/#issues).
 
@@ -203,16 +205,16 @@ Personal assistants, routines, and the inbox. Full model: [Assistants](/docs/ass
 ```bash
 cocurdex persona list [--json]
 cocurdex persona show <persona> [--json]
-cocurdex persona create --name <name> [--agent <agent>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--json]
-cocurdex persona update <persona> [--name <name>] [--agent <agent>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--pin|--unpin] [--mute|--unmute] [--json]
+cocurdex persona create --name <name> [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--json]
+cocurdex persona update <persona> [--name <name>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--pin|--unpin] [--mute|--unmute] [--json]
 cocurdex persona duplicate <persona> --name <name> [--json]
 cocurdex persona delete <persona>
 cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>] [--json]
 cocurdex persona thread <persona> [--limit <n>] [--json]
 cocurdex routine list [--persona <persona>] [--json]
 cocurdex routine show <routine> [--json]
-cocurdex routine create --persona <persona> --name <name> (--prompt <text>|--prompt-file <path>) (--every <minutes>|--at <HH:MM> [--days <mon,wed|weekdays|weekends>]) [--tz <zone>] [--access read-and-draft|ask|full] [--deliver inbox|push|silent] [--json]
-cocurdex routine update <routine> [--name <name>] [--prompt <text>|--prompt-file <path>] [--every <minutes>|--at <HH:MM> [--days <days>]] [--tz <zone>] [--access read-and-draft|ask|full] [--deliver inbox|push|silent] [--json]
+cocurdex routine create --persona <persona> --name <name> (--prompt <text>|--prompt-file <path>) (--every <minutes>|--at <HH:MM> [--days <mon,wed|weekdays|weekends>]) [--tz <zone>] [--access read-and-draft|full] [--deliver inbox|push|silent] [--json]
+cocurdex routine update <routine> [--name <name>] [--prompt <text>|--prompt-file <path>] [--every <minutes>|--at <HH:MM> [--days <days>]] [--tz <zone>] [--access read-and-draft|full] [--deliver inbox|push|silent] [--json]
 cocurdex routine pause|resume <routine> [--json]
 cocurdex routine run <routine> [--wait] [--timeout <seconds>] [--json]
 cocurdex routine runs [<routine>] [--limit <n>] [--json]
@@ -220,9 +222,10 @@ cocurdex routine delete <routine>
 cocurdex inbox [list] [--json]
 cocurdex inbox read <item-id> [--json]
 cocurdex inbox brief [--tz <zone>] [--json]
+cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN] [--json]
 ```
 
-`persona create` uses Pi unless you pass `--agent`. `--provider` and `--model` go together. `persona send --wait` prints the reply (default timeout 600 seconds). `routine create` needs `--prompt` or `--prompt-file`, and either `--every` (at least 5) or `--at`. `inbox read` marks the item's thread visited. `inbox brief` prints `Nothing to brief today.` when there is nothing to report.
+Personal assistants always run on Pi. There is no `--agent` flag on `persona create` or `persona update`. `--provider` and `--model` go together. `persona send --wait` prints the reply (default timeout 600 seconds). `routine create` needs `--prompt` or `--prompt-file`, and either `--every` (at least 5) or `--at`. `--access` is `read-and-draft` (default) or `full`. `inbox read` marks the item's thread visited. `inbox brief` prints `Nothing to brief today.` when there is nothing to report. `inbox brief post` writes today's brief into the default assistant's home thread. `--locale` is `en-US` or `zh-CN`; omit it to reuse the last locale used for a post. Nothing new to post prints `Nothing new to post.`
 
 ## Search
 
