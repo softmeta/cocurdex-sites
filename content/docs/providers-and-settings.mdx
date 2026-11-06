@@ -58,6 +58,7 @@ External agent CLIs (`claude`, `codex`, `opencode`, and ACP Registry agents such
 - A **form** (name, local command or remote URL, arguments, environment or headers) and raw **JSON**. The JSON shape is the standard `mcpServers` object.
 - Server names may contain only letters, digits, `_`, and `-`.
 - **Agents** chooses which agents receive the server. Their own MCP configs are left untouched. Some servers can only be used by Pi — for example one that sets a working directory, runs a command value, or signs in through a Pi provider. The row says so.
+- Notion, Linear, and GitHub connections are managed in the right panel's **Applications**, not by assigning agents here. That row says **This connection is managed in Applications. Choose assistant access there; engine-level MCP assignment does not apply.** See [Applications](/docs/assistants/#applications).
 - **Import from other agents** reads servers already configured for Claude Code, Codex, Cursor, OpenCode, or Antigravity, including project configs. You confirm each one. You can also drop or paste JSON.
 - **Sign in** when a server asks for it. **Test connection** lists its tools.
 - A project server defined in a file on disk is read-only here; edit that file to change it.
