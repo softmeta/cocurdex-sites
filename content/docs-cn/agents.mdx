@@ -174,6 +174,8 @@ daemon 为每个会话挂载一个本地 MCP 工具服务。工具按组划分�
 | `script_run` | `propose` | 主会话 |
 | `settings` | `list`、`get`、`set`、`propose` | 主会话（也驱动[设置助手](/zh-cn/docs/providers-and-settings/#设置助手)） |
 | `routine` | `list`、`create`、`update`、`run`、`runs`、`delete` 和 `report` | [助理](/zh-cn/docs/assistants/#例行任务)线程。`report` 只在一次例行任务运行进行中提供。助理不能授予**完全权限**，也不能修改或运行已经是完全权限的任务 |
+| `work` | `catalog`、`start`、`list`、`send`、`stop` | 个人助理。把仓库工作交给一个工作会话。例行任务只有在**完全权限**下才能使用。见[委派工作](/zh-cn/docs/assistants/#委派工作) |
+| `applications` | `list`、`tools`、`read`、`call` | 被授予该连接的助理。`read` 调用提供方声明为只读的工具，**只读加草稿**的例行任务用的就是它。`call` 是一般调用。见[应用](/zh-cn/docs/assistants/#应用) |
 
 脚本编排启动的子 Agent 不获得以上任何工具。能够委派工作的会话还会收到指引：同一 provider、只要结果的工作用 Agent 自带的原生子 Agent；需要其他 provider、已保存角色、独立工作树或任务依赖时，用 Cocurdex 团队或脚本编排。具体用法见[团队与编排](/zh-cn/docs/teams/)。
 

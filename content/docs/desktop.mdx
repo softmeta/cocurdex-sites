@@ -18,14 +18,14 @@ Typical peers in the shell:
 | **Editor** | Inspect and edit project files without leaving the app |
 | **Git** | Diff, stage, and commit workspace changes; review what each agent turn changed |
 | **Browser preview** | Tabbed preview of your dev server; Design Mode annotations go straight to chat |
-| **PDF reader** | Read PDFs from the file tree with outline, thumbnails, search, bookmarks, and highlights |
+| **PDF reader** | Read PDFs from the file tree or from a conversation, with outline, thumbnails, search, bookmarks, and highlights |
 | **Worktrees** | Managed git worktrees for isolated session work (**Worktree** checkbox on new sessions; inventory under **Settings → Worktrees**) |
 | **Notes / issues** | App-owned product data (see [Notes and issues](/docs/notes-and-issues/)) |
 | **Decks** | App-owned slide decks: edit, present, and export (see [Slide decks](/docs/decks/)) |
 | **Team panel** | Teammates of the current lead session, their status, and replies (see [Teams](/docs/teams/)) |
 | **Script runs** | Proposed scripts awaiting approval and running subagents (see [Script runs](/docs/teams/#script-runs)) |
 
-The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. Its view switcher includes **Memory** and **Routines** as well as Git, the editor, and the other panes above. Hover an icon-only button to see its action name. On Windows and Linux the window uses themed native window controls in the title bar.
+The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. On **Work** and **Chat** the switcher includes **Applications**, **Files**, **Git**, **Notes**, **Decks**, **Issues**, **Memory**, **Routines**, **Browser**, **PDF** while a PDF is open, and **Terminal**. On an assistant the panel opens **Assistant overview**, and that view is remembered separately from the work view. The assistant switcher is **Assistant overview**, **Applications**, **Memory**, **Notes**, **Issues**, **Routines**, and **PDF** while a PDF is open. **More views** holds **Conversation files**, **Browser**, and **Decks**. **Git** and **Terminal** stay on the work form. Hover an icon-only button to see its action name. On Windows and Linux the window uses themed native window controls in the title bar. See [Assistants](/docs/assistants/#overview).
 
 Chat layout is chosen in **Settings → General → Chat layout** and restored on next launch:
 
@@ -187,7 +187,7 @@ The annotation popover can be dragged out of the way; **Clear all annotations** 
 
 ## PDF reader
 
-PDFs opened from the file tree open in the PDF reader instead of the code editor. It has a table of contents, page thumbnails, search, fit-width / fit-page zoom, page bookmarks, and highlights in four colors. Bookmarks and highlights are saved by the daemon. Select text and choose **Add to Note** to quote it into a [note](/docs/notes-and-issues/).
+PDFs opened from the file tree open in the PDF reader instead of the code editor. So does a PDF attached to a conversation, including one uploaded into it: choose it under **Conversation files** on an assistant. The reader has a table of contents, page thumbnails, search, fit-width / fit-page zoom, page bookmarks, and highlights in four colors. Bookmarks and highlights are saved for that file. A file the reader will not open shows **Unable to open PDF** and **This PDF could not be opened in the reader.** Select text and choose **Add to Note** to quote it into a [note](/docs/notes-and-issues/).
 
 ## Decks
 

@@ -1,6 +1,6 @@
 ---
 title: Assistants
-description: The Assistants form — personal assistants, home threads, routines, the inbox, and today's brief.
+description: The Assistants form — personal assistants, the overview, delegated work, applications, routines, the inbox, and today's brief.
 ---
 
 **Assistants** is a form in the desktop sidebar, next to **Work** and **Chat**. Each assistant is a saved role (name, model, instructions, avatar) on the built-in **Pi** agent, with one long-lived home thread. The app always keeps a default assistant, named **Assistant** until you rename it.
@@ -15,15 +15,16 @@ Right-click a row:
 
 | Action | Does |
 | --- | --- |
-| **Edit** | Opens **Edit assistant** for the name, model, **Instructions**, **Persona**, description, and avatar. There is no engine picker |
+| **Edit** | Opens **Edit assistant** for the name, **Model**, **Instructions**, **Persona**, description, and avatar. There is no engine picker |
 | **Pin** / **Unpin** | Keeps the assistant above the unpinned ones. Not offered on the default |
 | **Mute** / **Unmute** | Hides the unread mark on that row. A muted row shows **Muted**. A muted assistant never alerts the desktop or the phone; its threads still reach the inbox |
+| **Mark as unread** | Marks the home thread's latest result unread. Offered when that assistant is not the one open and the result is already read |
 | **Duplicate** | Copies the assistant, adds **copy** to the name, and opens the copy |
-| **Delete** | Deletes the assistant, its home thread, and its routines (including every routine run thread). Memories stay. Not offered on the default |
+| **Delete** | Deletes the assistant, its home thread, and its routines (including every routine run thread). Memories stay. Offered on every assistant, including the default |
 
 **New assistant** (the compose button on the switcher's row) starts from the default assistant's model, then opens **Edit assistant**.
 
-The assistant's role and home thread cannot be deleted or archived on their own. Deleting the role from **Settings → Roles** fails with `Delete the personal agent instead of its role`. Deleting or archiving the home thread fails with `A personal agent's home thread cannot be removed`. `cocurdex persona delete` on the default fails with `The default personal agent cannot be deleted`.
+The assistant's role and home thread cannot be deleted or archived on their own. Deleting the role from **Settings → Roles** fails with `Delete the personal agent instead of its role`. Deleting or archiving the home thread fails with `A personal agent's home thread cannot be removed`. Deleting the default assistant makes the next one in the list the default and clears that assistant's pin. If none remain, the next time you open **Assistants** the app creates a fresh default named **Assistant**. `cocurdex persona delete` does the same, including on the default.
 
 Assistants run only on Pi. Creating, updating, or saving the role on another agent fails with `Personal agents run on pi, not <agent>`. Assistants that already used another agent, together with their home threads and routine threads, move to Pi. The model stays when Pi already offers it; otherwise it becomes Pi's default model.
 
@@ -43,9 +44,93 @@ An assistant thread uses the chat layout: the name and avatar sit in the middle 
 
 The pane title shows the assistant's avatar. These threads do not appear in the **Work** session list.
 
+While a turn runs, the thread shows the assistant's avatar with **Thinking**, or **Working on it** when a tool is in use. It does not show the work-mode timer or each tool step. The composer does not offer the agent, model, or usage controls. Change the model under **Model** in **Edit assistant**.
+
 **Instructions** say what the assistant is for and how it should work. **Persona** is who it is to you: tone, personality, and how it talks to you (up to 20,000 characters). Set either in **Edit assistant**, or from the CLI with `--instructions` / `--instructions-file` and `--soul` / `--soul-file`. Both are included on every turn, as a section of the system prompt, so an edit applies from the next message. A save that does not send instructions or skills leaves the stored values in place, including instructions set from the CLI.
 
-Messages the app posts into the home thread are marked with a source line. **Today's brief** is the daily brief. **From routine** plus the routine's name is a routine result; choose it to open that run's thread.
+Messages the app posts into the home thread are marked with a source line. **Today's brief** is the daily brief. **From routine** plus the routine's name is a routine result; choose it to open that run's thread. A finished, failed, cancelled, or interrupted delegated session is posted back the same way, and the assistant takes a turn to tell you what happened. See [Delegated work](#delegated-work).
+
+## Overview
+
+Opening an assistant puts **Assistant overview** in the right panel. The panel remembers the last view for assistants separately from the last view for work. **Git** and **Terminal** stay on the work form; they are not in the assistant switcher. With no assistant selected, the panel says **Select an assistant to see its work**.
+
+The header is the assistant's avatar, name, and description. Until you write a description, it says **Coordinate work, keep context, and follow through.**
+
+| Section | Shows |
+| --- | --- |
+| **Needs you** | Inbox items for this assistant, its delegated work, or its routines that need you or failed. Shown only when there is one. Choosing a row opens that session, or selects the routine |
+| **Delegated work** | Running and idle sessions this assistant handed off. A row shows the workspace, the agent, and **Running** or **Idle**. Choosing it opens that work session. Empty, the section says **Work delegated by this assistant will appear here.** A session that is gone says **This work session is no longer available.** |
+| **Recent results** | Those sessions once a turn is no longer running or idle: **Turn completed**, **Failed**, **Cancelled**, **Interrupted**, or **Archived**. Shown only when there is one |
+| **Routines** | This assistant's routines. A row shows the next run and its time zone, or **Paused**, **Paused after failures**, or **No next run scheduled**. Choosing one selects that routine and opens **Routines**. **Manage this assistant’s routines** opens the list with none selected. The section says **Runs on the connected host while its background service is online.** |
+| **Context and resources** | **Memory**, **Notes**, **Issues**, and **Conversation files** |
+| **Applications** | **Connect applications**. The detail says **Connect accounts, choose assistant access, and inspect available tools.** |
+
+If a list cannot load, the section offers **Work could not load. Retry**, **Routines could not load. Retry**, or **Assistant could not load. Retry**.
+
+**Conversation files** lists attachments and files opened in this conversation. The line under the heading says **Attachments and files opened in this conversation**. Empty, it says **No conversation files**. An image opens a preview. A PDF opens in the [PDF reader](/docs/desktop/#pdf-reader), including a PDF uploaded into the conversation. Any other file opens in the editor. **More views** on the assistant panel also holds **Browser** and **Decks**. **PDF** appears in the switcher while a PDF is open.
+
+## Delegated work
+
+A personal assistant does not edit the repository itself. It hands that work to an ordinary work session in one of your workspaces. The session uses that workspace's most recent agent and model, a saved [agent role](/docs/agents/#agent-roles), or leads a saved [team template](/docs/teams/#team-templates). It can run in a new [worktree](/docs/desktop/#worktrees). The session shows up under **Work**, where you can follow it and take it over.
+
+The task arrives in that session marked as coming from the assistant. Each time the session finishes a turn, or the turn fails, is cancelled, or is interrupted, the result is posted into the home thread and the assistant tells you what happened. You can open the original session from the overview, or from that message. Approvals and questions reach you through the [inbox](#inbox-and-the-daily-brief). The assistant can list, message, and stop only the sessions it delegated.
+
+Ask the assistant to do this. The tools are `work_catalog`, `work_start`, `work_list`, `work_send`, and `work_stop`. `work_catalog` lists workspaces (not Chat, and not the assistant's own workspace), saved agent roles, and team templates. Pass a role or a team template, not both. Without either, the session uses the workspace's most recent agent and model. A team template makes the session lead that template, using the template's first member as its role. A follow-up is steered into the current turn when that agent supports it, and otherwise waits until the turn finishes. A routine can delegate only with **Full access**. The same actions are `cocurdex persona work`. See [CLI](#cli).
+
+## Applications
+
+**Applications** in the right panel connects Notion, Linear, and GitHub on this computer, then chooses which assistants may use each account. Custom MCP servers stay under **Settings → MCP**. **Custom MCP** in the header opens that page. Adding a connection does not authorize it. The page says **Credentials stay on this host. The provider controls account and workspace access during authorization. Adding a connection does not authorize it.**
+
+**Search applications** filters both lists. **No matching connections** means the search matched nothing.
+
+**Added connections** shows each connection's name, `notion`, `linear`, or `github`, how many assistants can use it, and a status:
+
+| Status | When |
+| --- | --- |
+| **Disabled** | **Enabled** is off |
+| **Setup required** | A GitHub connection still needs its OAuth application |
+| **Not checked** | Not checked yet |
+| **Connected** | The last check succeeded |
+| **Authorization required** | The account still needs authorization |
+| **Connection failed** | The last check failed |
+
+**Available applications**:
+
+| Application | How you authorize |
+| --- | --- |
+| **Notion** | **Authorize in your browser** |
+| **Linear** | **Authorize in your browser** |
+| **GitHub** | **Requires your own OAuth application** |
+
+**Add** creates a connection named after the application. If an assistant is open, that assistant is granted access. **Allow delegated work** starts off.
+
+| Control | Does |
+| --- | --- |
+| **Connection name** | The name in the list. It is not the account. The provider's authorization page chooses the account and workspace |
+| **Enabled** | Turns the connection on or off |
+| **Assistant access** | A switch for each assistant. **Only selected assistants can use this connection. Save changes before connecting.** |
+| **Allow delegated work** | **Work sessions and teammates delegated by these assistants can also use this account. Other work sessions receive no access.** |
+| **Save access** | Saves the name, the switches, and any GitHub credentials |
+| **Authorize** | Starts authorization. The connection has to be enabled and, for GitHub, configured |
+| **Check connection** | Checks the connection and shows the result next to the time it was checked |
+| **Inspect tools** | Lists **Available tools**, with each tool's description |
+| **Sign out** | Signs out of this connection on this computer |
+| **Provider instructions** | Opens that application's own documentation |
+| **Remove connection** | Removes the connection and the authorization saved on this computer. The confirmation says **Remove this host connection and its saved authorization? Provider-side authorization may also need revoking in the provider's account settings.** |
+
+While authorization is in progress the page says **Preparing authorization…**, then **Waiting for authorization**, with **Open authorization page**. On another device, paste the complete localhost return URL into **Authorization return URL** and choose **Complete authorization**. Treat that URL as a secret; the page says not to send it in chat. **Cancel** stops the attempt.
+
+Saving after the connection changed elsewhere fails with `Application changed. Reload before saving.`
+
+**GitHub OAuth application** appears only on a GitHub connection. Register an OAuth application that you own. **Register OAuth application** opens GitHub's developer settings. Use the callback the page shows, `http://127.0.0.1:<port>/callback`, and enter **Client ID** and **Client secret (leave blank to keep existing)**. **Callback port** accepts 1024 through 65535 and starts at `19173`. Anything else fails with `Choose a callback port between 1024 and 65535`. Secrets are never shown again. Checking or authorizing before this is filled in fails with `Register your GitHub OAuth app and configure its client ID and callback port first.` or `Configure your GitHub OAuth app first.`
+
+An assistant can use a connection when it is enabled and that assistant is selected. A delegated work session or teammate also needs **Allow delegated work**. Otherwise the call fails with `This assistant is not allowed to use this application`. A disabled connection fails with `Application is disabled`.
+
+A **Read and draft** routine may call only tools the provider declares read-only. Anything else fails with `This tool is not declared read-only. Describe the action for the user instead.` **Full access** may call the other tools. If a write's result is unclear, look at the remote state before trying again.
+
+When authorization is missing, the assistant asks you to open **Applications**. It does not ask you to paste credentials into the thread. The tools are `applications_list`, `applications_tools`, `applications_read`, and `applications_call`. `applications_read` is the read-only call. `applications_call` is the general call.
+
+A managed connection listed under **Settings → MCP** says **This connection is managed in Applications. Choose assistant access there; engine-level MCP assignment does not apply.** `cocurdex mcp agents` on that connection fails with `Manage assistant access with cocurdex apps update.` The same actions are `cocurdex apps`. See [CLI](#cli).
 
 ## Routines
 
@@ -65,7 +150,7 @@ Messages the app posts into the home thread are marked with a source line. **Tod
 
 | Access | Meaning |
 | --- | --- |
-| **Read and draft** | Reads and drafts only; nothing is sent or changed. The run may use `read`, `grep`, `find`, `ls`, memory and history, and the routine tools. Other tools are blocked, including a write nested inside another tool |
+| **Read and draft** | Reads and drafts only; nothing is sent or changed. The run may use `read`, `grep`, `find`, `ls`, memory and history, the routine tools, and provider-declared read-only tools on an allowed application (`applications_list`, `applications_tools`, `applications_read`). Other tools are blocked, including a write nested inside another tool, a mutating application tool, and delegated work |
 | **Full access** | Runs unattended with every permission |
 
 **Notify** defaults to **Inbox**.
@@ -92,7 +177,7 @@ A posted result is marked **From routine** plus the routine's name. Choose that 
 
 **Delete** removes the routine and every run thread. The confirmation says **The routine and its thread are deleted. This cannot be undone.**
 
-You can ask the assistant to manage its own routines. It cannot grant **Full access**, and it cannot change or run a routine that already has it. The same actions are the `routine_list`, `routine_create`, `routine_update`, `routine_run`, `routine_runs`, and `routine_delete` tools. `routine_report` is only available during a run. The [CLI](#cli) does the same.
+You can ask the assistant to manage its own routines. It cannot grant **Full access**, and it cannot change or run a routine that already has it. The same actions are the `routine_list`, `routine_create`, `routine_update`, `routine_run`, `routine_runs`, and `routine_delete` tools. `routine_report` is only available during a run. Delegated work and applications are separate tool groups; see [Delegated work](#delegated-work) and [Applications](#applications). The [CLI](#cli) does the same.
 
 ## Inbox and the daily brief
 
@@ -127,9 +212,16 @@ cocurdex persona duplicate <persona> --name <name>
 cocurdex persona delete <persona>
 cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>]
 cocurdex persona thread <persona> [--limit <n>]
+cocurdex persona work catalog [--json]
+cocurdex persona work list <persona> [--json]
+cocurdex persona work start <persona> --workspace <id|name> --prompt <text>|--prompt-file <path> [--title <title>] [--role <role>|--team <template>] [--worktree] [--json]
+cocurdex persona work send <persona> <session-id> <message> [--json]
+cocurdex persona work stop <persona> <session-id> [--json]
 ```
 
 `--provider` and `--model` are passed together. There is no `--agent` flag. `persona send` posts to the home thread. `--wait` prints the reply when the turn settles (the default wait is 600 seconds). `persona thread` prints the latest messages (default 20). `--mute` stops desktop and phone alerts for that assistant.
+
+`persona work catalog` lists workspaces, saved agent roles, and team templates. `list` prints `sessionId`, `title`, `workspaceName`, `agentType`, and `state`. `--workspace` is an id or a name. A name that matches more than one workspace fails with `Several workspaces are named "<name>"; pass its id.` No match fails with `No workspace matches "<name>". List the workspaces first.` `--role` and `--team` are alternatives; both fail with `Pass either an agent role or a team template, not both.` An empty task fails with `Describe the task to delegate.` `send` and `stop` only accept a session this assistant delegated. Anything else fails with `No work session you delegated has this id.`
 
 ```bash
 cocurdex routine list [--persona <persona>]
@@ -153,12 +245,26 @@ cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN]
 
 `inbox` lists what needs you. `inbox read` marks that item's thread visited, which clears it. `inbox brief` prints today's brief, or `Nothing to brief today.` `inbox brief post` posts that brief into the default assistant's home thread, in the locale you pass. `--locale` is `en-US` or `zh-CN`; omit it to reuse the last locale used for a post. Nothing new to post prints `Nothing new to post.`
 
+```bash
+cocurdex apps catalog|list [--json]
+cocurdex apps add <notion|linear|github> --name <name> [--assistants <id,id>] [--delegated] [--json]
+cocurdex apps update --stdin [--json]
+cocurdex apps check|tools|logout|remove <connection-id> [--json]
+cocurdex apps login <connection-id> [--json]
+cocurdex apps login-wait|login-cancel <connection-id> --login <id> [--json]
+cocurdex apps login-return <connection-id> --login <id> --stdin [--json]
+cocurdex apps read|call <connection-id> --tool <name> --stdin [--json]
+```
+
+`catalog` prints Notion, Linear, and GitHub. `add --name` is the connection name. `--assistants` is a comma-separated list of assistant ids. `--delegated` turns on **Allow delegated work**. An unknown application fails with `Choose notion, linear, or github`. `update`, `login-return`, and `read` / `call` read JSON from stdin. Credentials in the arguments fail with `Pass the update JSON through --stdin; never put credentials in command arguments.` `login` starts authorization. `login-wait` waits on the login id from that start. `login-return` takes the complete return URL on stdin. `read` calls a provider-declared read-only tool. `call` is the general call. Both take the tool arguments as JSON on stdin. `remove` prints `{ "removed": true }`. The `update` object is `id`, `revision`, `displayName`, `personaIds`, `allowDelegatedWork`, and `enabled`. A GitHub connection may also include `clientId`, `clientSecret`, and `callbackPort`.
+
 The product skill is [`cocurdex-persona`](/docs/skills/). Memory for these assistants is documented on [Memory](/docs/memory/).
 
 ## Related
 
 - [Desktop workspace](/docs/desktop/)
 - [Memory](/docs/memory/)
+- [Providers and settings](/docs/providers-and-settings/#mcp-servers)
 - [Devices and local web](/docs/devices-and-web/#assistant)
 - [CLI](/docs/cli/#assistants)
 - [Skills](/docs/skills/)

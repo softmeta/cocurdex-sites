@@ -1,6 +1,6 @@
 ---
 title: CLI
-description: cocurdex CLI reference — open the desktop app, manage notes, issues, memory, assistants, routines, and slide decks, sessions, teams, script runs, devices, providers, MCP, and skills.
+description: cocurdex CLI reference — open the desktop app, manage notes, issues, memory, assistants, delegated work, applications, routines, and slide decks, sessions, teams, script runs, devices, providers, MCP, and skills.
 ---
 
 The **`cocurdex` CLI** is the supported command-line boundary for app-owned product data and daemon operations. External tools and agents should use the CLI rather than reading private database files.
@@ -211,6 +211,11 @@ cocurdex persona duplicate <persona> --name <name> [--json]
 cocurdex persona delete <persona>
 cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>] [--json]
 cocurdex persona thread <persona> [--limit <n>] [--json]
+cocurdex persona work catalog [--json]
+cocurdex persona work list <persona> [--json]
+cocurdex persona work start <persona> --workspace <id|name> --prompt <text>|--prompt-file <path> [--title <title>] [--role <role>|--team <template>] [--worktree] [--json]
+cocurdex persona work send <persona> <session-id> <message> [--json]
+cocurdex persona work stop <persona> <session-id> [--json]
 cocurdex routine list [--persona <persona>] [--json]
 cocurdex routine show <routine> [--json]
 cocurdex routine create --persona <persona> --name <name> (--prompt <text>|--prompt-file <path>) (--every <minutes>|--at <HH:MM> [--days <mon,wed|weekdays|weekends>]) [--tz <zone>] [--access read-and-draft|full] [--deliver inbox|push|silent] [--json]
@@ -225,7 +230,9 @@ cocurdex inbox brief [--tz <zone>] [--json]
 cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN] [--json]
 ```
 
-Personal assistants always run on Pi. There is no `--agent` flag on `persona create` or `persona update`. `--provider` and `--model` go together. `persona send --wait` prints the reply (default timeout 600 seconds). `routine create` needs `--prompt` or `--prompt-file`, and either `--every` (at least 5) or `--at`. `--access` is `read-and-draft` (default) or `full`. `inbox read` marks the item's thread visited. `inbox brief` prints `Nothing to brief today.` when there is nothing to report. `inbox brief post` writes today's brief into the default assistant's home thread. `--locale` is `en-US` or `zh-CN`; omit it to reuse the last locale used for a post. Nothing new to post prints `Nothing new to post.`
+Personal assistants always run on Pi. There is no `--agent` flag on `persona create` or `persona update`. `--provider` and `--model` go together. `persona send --wait` prints the reply (default timeout 600 seconds). `persona delete` deletes that assistant, including the default: the next assistant in the list becomes the default, or the next open of **Assistants** creates a fresh one. `routine create` needs `--prompt` or `--prompt-file`, and either `--every` (at least 5) or `--at`. `--access` is `read-and-draft` (default) or `full`. `inbox read` marks the item's thread visited. `inbox brief` prints `Nothing to brief today.` when there is nothing to report. `inbox brief post` writes today's brief into the default assistant's home thread. `--locale` is `en-US` or `zh-CN`; omit it to reuse the last locale used for a post. Nothing new to post prints `Nothing new to post.`
+
+`persona work` hands repository work to a work session. `catalog` lists workspaces, saved agent roles, and team templates. `list` prints `sessionId`, `title`, `workspaceName`, `agentType`, and `state`. `--workspace` is an id or a name. A name that matches more than one workspace fails with `Several workspaces are named "<name>"; pass its id.` `--role` and `--team` are alternatives (`Pass either an agent role or a team template, not both.`). `--prompt-file` reads the task from a file. `--worktree` uses a new git worktree. `send` and `stop` only accept a session that assistant delegated (`No work session you delegated has this id.`). See [Delegated work](/docs/assistants/#delegated-work).
 
 ## Search
 
@@ -464,7 +471,33 @@ cocurdex mcp import <file|-> [--overwrite]
 cocurdex mcp import --from claude|claude-project|codex|codex-project|cursor|opencode|opencode-project|antigravity [--name <name>]... [--overwrite] [--workspace <id|path>]
 ```
 
-`--agent` may be repeated. `agents <name> --none` clears the agent list. `import --from` reads servers that agent already has on this computer; repeat `--name` to import only those servers.
+`--agent` may be repeated. `agents <name> --none` clears the agent list. `import --from` reads servers that agent already has on this computer; repeat `--name` to import only those servers. A Notion, Linear, or GitHub connection managed in **Applications** is not assigned to agents here. `mcp agents` on one fails with `Manage assistant access with cocurdex apps update.`
+
+## Applications
+
+Notion, Linear, and GitHub accounts for assistants. The desktop screen is [Applications](/docs/assistants/#applications). These commands print JSON. `login-cancel` only stops the attempt and prints nothing.
+
+```bash
+cocurdex apps catalog|list [--json]
+cocurdex apps add <notion|linear|github> --name <name> [--assistants <id,id>] [--delegated] [--json]
+cocurdex apps update --stdin [--json]
+cocurdex apps check|tools|logout|remove <connection-id> [--json]
+cocurdex apps login <connection-id> [--json]
+cocurdex apps login-wait|login-cancel <connection-id> --login <id> [--json]
+cocurdex apps login-return <connection-id> --login <id> --stdin [--json]
+cocurdex apps read|call <connection-id> --tool <name> --stdin [--json]
+```
+
+| Command | Notes |
+| --- | --- |
+| `catalog` | Prints Notion, Linear, and GitHub. It does not need a running daemon |
+| `add` | `--name` is required. `--assistants` is a comma-separated list of assistant ids. `--delegated` allows delegated work sessions and teammates to use the account. An unknown id fails with `Choose notion, linear, or github` |
+| `update` | Reads one JSON object from stdin. Fields: `id`, `revision`, `displayName`, `personaIds`, `allowDelegatedWork`, `enabled`. GitHub may also include `clientId`, `clientSecret`, and `callbackPort`. Credentials on the command line fail with `Pass the update JSON through --stdin; never put credentials in command arguments.` A stale `revision` fails with `Application changed. Reload before saving.` |
+| `check` / `tools` / `logout` / `remove` | One connection id. `remove` prints `{ "removed": true }` |
+| `login` | Starts authorization and prints the login, including its id |
+| `login-wait` / `login-cancel` | `--login` is that login id |
+| `login-return` | The complete return URL is the stdin text, not a flag. Missing stdin fails with `Pass the complete return URL through --stdin` |
+| `read` / `call` | `--tool` is the tool name. Arguments are a JSON object on stdin. `read` is limited to tools the provider declares read-only |
 
 ## Diagnostics
 
@@ -502,6 +535,7 @@ Do not point scripts at `cocurdex.sqlite` or private schema paths. Those are imp
 - [Notes and issues](/docs/notes-and-issues/)
 - [Memory](/docs/memory/)  
 - [Assistants](/docs/assistants/)  
+- [Applications](/docs/assistants/#applications)  
 - [Slide decks](/docs/decks/)  
 - [Devices and local web](/docs/devices-and-web/)  
 - [Agents](/docs/agents/)  
