@@ -137,7 +137,7 @@ Cursor, Devin, and other registry agents have no Cocurdex-side permission-mode l
 
 ### Built-in Pi (`pi`)
 
-No separate permission-mode list; write mode is **read-only**.
+No separate permission-mode list; write mode is **read-only**. Personal assistants always run on Pi. Their routines are documented on [Assistants](/docs/assistants/).
 
 When an agent requests a privileged action, Cocurdex surfaces a permission card (and may show path/action detail). Resolve from the session UI or from `session tui` in the CLI.
 
@@ -152,7 +152,7 @@ Not every agent supports every combination. ACP Registry agents (including Grok 
 
 ## Agent roles
 
-An **agent role** is a saved preset: agent + provider/model + permission mode + collaboration and reasoning axes, plus optional instructions and skills. Each role also has an **avatar** (an emoji or initial on a color, badged with the agent's icon) and an optional **description** of what it is good at — team leads read the description when they pick teammates.
+An **agent role** is a saved preset: agent + provider/model + permission mode + collaboration and reasoning axes, plus optional instructions and skills. Each role also has an **avatar** and an optional **description** of what it is good at — team leads read the description when they pick teammates. The avatar can be an emoji, or a **Shape** with an **Expression** (**Calm**, **Happy**, **Wink**, **Sleepy**, **Curious**) and a **Color**. A role with no avatar gets a shape, expression, and color of its own. A save that leaves out instructions or skills keeps the ones already stored. Assistants use the same roles, and always on Pi; see [Assistants](/docs/assistants/).
 
 Save a role from the composer: open the model menu in a new session and choose **Save as role**. Edit or delete roles under **Settings → Roles**, and list them from the CLI:
 
@@ -173,6 +173,7 @@ Every session gets a local MCP tool server from the daemon. Tools are grouped an
 | `messaging` | `list_agents`, `send_message` | Main sessions and teammates |
 | `script_run` | `propose` | Main sessions |
 | `settings` | `list`, `get`, `set`, `propose` | Main sessions (also powers the [settings assistant](/docs/providers-and-settings/#settings-assistant)) |
+| `routine` | `list`, `create`, `update`, `run`, `runs`, `delete`, and `report` | [Assistant](/docs/assistants/#routines) threads. `report` is only offered during a routine run. The assistant cannot grant **Full access**, or change or run a routine that already has it |
 
 Subagents started by a script run get none of these tools. Sessions that can delegate also receive guidance on when to use the agent's own native subagents (same provider, result only) versus a Cocurdex team or script run (another provider, a saved role, a separate worktree, or task dependencies).
 

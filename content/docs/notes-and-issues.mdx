@@ -169,8 +169,8 @@ cocurdex issue views
 cocurdex issue view update <id> [--title <title>] [--group-by status|priority|label|workspace|parent] [--layout board|list] [--show-empty true|false] [--properties identifier,status,priority]
 cocurdex issue list
 cocurdex issue list --status doing [--label <name>] [--parent <id>] [--open]
-cocurdex issue create --title "Wire download artifacts" --status backlog --priority high [--labels <ids>] [--parent <id>]
-cocurdex issue update <id> [--title <title>] [--body <text>] [--status <column>] [--priority <id>]
+cocurdex issue create --title "Wire download artifacts" --status backlog --priority high [--body <markdown>|--body-file <path>] [--labels <ids>] [--parent <id>]
+cocurdex issue update <id> [--title <title>] [--body <markdown>|--body-file <path>] [--status <column>] [--priority <id>]
 cocurdex issue move <id> doing
 cocurdex issue move <id> <label> --from <label>
 cocurdex issue show <id> [--detail]
@@ -188,6 +188,8 @@ cocurdex issue status move <id|name> --position <n>
 cocurdex issue status delete <id|name>
 cocurdex issue delete <id>
 ```
+
+`create`, `update`, and `comment` take the body the same way notes do: `--body -` reads stdin, and `--body-file <path>` reads a file. An unknown flag is rejected and the issue is left unchanged.
 
 `--from` is for a label move: it names the label the card was under, and only that label changes. Status categories are `backlog`, `unstarted`, `started`, `completed`, and `canceled`. `--properties` accepts `identifier`, `status`, `priority`, `labels`, `workspace`, `parent`, `description`, `created`, and `updated`.
 

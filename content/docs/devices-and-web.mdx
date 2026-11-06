@@ -73,7 +73,7 @@ cocurdex host push off
 
 **Pair a device → Create pairing code** creates a one-time code, a QR code, and pairing links. Links are listed most reachable first: the relay while it is online, then Tailscale, then LAN.
 
-- **iOS or Android app:** choose **Pair a Computer**, then **Scan to Pair** and scan the QR code, or **Paste Pairing Link** and tap **Pair**. The app adds that computer, selects it, and you continue on **Sessions**. A paired phone learns every address the computer reports and switches to the one that answers.
+- **iOS or Android app:** choose **Pair a Computer**, then **Scan to Pair** and scan the QR code, or **Paste Pairing Link** and tap **Pair**. The app adds that computer, selects it, and you continue on **Assistant**. A paired phone learns every address the computer reports and switches to the one that answers.
 - **Browser on another device:** open the pairing link, or paste it on the **Pair** screen. A browser on another device connects only through a [relay](#relay), so turn one on first.
 
 If no address of the computer answers — a different Wi-Fi network, or access-point isolation — **Pair** and the scan screen show **Can't reach the computer. Check that it is online and reachable on your network or through its relay.**
@@ -134,11 +134,25 @@ cocurdex host audit [--limit <n>]
 
 ## Native app
 
-The iOS and Android app has four tabs: **Sessions**, **Issues**, **Notes**, and **Computers**. **Computers** lists paired computers. **Sessions**, **Issues**, and **Notes** are for the computer named in the toolbar.
+The iOS and Android app has five tabs: **Assistant**, **Sessions**, **Issues**, **Notes**, and **Settings**. **Assistant** is first, and it is the screen the app opens on. **Settings** includes **Computers**, which lists paired computers. **Sessions**, **Issues**, and **Notes** are for the computer named in the toolbar.
 
 With no computer paired yet, those tabs show **No Computers** and **Pair a Computer**. After you pair, open the computer name in the toolbar to switch hosts, or choose **Pair a Computer** to add another.
 
 Each computer row shows **Connected** with the round-trip in milliseconds, **Checking**, **Unreachable**, **Waiting for approval on the computer**, or **Access revoked**. Open a computer for **Permissions and Connection**, including the **Safety Code**. **Rename** changes the name on this phone only. **Remove This Computer** drops the pairing; if the computer is offline, revoke it later under **Settings → Devices**.
+
+### Assistant
+
+**Assistant** lists three sections for the computer in the toolbar, when they have anything to show:
+
+| Section | Shows |
+| --- | --- |
+| **Today** | Today's successful routine results that were not silent |
+| **Inbox** | What needs you, and routine results, failures, and pauses. A routine that needs you or is blocked is labeled **Needs you**, including when the routine is silent |
+| **Assistants** | The assistants on that computer. The line under a name is the agent and model |
+
+Tap an assistant to open its home thread. Tap an inbox row or a result to open that session. With no assistants yet, the screen says **No assistants yet** and **Create an assistant on** that computer **to see it here.** If the phone cannot reach the computer, it says **Can't reach** that computer, with **Try Again**.
+
+Assistant threads stay out of **Sessions**. In a thread, a posted brief is marked **Today's brief**, and a posted routine result is marked **From routine** plus the routine's name. Each of those is its own turn.
 
 **Issues** and **Notes** can be edited when the phone was paired with **Interact**. See [Notes and issues](/docs/notes-and-issues/#on-the-phone).
 
@@ -201,6 +215,7 @@ Paired without **Approvals**, that dock shows **Approve this on your computer** 
 
 ## Related
 
+- [Assistants](/docs/assistants/)
 - [Desktop workspace](/docs/desktop/)
 - [Notes and issues](/docs/notes-and-issues/#on-the-phone)
 - [Providers and settings](/docs/providers-and-settings/)

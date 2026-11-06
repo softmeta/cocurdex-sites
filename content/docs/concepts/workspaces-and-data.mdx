@@ -46,6 +46,7 @@ Important rules:
 | --- | --- |
 | Notes, issues, slide decks, views, tags, links, FTS indexes | Daemon + `cocurdex.sqlite` |
 | Agent roles, team tasks, worktree settings, session records | Daemon + `cocurdex.sqlite` |
+| Assistants and routines | Daemon + `cocurdex.sqlite`. Deleting an assistant keeps its memories in the rsrs store |
 | Installed ACP Registry agents | Recorded in app settings; downloaded binaries live in the app's data directory |
 | Managed git worktrees | Created by the daemon under the configured worktree root |
 | Project source files | Your workspace directory on disk |
@@ -73,7 +74,7 @@ The daemon:
 
 - Owns the DB connection  
 - Serves desktop and CLI over documented RPC contracts  
-- Runs sessions, teams, script runs, and worktree setup  
+- Runs sessions, assistant routines, teams, script runs, and worktree setup  
 
 ```bash
 cocurdex daemon status

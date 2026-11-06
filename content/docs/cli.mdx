@@ -1,6 +1,6 @@
 ---
 title: CLI
-description: cocurdex CLI reference — open the desktop app, manage notes, issues, memory, and slide decks, sessions, teams, script runs, devices, providers, MCP, and skills.
+description: cocurdex CLI reference — open the desktop app, manage notes, issues, memory, assistants, routines, and slide decks, sessions, teams, script runs, devices, providers, MCP, and skills.
 ---
 
 The **`cocurdex` CLI** is the supported command-line boundary for app-owned product data and daemon operations. External tools and agents should use the CLI rather than reading private database files.
@@ -86,10 +86,10 @@ Default view id is `project` unless you pass `--view`.
 ```bash
 cocurdex issue list [--status <column>] [--label <name>] [--parent <id>] [--open] [--view <id>] [--json]
 cocurdex issue show <id> [--detail] [--view <id>] [--json]
-cocurdex issue create --title <title> [--status <column>] [--priority <id>] [--body <text>] [--workspace <id>] [--parent <id>] [--labels <ids>] [--view <id>] [--json]
-cocurdex issue update <id> [--title <title>] [--body <text>] [--status <column>] [--priority <id>] [--workspace <id>|none] [--parent <id>|none] [--labels <ids>] [--view <id>] [--json]
+cocurdex issue create --title <title> [--status <column>] [--priority <id>] [--body <markdown>|--body-file <path>] [--workspace <id>] [--parent <id>] [--labels <ids>] [--view <id>] [--json]
+cocurdex issue update <id> [--title <title>] [--body <markdown>|--body-file <path>] [--status <column>] [--priority <id>] [--workspace <id>|none] [--parent <id>|none] [--labels <ids>] [--view <id>] [--json]
 cocurdex issue move <id> <column> [--view <id>] [--json]
-cocurdex issue comment <id> --body <markdown> [--json]
+cocurdex issue comment <id> --body <markdown>|--body-file <path> [--json]
 cocurdex issue relate <id> blocks|related|duplicate <id> [--json]
 cocurdex issue unrelate <id> blocks|related|duplicate <id> [--json]
 cocurdex issue labels [--json]
@@ -114,6 +114,8 @@ cocurdex issue label update <id|name> [--name <name>] [--color <color>]
 cocurdex issue view update <id> [--title <title>] [--group-by status|priority|label|workspace|parent] [--layout board|list] [--show-empty true|false] [--properties <a,b>]
 cocurdex issue move <id> <column> [--from <column>]
 ```
+
+`create`, `update`, and `comment` take the body the same way notes do: `--body -` reads stdin, and `--body-file <path>` reads a file. An unknown flag is rejected and the issue is left unchanged. The error is `Unknown flag --<name> for "issue <action>". Accepted flags: ...`.
 
 `--from` names the label a card was under, and only that label changes. `--properties` accepts `identifier`, `status`, `priority`, `labels`, `workspace`, `parent`, `description`, `created`, and `updated`. See [Notes and issues](/docs/notes-and-issues/#issues).
 
@@ -178,6 +180,13 @@ cocurdex memory doctor [--remote] [--check-update] [--json]
 cocurdex memory recall <query> [--limit <n>] [--project <name>] [--json]
 cocurdex memory show <id> [--json]
 cocurdex memory remember --title <title> [--content <text> | --file <path> | <text>] [--importance important|trivial] [--parent <id>] [--tags a,b] [--force] [--json]
+cocurdex memory list [--partition me|agent:<persona-id>] [--since <date>] [--limit <n>] [--json]
+cocurdex memory update <id> [--title <title>] [--content <text> | --file <path>] [--tags a,b] [--importance important|trivial] [--json]
+cocurdex memory forget <id> [--json]
+cocurdex memory restore <full-id> [--json]
+cocurdex memory history [<id>] [--limit <n>] [--json]
+cocurdex memory export <file> [--json]
+cocurdex memory import <file> [--json]
 cocurdex memory save-session <session-id> [--force] [--importance important|trivial] [--json]
 cocurdex memory sync on | off [--json]
 cocurdex memory cloud register|signin --user <name> [--json]
@@ -186,6 +195,37 @@ cocurdex memory policy
 ```
 
 Account secrets are read from a hidden prompt, or from piped stdin when the process is not a terminal. Sign-in reads the password, then the recovery key.
+
+`memory list --partition me` is what you saved about yourself. `agent:<persona-id>` is one assistant's own memories. `forget` removes an entry; `history` prints the full id, and `restore` takes that id. `export` writes the whole library as plaintext JSON.
+
+## Assistants
+
+Personal assistants, routines, and the inbox. Full model: [Assistants](/docs/assistants/). A `<persona>` or `<routine>` is the id, a unique id prefix, or the name.
+
+```bash
+cocurdex persona list [--json]
+cocurdex persona show <persona> [--json]
+cocurdex persona create --name <name> [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--json]
+cocurdex persona update <persona> [--name <name>] [--provider <id> --model <id>] [--description <text>] [--instructions <text>|--instructions-file <path>] [--soul <text>|--soul-file <path>] [--pin|--unpin] [--mute|--unmute] [--json]
+cocurdex persona duplicate <persona> --name <name> [--json]
+cocurdex persona delete <persona>
+cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>] [--json]
+cocurdex persona thread <persona> [--limit <n>] [--json]
+cocurdex routine list [--persona <persona>] [--json]
+cocurdex routine show <routine> [--json]
+cocurdex routine create --persona <persona> --name <name> (--prompt <text>|--prompt-file <path>) (--every <minutes>|--at <HH:MM> [--days <mon,wed|weekdays|weekends>]) [--tz <zone>] [--access read-and-draft|full] [--deliver inbox|push|silent] [--json]
+cocurdex routine update <routine> [--name <name>] [--prompt <text>|--prompt-file <path>] [--every <minutes>|--at <HH:MM> [--days <days>]] [--tz <zone>] [--access read-and-draft|full] [--deliver inbox|push|silent] [--json]
+cocurdex routine pause|resume <routine> [--json]
+cocurdex routine run <routine> [--wait] [--timeout <seconds>] [--json]
+cocurdex routine runs [<routine>] [--limit <n>] [--json]
+cocurdex routine delete <routine>
+cocurdex inbox [list] [--json]
+cocurdex inbox read <item-id> [--json]
+cocurdex inbox brief [--tz <zone>] [--json]
+cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN] [--json]
+```
+
+Personal assistants always run on Pi. There is no `--agent` flag on `persona create` or `persona update`. `--provider` and `--model` go together. `persona send --wait` prints the reply (default timeout 600 seconds). `routine create` needs `--prompt` or `--prompt-file`, and either `--every` (at least 5) or `--at`. `--access` is `read-and-draft` (default) or `full`. `inbox read` marks the item's thread visited. `inbox brief` prints `Nothing to brief today.` when there is nothing to report. `inbox brief post` writes today's brief into the default assistant's home thread. `--locale` is `en-US` or `zh-CN`; omit it to reuse the last locale used for a post. Nothing new to post prints `Nothing new to post.`
 
 ## Search
 
@@ -461,6 +501,7 @@ Do not point scripts at `cocurdex.sqlite` or private schema paths. Those are imp
 
 - [Notes and issues](/docs/notes-and-issues/)
 - [Memory](/docs/memory/)  
+- [Assistants](/docs/assistants/)  
 - [Slide decks](/docs/decks/)  
 - [Devices and local web](/docs/devices-and-web/)  
 - [Agents](/docs/agents/)  

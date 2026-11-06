@@ -43,6 +43,26 @@ Off by default. **Multi-device sync** opens **Connect cloud memory**, where you 
 
 The page links to the Respire site and source for what rsrs is.
 
+## In the Assistants form
+
+The Assistants sidebar offers **Let your assistants remember**, with **Turn on memory** and **Skip**. Turning it on installs rsrs when it is missing. After you leave that card, the same control is **Long-term memory** in the sidebar footer. See [Assistants](/docs/assistants/).
+
+Which memories an assistant sees still follows **Recall for agent sessions**. When that is on, the thread recalls that assistant's own memories and **About me**, not another assistant's. **Instructions** and **Persona** on the assistant are separate from this library, and both are included on every turn. See [Assistants](/docs/assistants/#home-thread).
+
+## Browse and edit
+
+**Memory** in the right panel lists what is stored.
+
+| View | Shows |
+| --- | --- |
+| **Diary** | Memories by day |
+| **Tree** | The same entries as a tree |
+| **History** | Edits, deletions, and restores |
+
+**Partition** filters to **All memories**, **About me**, or one assistant. If the installed rsrs cannot split memory this way, the partition menu stays hidden and every assistant uses the one library.
+
+**Filter memories** narrows the list. Select an entry to edit its **Title**, **Content**, or **Tags**. **Delete** asks you to confirm; **Undo** on the **Memory deleted** toast restores it when the installed rsrs can. **History** on an entry lists what changed.
+
 ## CLI
 
 ```bash
@@ -53,6 +73,13 @@ cocurdex memory doctor [--remote] [--check-update]
 cocurdex memory recall <query> [--limit <n>] [--project <name>]
 cocurdex memory show <id>
 cocurdex memory remember --title <title> [--content <text> | --file <path> | <text>] [--importance important|trivial] [--tags a,b]
+cocurdex memory list [--partition me|agent:<persona-id>] [--since <date>] [--limit <n>]
+cocurdex memory update <id> [--title <title>] [--content <text> | --file <path>] [--tags a,b] [--importance important|trivial]
+cocurdex memory forget <id>
+cocurdex memory restore <full-id>
+cocurdex memory history [<id>] [--limit <n>]
+cocurdex memory export <file>
+cocurdex memory import <file>
 cocurdex memory save-session <session-id> [--force] [--importance important|trivial]
 cocurdex memory sync on | off
 cocurdex memory cloud register|signin --user <name>
@@ -62,8 +89,11 @@ cocurdex memory policy
 
 `cloud register` and `cloud signin` read the password from a hidden prompt (and the recovery key on sign-in). When stdin is not a terminal, they read those secrets from the pipe instead. `cloud keys` prints the recovery key. `memory policy` prints the rules the memory tools follow.
 
+`memory list --partition me` is **About me**. `agent:<persona-id>` is one assistant's own memories. `forget` removes an entry; `history` shows its full id, and `restore` takes that id. `export` writes the whole library as plaintext JSON. `import` reads that file back.
+
 ## Related
 
 - [Providers and settings](/docs/providers-and-settings/)
 - [Workspaces and data](/docs/concepts/workspaces-and-data/)
+- [Assistants](/docs/assistants/)
 - [CLI](/docs/cli/#memory)
