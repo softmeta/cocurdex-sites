@@ -225,7 +225,7 @@ cocurdex inbox brief [--tz <zone>] [--json]
 cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN] [--json]
 ```
 
-Personal assistants always run on Pi. There is no `--agent` flag on `persona create` or `persona update`. `--provider` and `--model` go together. `persona send --wait` prints the reply (default timeout 600 seconds). `routine create` needs `--prompt` or `--prompt-file`, and either `--every` (at least 5) or `--at`. `--access` is `read-and-draft` (default) or `full`. `inbox read` marks the item's thread visited. `inbox brief` prints `Nothing to brief today.` when there is nothing to report. `inbox brief post` writes today's brief into the default assistant's home thread. `--locale` is `en-US` or `zh-CN`; omit it to reuse the last locale used for a post. Nothing new to post prints `Nothing new to post.`
+Personal assistants always run on Pi. There is no `--agent` flag on `persona create` or `persona update`. `--provider` and `--model` go together. `persona send --wait` prints the reply (default timeout 600 seconds). `routine create` needs `--prompt` or `--prompt-file`, and either `--every` (at least 5) or `--at`. `--access` is `read-and-draft` (default) or `full`. `inbox` lists the same items as the sidebar inbox: assistant threads, work an assistant delegated, and routines. Work and chat sessions you started yourself are left out. `inbox read` marks the item's thread visited. `inbox brief` prints `Nothing to brief today.` when there is nothing to report. `inbox brief post` writes today's brief into the default assistant's home thread. `--locale` is `en-US` or `zh-CN`; omit it to reuse the last locale used for a post. Nothing new to post prints `Nothing new to post.`
 
 ## Search
 
