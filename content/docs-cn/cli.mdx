@@ -1,6 +1,6 @@
 ---
 title: CLI
-description: cocurdex CLI 参考——打开桌面应用，管理笔记、事项、记忆、助理、例行任务、演示文稿、会话、团队、脚本编排、设备、provider、MCP 与 skills。
+description: cocurdex CLI 参考——打开桌面应用，管理笔记、事项、记忆、助理、委派工作、应用、例行任务、演示文稿、会话、团队、脚本编排、设备、provider、MCP 与 skills。
 ---
 
 **`cocurdex` CLI** 是应用私有产品数据和 daemon 操作受支持的命令行边界。外部工具和 Agent 应该使用 CLI,而不是读取私有数据库文件。
@@ -200,7 +200,7 @@ cocurdex memory policy
 
 ## 助理
 
-个人助理、例行任务和收件箱。完整说明见[助理](/zh-cn/docs/assistants/)。`<persona>` 或 `<routine>` 可以是 id、唯一的 id 前缀或名称。
+个人助理、委派工作、应用、例行任务和收件箱。完整说明见[助理](/zh-cn/docs/assistants/)。`<persona>` 或 `<routine>` 可以是 id、唯一的 id 前缀或名称。
 
 ```bash
 cocurdex persona list [--json]
@@ -211,6 +211,11 @@ cocurdex persona duplicate <persona> --name <name> [--json]
 cocurdex persona delete <persona>
 cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>] [--json]
 cocurdex persona thread <persona> [--limit <n>] [--json]
+cocurdex persona work catalog [--json]
+cocurdex persona work list <persona> [--json]
+cocurdex persona work start <persona> --workspace <id|name> --prompt <text>|--prompt-file <path> [--title <title>] [--role <role>|--team <template>] [--worktree] [--json]
+cocurdex persona work send <persona> <session-id> <message> [--json]
+cocurdex persona work stop <persona> <session-id> [--json]
 cocurdex routine list [--persona <persona>] [--json]
 cocurdex routine show <routine> [--json]
 cocurdex routine create --persona <persona> --name <name> (--prompt <text>|--prompt-file <path>) (--every <minutes>|--at <HH:MM> [--days <mon,wed|weekdays|weekends>]) [--tz <zone>] [--access read-and-draft|full] [--deliver inbox|push|silent] [--json]
@@ -225,7 +230,9 @@ cocurdex inbox brief [--tz <zone>] [--json]
 cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN] [--json]
 ```
 
-个人助理始终跑在 Pi 上。`persona create` 和 `persona update` 没有 `--agent` 参数。`--provider` 和 `--model` 要一起给出。`persona send --wait` 打印回复（默认超时 600 秒）。`routine create` 需要 `--prompt` 或 `--prompt-file`，以及 `--every`（至少 5）或 `--at` 其中之一。`--access` 为 `read-and-draft`（默认）或 `full`。`inbox read` 把该项的线程标为已访问。没有可报告的内容时，`inbox brief` 打印 `Nothing to brief today.` `inbox brief post` 把今日简报写入默认助理的主线程。`--locale` 为 `en-US` 或 `zh-CN`；省略则沿用上次发布所用的语言。没有新内容可发布时打印 `Nothing new to post.`
+个人助理始终跑在 Pi 上。`persona create` 和 `persona update` 没有 `--agent` 参数。`--provider` 和 `--model` 要一起给出。`persona send --wait` 打印回复（默认超时 600 秒）。`persona delete` 会删除那个助理，包括默认助理：列表里的下一个成为默认助理；一个都不剩时列表保持为空。`routine create` 需要 `--prompt` 或 `--prompt-file`，以及 `--every`（至少 5）或 `--at` 其中之一。`--access` 为 `read-and-draft`（默认）或 `full`。`inbox read` 把该项的线程标为已访问。没有可报告的内容时，`inbox brief` 打印 `Nothing to brief today.` `inbox brief post` 把今日简报写入默认助理的主线程。`--locale` 为 `en-US` 或 `zh-CN`；省略则沿用上次发布所用的语言。没有新内容可发布时打印 `Nothing new to post.`
+
+`persona work` 把仓库工作交给一个工作会话。`catalog` 列出工作区、已保存的 Agent 角色和团队模板。`list` 打印 `sessionId`、`title`、`workspaceName`、`agentType` 和 `state`。`--workspace` 是 id 或名称。名称匹配到不止一个工作区时失败，提示 `Several workspaces are named "<name>"; pass its id.` `--role` 和 `--team` 二选一（`Pass either an agent role or a team template, not both.`）。`--prompt-file` 从文件读取任务。`--worktree` 使用一棵新的 git 工作树。`send` 和 `stop` 只接受这个助理委派过的会话（`No work session you delegated has this id.`）。见[委派工作](/zh-cn/docs/assistants/#委派工作)。
 
 ## 搜索
 
@@ -464,7 +471,33 @@ cocurdex mcp import <file|-> [--overwrite]
 cocurdex mcp import --from claude|claude-project|codex|codex-project|cursor|opencode|opencode-project|antigravity [--name <name>]... [--overwrite] [--workspace <id|path>]
 ```
 
-`--agent` 可以重复。`agents <name> --none` 清空 Agent 列表。`import --from` 读取这台电脑上该 Agent 已经有的服务器；重复 `--name` 则只导入这些服务器。
+`--agent` 可以重复。`agents <name> --none` 清空 Agent 列表。`import --from` 读取这台电脑上该 Agent 已经有的服务器；重复 `--name` 则只导入这些服务器。在**应用**里管理的 Notion、Linear 或 GitHub 连接，不在这里分配给 Agent。对它执行 `mcp agents` 会失败，提示 `Manage assistant access with cocurdex apps update.`
+
+## 应用
+
+给助理使用的 Notion、Linear 和 GitHub 账号。桌面入口是[应用](/zh-cn/docs/assistants/#应用)。这些命令打印 JSON。`login-cancel` 只停止这次授权，不打印内容。
+
+```bash
+cocurdex apps catalog|list [--json]
+cocurdex apps add <notion|linear|github> --name <name> [--assistants <id,id>] [--delegated] [--work-sessions true|false] [--json]
+cocurdex apps update --stdin [--json]
+cocurdex apps check|tools|logout|remove <connection-id> [--json]
+cocurdex apps login <connection-id> [--json]
+cocurdex apps login-wait|login-cancel <connection-id> --login <id> [--json]
+cocurdex apps login-return <connection-id> --login <id> --stdin [--json]
+cocurdex apps read|call <connection-id> --tool <name> --stdin [--json]
+```
+
+| 命令 | 说明 |
+| --- | --- |
+| `catalog` | 打印 Notion、Linear 和 GitHub。不需要正在运行的 daemon |
+| `add` | `--name` 必填。`--assistants` 是用逗号分开的助理 id。`--delegated` 允许委派的工作会话和队友使用这个账号。`--work-sessions true` 或 `false` 设置**工作模式可用**；省略则这条连接可以在工作模式里使用。未知 id 失败并提示 `Choose notion, linear, or github`。`--work-sessions` 写成别的值会失败，提示 `--work-sessions takes true or false` |
+| `update` | 从标准输入读一个 JSON 对象。字段：`id`、`revision`、`displayName`、`personaIds`、`allowDelegatedWork`、`allowWorkSessions`、`enabled`。把这段 JSON 写在命令参数里会失败，提示 `Pass the update JSON through --stdin; never put credentials in command arguments.` `revision` 过期会失败，提示 `Application changed. Reload before saving.` |
+| `check` / `tools` / `logout` / `remove` | 一个连接 id。`remove` 打印 `{ "removed": true }` |
+| `login` | 开始授权，并打印这次登录，包括它的 id。GitHub 在有 `gh` 登录时用它，否则使用设备码 |
+| `login-wait` / `login-cancel` | `--login` 是那个登录 id |
+| `login-return` | 完整的回调地址是标准输入的文本，不是参数。没有标准输入时失败，提示 `Pass the complete return URL through --stdin`。GitHub 的设备码登录会失败，提示 `GitHub authorization finishes in the browser` |
+| `read` / `call` | `--tool` 是工具名。参数是标准输入上的一个 JSON 对象。`read` 只限提供方声明为只读的工具 |
 
 ## 诊断
 
@@ -502,6 +535,7 @@ cocurdex role list [--json]
 - [笔记与 Issue](/zh-cn/docs/notes-and-issues/)
 - [记忆](/zh-cn/docs/memory/)
 - [助理](/zh-cn/docs/assistants/)
+- [应用](/zh-cn/docs/assistants/#应用)
 - [演示文稿](/zh-cn/docs/decks/)
 - [设备与本地网页](/zh-cn/docs/devices-and-web/)
 - [Agent](/zh-cn/docs/agents/)
