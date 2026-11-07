@@ -34,7 +34,7 @@ A provider config holds:
 | Provider id / name | Stable id and display name |
 | Base URL | Service endpoint |
 | API runtime | `openai-completions`, `openai-responses`, `openai-codex-responses`, `anthropic-messages`, `google-generative-ai`, or `mistral-conversations` |
-| Auth | A provider account via Pi OAuth, or an API key managed by Pi |
+| Auth | A provider account via Pi OAuth, or an API key managed by Pi. A custom provider pointed at a local or proxy endpoint can leave the key empty |
 | Models | Per-model id, display name, capabilities (agent / chat / reasoning / vision), context and output limits, cost per 1M tokens |
 | Advanced | Custom headers, compatibility JSON, thinking-level maps |
 
@@ -51,13 +51,16 @@ Provider configs and models are also scriptable: `cocurdex provider add|update|l
 
 External agent CLIs (`claude`, `codex`, `opencode`, and ACP Registry agents such as `cursor-agent` or `grok`) keep their own authentication — Codex account state under `~/.codex`, for example. Provider configs do not replace that; they give Pi and the desktop a shared model catalog.
 
+A custom, local, or proxy provider with no API key is used the same way for one-shot text as for an agent run. That covers Pi session titles, an assistant's greeting, and a generated commit message.
+
 ## MCP servers
 
-**Settings → MCP** is the tool servers Cocurdex gives to your agents. New sessions pick up changes; a running session keeps the tools it already has.
+**Settings → Connections**, on the **MCP** tab, is the tool servers Cocurdex gives to your agents. The page title is **Connections**. **Apps** and **Skills** are the other tabs. New sessions pick up changes; a running session keeps the tools it already has.
 
 - A **form** (name, local command or remote URL, arguments, environment or headers) and raw **JSON**. The JSON shape is the standard `mcpServers` object.
 - Server names may contain only letters, digits, `_`, and `-`.
 - **Agents** chooses which agents receive the server. Their own MCP configs are left untouched. Some servers can only be used by Pi — for example one that sets a working directory, runs a command value, or signs in through a Pi provider. The row says so.
+- Notion, Linear, and GitHub connections are managed on the **Apps** tab, not assigned to agents here. That row says **This connection is managed in Applications. Choose assistant access there; engine-level MCP assignment does not apply.** See [Applications](/docs/assistants/#applications).
 - **Import from other agents** reads servers already configured for Claude Code, Codex, Cursor, OpenCode, or Antigravity, including project configs. You confirm each one. You can also drop or paste JSON.
 - **Sign in** when a server asks for it. **Test connection** lists its tools.
 - A project server defined in a file on disk is read-only here; edit that file to change it.
@@ -140,9 +143,8 @@ After an update downloads, an **Update available** card offers **Update and Rest
 | **Agent CLIs** | Installed agents, versions, install hints, ACP Registry, and [run limits](#agent-clis) (above) |
 | **Roles** | Edit or delete saved agent presets, their avatars and descriptions; see [Agents](/docs/agents/#agent-roles) |
 | **Teams** | Reusable [team templates](/docs/teams/#team-templates) |
-| **MCP** | Tool servers for your agents, including import (above) |
+| **Connections** | **Apps**, **MCP**, and **Skills**. **Apps** connects Notion, Linear, and GitHub for assistants ([Applications](/docs/assistants/#applications)). **MCP** is the tool servers above. **Skills** is the skill manager ([Skills](/docs/skills/)) |
 | **Memory** | Long-term recall and optional multi-device sync; see [Memory](/docs/memory/) |
-| **Skills** | The `cocurdex-*` pack, plus other skills from skills.sh, a GitHub repo, or a folder |
 | **Network** | Outbound proxy (above) |
 | **Git** | Commit-message model (above) |
 | **Worktrees** / **Workspaces** | Managed worktree root and inventory; per-workspace scripts and actions (above) |
