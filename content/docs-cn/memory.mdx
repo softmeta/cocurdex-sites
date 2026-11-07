@@ -43,11 +43,25 @@ Intel Mac 没有 rsrs 构建，这台机器上记忆保持关闭，状态行会�
 
 这一页链到 Respire 的官网和源码，说明 rsrs 是什么。
 
+## 状态
+
+**设置 → 记忆 → 状态**显示已安装的 rsrs 版本，或者**rsrs 尚未安装**。这一行下面的错误说明记忆为什么不能照常使用：
+
+| 你会看到 | 含义 |
+| --- | --- |
+| `Memory is paused in rsrs. Restore it in rsrs before using memory in Cocurdex.` | 记忆已暂停。先在 rsrs 里恢复，再在这里使用 |
+| `Memory is read-only in rsrs. Recall is available, but new memories cannot be saved.` | 召回仍然可用。不能再保存新的记忆 |
+| `Local memory has not been initialized. For local-only memory, initialize rsrs with rsrs keygen. For multi-device sync, register or sign in from Settings > Memory > Multi-device sync, or run: cocurdex memory cloud register --user <name> (use cloud signin for an existing account).` | 这台电脑还没有记忆身份 |
+
+召回如果报告没有会话，或者你还没有登录，会附上同样的身份说明。
+
+**运行体检**检查这次安装。通过时提示 `rsrs 体检：<status>`。失败时提示 `rsrs 体检发现问题`。状态行上的 `体检：<status> · 通过 <pass> · 警告 <warn> · 失败 <fail>` 只对上次体检时的 rsrs 版本显示。那个版本变了之后，这一行会消失，直到你再选一次**运行体检**。
+
 ## 在助理表单里
 
 助理侧边栏会提供**让助理记住你**，可以选择**开启记忆**或**跳过**。开启时，如果还没有 rsrs，应用会安装它。离开这张卡片之后，同一个控件是侧边栏页脚的**长期记忆**。见[助理](/zh-cn/docs/assistants/)。
 
-助理能看到哪些记忆，仍由**Agent 会话自动召回**决定。开启后，线程只会召回这个助理自己的记忆和**关于我**，不会读另一个助理的。助理上的**指令**和**人设**不属于这份记忆库，每一轮都会带上。见[助理](/zh-cn/docs/assistants/#主线程)。
+助理能看到哪些记忆，仍由**Agent 会话自动召回**决定。开启后，线程只会召回这个助理自己的分区和**关于我**，不会读另一个助理的。`memory_remember` 写进这个助理自己的分区。关于你、每个助理都该共用的事实，用 `about` 设为 `user`，也就是**关于我**。助理上的**指令**和**人设**不属于这份记忆库，每一轮都会带上。见[助理](/zh-cn/docs/assistants/#主线程)。
 
 ## 浏览和编辑
 
@@ -59,7 +73,7 @@ Intel Mac 没有 rsrs 构建，这台机器上记忆保持关闭，状态行会�
 | **树** | 同一批条目的树形 |
 | **历史** | 编辑、删除和恢复 |
 
-**分区**可以筛到**全部记忆**、**关于我**或某一个助理。如果安装的 rsrs 不能这样拆分记忆，分区菜单保持隐藏，所有助理共用一份记忆库。
+**分区**可以筛到**全部记忆**、**关于我**或某一个助理。只有安装的 rsrs 能这样拆分记忆时才显示这个菜单。不能拆分时菜单保持隐藏，助理的召回或需要分区的写入会失败，提示 `Memory partition support is unavailable; unscoped access was refused.` 助理不会改去搜整份记忆库。读到允许分区之外的条目会失败，提示 `Memory is outside the permitted partition.` 指向不在该分区里的记忆会失败，提示 `Memory relation target was not found in the permitted partition.` 只存在于分区之外的冲突会留着，不自动合并：`Nothing was saved. The memory provider reported a conflict outside this partition; automatic merging was refused.`
 
 **筛选记忆**收窄列表。选中一条可以编辑**标题**、**内容**或**标签**。**删除**会要求确认；当安装的 rsrs 支持恢复时，**已删除记忆**提示上的**撤销**会把它恢复。一条记忆上的**历史**列出改过什么。
 

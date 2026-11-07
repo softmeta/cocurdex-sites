@@ -34,7 +34,7 @@ cocurdex agent login <agent>
 | Provider id / 名称 | 稳定 id 与显示名 |
 | Base URL | 服务端点 |
 | API 运行时 | `openai-completions`、`openai-responses`、`openai-codex-responses`、`anthropic-messages`、`google-generative-ai` 或 `mistral-conversations` |
-| 认证 | 通过 Pi OAuth 登录的 Provider 账号，或由 Pi 管理的 API key |
+| 认证 | 通过 Pi OAuth 登录的 Provider 账号，或由 Pi 管理的 API key。指向本地或代理端点的自定义 Provider 可以不填密钥 |
 | 模型 | 每个模型的 id、显示名、能力（agent / chat / reasoning / vision）、上下文与输出上限、每百万 token 成本 |
 | 高级 | 自定义请求头、兼容性 JSON、思考等级映射 |
 
@@ -51,13 +51,16 @@ Provider 配置与模型同样可以脚本化：`cocurdex provider add|update|lo
 
 外部 Agent CLI(`claude`、`codex`、`opencode`,以及 `cursor-agent`、`grok` 等 ACP Registry Agent)保留各自的认证——例如 Codex 的账号状态在 `~/.codex` 下。Provider 配置不替代它们；它为 Pi 和桌面端提供统一的模型目录。
 
+没有 API key 的自定义、本地或代理 Provider，生成一句短文本时和跑一轮 Agent 用的是同一种方式。这包括 Pi 会话标题、助理的问候，以及自动写的提交说明。
+
 ## MCP 服务器
 
-**设置 → MCP** 是 Cocurdex 提供给你的 Agent 的工具服务器。新会话会用上改动；正在运行的会话保留它已经有的工具。
+**设置 → 连接**里的 **MCP** 页，是 Cocurdex 提供给你的 Agent 的工具服务器。页面标题是**连接**。另外两个页是**应用**和 **Skills**。新会话会用上改动；正在运行的会话保留它已经有的工具。
 
 - **表单**（名称、本地命令或远程 URL、参数、环境变量或请求头）和原始 **JSON**。JSON 结构是标准的 `mcpServers` 对象。
 - 服务器名称只能包含字母、数字、`_` 和 `-`。
 - **Agent** 选择哪些 Agent 会拿到这台服务器。它们自己的 MCP 配置不会被改动。有些服务器只有 Pi 能用——例如设置了工作目录、用命令取值，或通过 Pi 的服务商登录。这一行会写明原因。
+- Notion、Linear 和 GitHub 连接在**应用**页管理，而不是在这里给 Agent 分配。那一行写着**此连接由「应用」管理。请在那里选择助理使用权限，不使用按引擎分配 MCP 的方式。** 见[应用](/zh-cn/docs/assistants/#应用)。
 - **从其他 Agent 导入**读取这台电脑上 Claude Code、Codex、Cursor、OpenCode 或 Antigravity 已经配置的服务器，包括项目级配置。每一项都要你确认。也可以拖入或粘贴 JSON。
 - 服务器要求登录时使用**登录**。**测试连接**列出它的工具。
 - 定义在磁盘文件里的项目服务器在这里是只读的；要改就去改那个文件。
@@ -140,9 +143,8 @@ cocurdex mcp import --from codex
 | **Agent CLI** | 已安装的 Agent、版本、安装提示、ACP Registry 与[运行上限](#agent-cli)（见上文） |
 | **角色** | 编辑或删除保存的 Agent 预设及其头像和描述；见 [Agent](/zh-cn/docs/agents/#agent-角色) |
 | **团队** | 可复用的[团队模板](/zh-cn/docs/teams/#团队模板) |
-| **MCP** | 提供给 Agent 的工具服务器，含导入（见上文） |
+| **连接** | **应用**、**MCP** 和 **Skills**。**应用**给助理连接 Notion、Linear 和 GitHub（见[应用](/zh-cn/docs/assistants/#应用)）。**MCP** 是上面的工具服务器。**Skills** 是技能管理（见 [Skills](/zh-cn/docs/skills/)） |
 | **记忆** | 长期召回和可选的多设备同步；见[记忆](/zh-cn/docs/memory/) |
-| **Skills** | `cocurdex-*` 包，以及来自 skills.sh、GitHub 仓库或文件夹的其他 skill |
 | **网络** | 出站代理（见上文） |
 | **Git** | 提交信息模型（见上文） |
 | **工作树** / **工作区** | 托管工作树根目录与清单；按工作区的脚本与 Actions(见上文) |
