@@ -225,7 +225,7 @@ cocurdex inbox brief [--tz <zone>] [--json]
 cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN] [--json]
 ```
 
-个人助理始终跑在 Pi 上。`persona create` 和 `persona update` 没有 `--agent` 参数。`--provider` 和 `--model` 要一起给出。`persona send --wait` 打印回复（默认超时 600 秒）。`routine create` 需要 `--prompt` 或 `--prompt-file`，以及 `--every`（至少 5）或 `--at` 其中之一。`--access` 为 `read-and-draft`（默认）或 `full`。`inbox read` 把该项的线程标为已访问。没有可报告的内容时，`inbox brief` 打印 `Nothing to brief today.` `inbox brief post` 把今日简报写入默认助理的主线程。`--locale` 为 `en-US` 或 `zh-CN`；省略则沿用上次发布所用的语言。没有新内容可发布时打印 `Nothing new to post.`
+个人助理始终跑在 Pi 上。`persona create` 和 `persona update` 没有 `--agent` 参数。`--provider` 和 `--model` 要一起给出。`persona send --wait` 打印回复（默认超时 600 秒）。`routine create` 需要 `--prompt` 或 `--prompt-file`，以及 `--every`（至少 5）或 `--at` 其中之一。`--access` 为 `read-and-draft`（默认）或 `full`。`--deliver` 为 `inbox`（默认；应用里是**仅失败时**）、`push` 或 `silent`。`inbox read` 把该项的线程标为已访问。没有可报告的内容时，`inbox brief` 打印 `Nothing to brief today.` `inbox brief post` 把今日简报写入默认助理的主线程。`--locale` 为 `en-US` 或 `zh-CN`；省略则沿用上次发布所用的语言。没有新内容可发布时打印 `Nothing new to post.`
 
 ## 搜索
 

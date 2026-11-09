@@ -13,7 +13,7 @@ Typical peers in the shell:
 | --- | --- |
 | **Sessions** | Track parallel agent runs and which one needs attention |
 | **Chat** | Steer the active agent; one pane among several |
-| **Assistants** | Personal assistants, their home threads, the inbox, and today's brief (see [Assistants](/docs/assistants/)) |
+| **Assistants** | Personal assistants, their home threads, the assistant overview, and today's brief (see [Assistants](/docs/assistants/)) |
 | **Terminal** | Integrated PTY for commands and agent-driven shell work |
 | **Editor** | Inspect and edit project files without leaving the app |
 | **Git** | Diff, stage, and commit workspace changes; review what each agent turn changed |
@@ -25,7 +25,7 @@ Typical peers in the shell:
 | **Team panel** | Teammates of the current lead session, their status, and replies (see [Teams](/docs/teams/)) |
 | **Script runs** | Proposed scripts awaiting approval and running subagents (see [Script runs](/docs/teams/#script-runs)) |
 
-The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. Its view switcher includes **Memory** and **Routines** as well as Git, the editor, and the other panes above. Hover an icon-only button to see its action name. On Windows and Linux the window uses themed native window controls in the title bar.
+The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. Its view switcher includes **Assistant overview**, **Memory**, and **Routines** as well as Git, the editor, and the other panes above. Hover an icon-only button to see its action name. On Windows and Linux the window uses themed native window controls in the title bar.
 
 Chat layout is chosen in **Settings → General → Chat layout** and restored on next launch:
 
@@ -169,7 +169,7 @@ Send-key behavior for chat (Enter vs Primary+Enter for multiline) is configurabl
 
 ## Approvals in one place
 
-Everything that needs you surfaces inside the session that asked for it: tool permission cards, agent questions, plan reviews, script-run proposals (with **Show script**, an agent limit, **Run** and **Discard**), and teammates that need input. The [Assistants inbox](/docs/assistants/#inbox-and-the-daily-brief) gathers those items from Work, Chat, and Assistants in one list. Nothing runs in the background without a visible state.
+Everything that needs you surfaces inside the session that asked for it: tool permission cards, agent questions, plan reviews, script-run proposals (with **Show script**, an agent limit, **Run** and **Discard**), and teammates that need input. On an assistant, **Needs you** in the [assistant overview](/docs/assistants/#overview-and-the-daily-brief) lists what is waiting for that assistant, and the roster shows a status dot. Nothing runs in the background without a visible state.
 
 ## Themes
 

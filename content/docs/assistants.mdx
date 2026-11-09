@@ -1,6 +1,6 @@
 ---
 title: Assistants
-description: The Assistants form — personal assistants, home threads, routines, the inbox, and today's brief.
+description: The Assistants form — personal assistants, home threads, routines, and today's brief.
 ---
 
 **Assistants** is a form in the desktop sidebar, next to **Work** and **Chat**. Each assistant is a saved role (name, model, instructions, avatar) on the built-in **Pi** agent, with one long-lived home thread. The app always keeps a default assistant, named **Assistant** until you rename it.
@@ -17,7 +17,7 @@ Right-click a row:
 | --- | --- |
 | **Edit** | Opens **Edit assistant** for the name, model, **Instructions**, **Persona**, description, and avatar. There is no engine picker |
 | **Pin** / **Unpin** | Keeps the assistant above the unpinned ones. Not offered on the default |
-| **Mute** / **Unmute** | Hides the unread mark on that row. A muted row shows **Muted**. A muted assistant never alerts the desktop or the phone; its threads still reach the inbox |
+| **Mute** / **Unmute** | Hides the unread mark on that row. A muted row shows **Muted**. A muted assistant never notifies the desktop or the phone; what needs you from its threads still shows in the assistant overview and via `cocurdex inbox` |
 | **Duplicate** | Copies the assistant, adds **copy** to the name, and opens the copy |
 | **Delete** | Deletes the assistant, its home thread, and its routines (including every routine run thread). Memories stay. Not offered on the default |
 
@@ -68,11 +68,11 @@ Messages the app posts into the home thread are marked with a source line. **Tod
 | **Read and draft** | Reads and drafts only; nothing is sent or changed. The run may use `read`, `grep`, `find`, `ls`, memory and history, and the routine tools. Other tools are blocked, including a write nested inside another tool |
 | **Full access** | Runs unattended with every permission |
 
-**Notify** defaults to **Inbox**.
+**Notify** defaults to **On failure**.
 
 | Notify | Meaning |
 | --- | --- |
-| **Inbox** | Results land in the inbox; failures notify you |
+| **On failure** | Results go to the assistant's thread; only failures notify you |
 | **Push** | Also notifies your phone on every result |
 | **Silent** | Only records the run |
 
@@ -81,10 +81,10 @@ Each run finishes by calling `routine_report` once, with a status of `ready`, `d
 | Report | In **Recent runs** | What you see |
 | --- | --- | --- |
 | `ready` | **Succeeded** | Posted to the home thread unless **Notify** is **Silent**. Alerts only when **Notify** is **Push** |
-| `dropped` | **Nothing to report** | Recorded only. Not posted to the home thread or the inbox, and it never alerts |
-| `needs_you` | **Needs you** | Posted to the home thread and listed in the inbox as **Needs you**, even when **Notify** is **Silent**. Alerts once, as a question |
+| `dropped` | **Nothing to report** | Recorded only. Not posted to the home thread, and it never alerts |
+| `needs_you` | **Needs you** | Posted to the home thread and shown under **Needs you** in the assistant overview, even when **Notify** is **Silent**. Alerts once, as a question |
 | `blocked` | **Blocked** | Same as **Needs you** |
-| `failed` | **Failed** | Counts toward the three-failure pause. Alerts when **Notify** is **Inbox** or **Push** |
+| `failed` | **Failed** | Counts toward the three-failure pause. Alerts when **Notify** is **On failure** or **Push** |
 
 A posted result is marked **From routine** plus the routine's name. Choose that line to open the run's thread. A muted assistant never alerts.
 
@@ -94,23 +94,13 @@ A posted result is marked **From routine** plus the routine's name. Choose that 
 
 You can ask the assistant to manage its own routines. It cannot grant **Full access**, and it cannot change or run a routine that already has it. The same actions are the `routine_list`, `routine_create`, `routine_update`, `routine_run`, `routine_runs`, and `routine_delete` tools. `routine_report` is only available during a run. The [CLI](#cli) does the same.
 
-## Inbox and the daily brief
+## Overview and the daily brief
 
-**Inbox** sits under the roster. It is one list for every form: permissions, questions, and plans that need you, finished and failed sessions, and routine results, runs that need you, failures, and pauses.
+**Assistant overview** in the right panel is for the assistant you have open. **Needs you** lists what is waiting: approvals, questions, and plans, failed sessions, and routine runs that need you, failed, or paused. The line under a row names the kind, such as **Needs approval**, **Has a question**, **Plan ready**, **Failed**, **Needs you**, **Routine failed**, or **Paused after failures**. Open a row to open that session. A status dot on the assistant's roster row, and on session rows, marks the same waiting state. Notifications do too. On the phone, **Overview** on the assistant thread opens this list. A routine that needs you or is blocked is labeled **Needs you**, including when the routine is silent.
 
-| Kind | Label |
-| --- | --- |
-| Approval | **Needs approval** |
-| Question | **Has a question** |
-| Plan | **Plan ready** |
-| Finished session | **Done** |
-| Failed session | **Failed** |
-| Routine result | **New result** |
-| Routine needs you | **Needs you** |
-| Routine failure | **Routine failed** |
-| Routine paused | **Paused after failures** |
+Finished sessions and routine results that do not need you stay out of **Needs you**. They go to the home thread and the daily brief.
 
-The heading shows the count, as in **Inbox · 3**. Opening an item leaves the sidebar on **Assistants** and opens that session. On the phone, a routine that needs you or is blocked uses the same **Needs you** label.
+`cocurdex inbox` lists what needs you from the CLI, and also finished sessions and routine results. See [CLI](#cli).
 
 The daily brief is no longer a dialog. The app writes it in your locale. **Today's brief** on the switcher's row posts the latest brief into the default assistant's home thread when you are back, and opens that thread. The message is an ordinary reply marked **Today's brief**, with **Needs you**, **Routine results**, and **Failures**. Posting again skips a brief that has not changed. The button is hidden when there is nothing to report. Silent routine results are left out of **Routine results**. A run that needs you still appears under **Needs you**.
 
@@ -129,7 +119,7 @@ cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>]
 cocurdex persona thread <persona> [--limit <n>]
 ```
 
-`--provider` and `--model` are passed together. There is no `--agent` flag. `persona send` posts to the home thread. `--wait` prints the reply when the turn settles (the default wait is 600 seconds). `persona thread` prints the latest messages (default 20). `--mute` stops desktop and phone alerts for that assistant.
+`--provider` and `--model` are passed together. There is no `--agent` flag. `persona send` posts to the home thread. `--wait` prints the reply when the turn settles (the default wait is 600 seconds). `persona thread` prints the latest messages (default 20). `--mute` stops desktop and phone notifications for that assistant. What needs you from its threads still shows in the assistant overview and via `cocurdex inbox`.
 
 ```bash
 cocurdex routine list [--persona <persona>]
@@ -142,7 +132,7 @@ cocurdex routine runs [<routine>] [--limit <n>]
 cocurdex routine delete <routine>
 ```
 
-`--every` and `--at` are alternatives. `--days` needs `--at`. `--access` is `read-and-draft` (default) or `full`. `--deliver` is `inbox` (default), `push`, or `silent`. `routine runs` lists each run's status, start time, and summary. `--json` also includes `outcome` and `question`.
+`--every` and `--at` are alternatives. `--days` needs `--at`. `--access` is `read-and-draft` (default) or `full`. `--deliver` is `inbox` (default; **On failure** in the app), `push`, or `silent`. `routine runs` lists each run's status, start time, and summary. `--json` also includes `outcome` and `question`.
 
 ```bash
 cocurdex inbox
