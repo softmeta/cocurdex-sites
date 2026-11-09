@@ -7,13 +7,17 @@ Most Cocurdex configuration lives in the desktop app's **Settings**. This page c
 
 ## Agent CLIs
 
-**Settings → Agent CLIs** lists every agent you can pick when starting a session. For each one it shows the detected version and status (**Built in**, **Ready**, **Not installed**, **Update required**, **Update available**, **Login required**), a copyable install command, a docs link, and — for agents that report it — your plan usage. Agents that are not installed are folded under **Not installed (N)** until you expand that group. The agent menu on a new session hides those missing agents; an agent you already selected stays visible if it is later uninstalled. **Update to v…** installs a newer ACP Registry build. Registry agents that support it offer **Log in** and **Log out**. **Add from ACP Registry** installs more agents, or registers one with your own command. See [Agents](/docs/agents/#acp-registry-agents).
+**Settings → Agent CLIs** lists every agent you can pick when starting a session. Built-in **Pi** is pinned at the top and cannot be disabled. For each agent it shows the detected version and status (**Built in**, **Ready**, **Not installed**, **Update required**, **Update available**, **Login required**, **Disabled**), a copyable install command, a docs link, and — for agents that report it — your plan usage. Agents that are not installed are folded under **Not installed (N)** until you expand that group. Disabled agents are folded under **Disabled (N)** with status **Disabled**. The agent menu on a new session hides missing and disabled agents; an agent you already selected stays visible if it is later uninstalled or disabled. **Update to v…** installs a newer ACP Registry build. Registry agents that support it offer **Log in** and **Log out**. **Add from ACP Registry** installs more agents, or registers one with your own command. See [Agents](/docs/agents/#acp-registry-agents).
 
 ```bash
 cocurdex agent updates
 cocurdex agent update <agent>
 cocurdex agent login <agent>
 ```
+
+Open an installed agent's detail dialog and use the **Enabled** switch to disable it temporarily. Pi and agents under **Not installed** do not show the switch. Turning it off asks you to confirm — for example **Disable Codex?**. The message says that disabling that agent stops its running sessions and pauses new sessions, model discovery, and usage checks. Existing session history is kept, and you can re-enable it anytime. While it is disabled, capability checks, login, and MCP servers injected for that agent are paused too. The detail line reads **Temporarily disabled. New sessions, model discovery, and usage checks are paused.** Turn **Enabled** back on to resume; that does not ask again.
+
+On macOS and Linux, if a CLI is not found, Cocurdex refreshes the login-shell `PATH` and searches again for local ACP CLIs such as `cursor-agent`, `devin`, `grok`, and `agy`. CLIs installed with `n`, `nvm`, `fnm`, `volta`, `mise`, `asdf`, or under `~/.local/bin` are detected even when the background daemon started at login before that shell environment was populated.
 
 **Run limits** on the same page cap how many agent runs execute at once. Delegated runs (teammates and script-run subagents) past a limit wait in the queue; runs you start yourself are never held back.
 
@@ -137,7 +141,7 @@ After an update downloads, an **Update available** card offers **Update and Rest
 | **Editor** | Code MiniMap |
 | **Shortcuts** | Rebindable keyboard shortcuts; `null` override unbinds an action |
 | **Providers** | Provider configs and model catalogs (above) |
-| **Agent CLIs** | Installed agents, versions, install hints, ACP Registry, and [run limits](#agent-clis) (above) |
+| **Agent CLIs** | Installed agents, versions, install hints, ACP Registry, the **Enabled** switch, and [run limits](#agent-clis) (above) |
 | **Roles** | Edit or delete saved agent presets, their avatars and descriptions; see [Agents](/docs/agents/#agent-roles) |
 | **Teams** | Reusable [team templates](/docs/teams/#team-templates) |
 | **MCP** | Tool servers for your agents, including import (above) |

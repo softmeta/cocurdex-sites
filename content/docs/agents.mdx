@@ -31,8 +31,9 @@ Common registry agents:
 | `acp:cursor` | Cursor | `cursor-agent acp` | Streaming, native write; login via Cursor |
 | `acp:devin` | Devin | `devin acp` | Streaming, native write; login via Devin |
 | `acp:grok-build` | Grok Build | `grok agent stdio` | Plan mode, steering, native write; plan usage meter |
+| `acp:antigravity-acp` | Google Antigravity | `agy acp` | Local CLI, native write; `agy` 1.5.0 or newer |
 
-External agents must be installed and authenticated on your machine. **Settings → Agent CLIs** shows each agent's detected version and status (**Ready**, **Not installed**, **Update required**, **Update available**, **Login required**), a copyable install command, and a docs link. Agents that are not installed are folded under **Not installed (N)**, and the session's agent menu hides them. An agent below its minimum version stays usable, but some capabilities may not work until you update. **Update to v…** installs a newer registry build. **Log in** and **Log out** are on the same page when the agent supports them.
+External agents must be installed and authenticated on your machine. **Settings → Agent CLIs** shows each agent's detected version and status (**Ready**, **Not installed**, **Update required**, **Update available**, **Login required**, **Disabled**), a copyable install command, and a docs link. Agents that are not installed are folded under **Not installed (N)**, and agents you disable are folded under **Disabled (N)**. The session's agent menu hides both; an agent already selected for that session stays listed. Built-in **Pi** is pinned at the top of the list and cannot be disabled. Every other installed agent has an **Enabled** switch in its detail dialog. See [Agent CLIs](/docs/providers-and-settings/#agent-clis). An agent below its minimum version stays usable, but some capabilities may not work until you update. **Update to v…** installs a newer registry build. **Log in** and **Log out** are on the same page when the agent supports them.
 
 ```bash
 cocurdex agent updates
@@ -58,7 +59,8 @@ To add one, open **Settings → Agent CLIs → Add from ACP Registry**, search t
 
 Registry agents are third-party code: review an agent's source and license before installing it. **Remove** uninstalls it again.
 
-- If `cursor-agent`, `devin`, or `grok` is already on your `PATH`, Cocurdex adopts it automatically the first time it starts.
+- If `cursor-agent`, `devin`, `grok`, or `agy` is already on your `PATH`, Cocurdex adopts it automatically. `agy` must be 1.5.0 or newer and start ACP with `agy acp` (Google Antigravity, `acp:antigravity-acp`).
+- If a CLI is still missing, Cocurdex refreshes the login-shell `PATH` on macOS and Linux and looks again. CLIs installed with `n`, `nvm`, `fnm`, `volta`, `mise`, `asdf`, or under `~/.local/bin` are found even when the background daemon started at login before that shell environment was ready.
 - **Use my own command** registers an agent the registry does not list (or a custom build): install it yourself, then enter its executable name or absolute path and the arguments that start ACP mode.
 - If an ACP agent process dies, the next turn respawns it and resumes the same provider session.
 
@@ -72,6 +74,7 @@ Registry agents are third-party code: review an agent's source and license befor
 | You have a Cursor subscription | `acp:cursor` |
 | You use Devin | `acp:devin` |
 | You want Grok-oriented implementation | `acp:grok-build` |
+| You use Google Antigravity | `acp:antigravity-acp` |
 | Another agent from the ACP Registry | `acp:<registry-id>` |
 | Lightweight chat-style turn without native workspace write | `pi` (Pi) |
 
@@ -133,7 +136,7 @@ When the collaboration mode is `plan`, the session uses `claude-plan` (plan only
 
 ### Other ACP Registry agents
 
-Cursor, Devin, and other registry agents have no Cocurdex-side permission-mode list. Tool approval follows the agent's own ACP permission requests, which surface as permission cards like any other agent. Many registry agents still advertise **session modes** in the composer (for example Devin's Ask / Plan / Autonomous). Those choices come from the installed agent, not from a Cocurdex table.
+Cursor, Devin, Google Antigravity, and other registry agents have no Cocurdex-side permission-mode list. Tool approval follows the agent's own ACP permission requests, which surface as permission cards like any other agent. Many registry agents still advertise **session modes** in the composer (for example Devin's Ask / Plan / Autonomous). Those choices come from the installed agent, not from a Cocurdex table.
 
 ### Built-in Pi (`pi`)
 
