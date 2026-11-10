@@ -40,9 +40,28 @@ cocurdex --help
 
 | Flag | 含义 |
 | --- | --- |
-| `--help` / `help` | 打印用法 |
+| `--help` / `-h` / `help` | 分类总览、单个命令，或完整参考；见[帮助](#帮助) |
 | `--version` / `-v` / `-V` / `version` | 打印 CLI 版本 |
 | `--json` | 支持处输出机器可读结果 |
+
+## 帮助
+
+`cocurdex --help`、`cocurdex -h`，以及不带命令的 `cocurdex help`，都会打印一份按类别排列的总览。开头是 CLI 版本，然后是这些用法：
+
+| 用法 | 含义 |
+| --- | --- |
+| `cocurdex [path]` | 在桌面应用中打开一个文件夹（如同 `code .`） |
+| `cocurdex <command> <action>` | 运行一条命令 |
+| `cocurdex <command> --help` | 显示该命令的操作和 flags |
+| `cocurdex help --all` | 显示每条命令的用法 |
+
+命令归在 **Knowledge**、**Sessions and agents**、**Setup** 和 **App and host** 下面。每个命令有一行摘要。总览里还会列出 `--json`、`-h, --help` 和 `-v, --version`。
+
+`cocurdex <command> --help` 和 `cocurdex help <command>` 打印该命令的操作和 flags，并按终端宽度换行。页首一行是 `Usage: cocurdex <command> <action> [options]`。
+
+`cocurdex help --all` 打印完整参考：按总览里的顺序，依次列出每个命令的那一页。
+
+未知的命令名会先打印 `Unknown command: <name>`，再打印这份总览。
 
 ## 打开桌面应用
 
