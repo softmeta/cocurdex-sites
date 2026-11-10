@@ -31,8 +31,9 @@ Cocurdex 内置四个 Agent，并可以添加 [ACP Registry](#acp-registry-agent
 | `acp:cursor` | Cursor | `cursor-agent acp` | 流式输出、本地写入；通过 Cursor 登录 |
 | `acp:devin` | Devin | `devin acp` | 流式输出、本地写入；通过 Devin 登录 |
 | `acp:grok-build` | Grok Build | `grok agent stdio` | 计划模式、引导、本地写入；显示套餐用量 |
+| `acp:antigravity-acp` | Google Antigravity | `agy acp` | 本地 CLI、本地写入；需要 `agy` 1.5.0 及以上 |
 
-外部 Agent 必须在你的机器上安装并完成授权。**设置 → Agent CLI** 会显示每个 Agent 探测到的版本和状态（**可用**、**未安装**、**需要升级**、**有更新**、**需要登录**）、可复制的安装命令和文档链接。未安装的 Agent 收在 **未安装（N）** 里，会话的 Agent 菜单会藏起它们。低于最低版本的 Agent 仍可使用，但在更新前部分能力可能无法工作。**更新到 v…** 安装 ACP Registry 上更新的构建。Agent 支持登录时，同一页提供**登录**和**退出登录**。
+外部 Agent 必须在你的机器上安装并完成授权。**设置 → Agent CLI** 会显示每个 Agent 探测到的版本和状态（**可用**、**未安装**、**需要升级**、**有更新**、**需要登录**、**已禁用**）、可复制的安装命令和文档链接。未安装的 Agent 收在 **未安装（N）** 里，你禁用的 Agent 收在 **已禁用（N）** 里。会话的 Agent 菜单会藏起这两类；该会话已经选中的 Agent 仍会留在菜单里。内置 **Pi** 固定在列表顶部，不能禁用。其他已安装的 Agent 在详情对话框里有一个**启用**开关。见 [Agent CLI](/zh-cn/docs/providers-and-settings/#agent-cli)。低于最低版本的 Agent 仍可使用，但在更新前部分能力可能无法工作。**更新到 v…** 安装 ACP Registry 上更新的构建。Agent 支持登录时，同一页提供**登录**和**退出登录**。
 
 ```bash
 cocurdex agent updates
@@ -58,7 +59,8 @@ Cursor、Devin 和 Grok Build 过去是内置 Agent，id 为 `cursor`、`devin`�
 
 Registry Agent 属于第三方代码：安装前请先查看它的源码和许可证。**移除**可以再次卸载。
 
-- 如果 `cursor-agent`、`devin` 或 `grok` 已在 `PATH` 上，Cocurdex 首次启动时会自动接管它们。
+- 如果 `cursor-agent`、`devin`、`grok` 或 `agy` 已在 `PATH` 上，Cocurdex 会自动接管。`agy` 需要 1.5.0 及以上，并以 `agy acp` 进入 ACP（Google Antigravity，id 为 `acp:antigravity-acp`）。
+- 如果某个 CLI 仍未找到，Cocurdex 会在 macOS 和 Linux 上刷新登录 shell 的 `PATH` 后再探测一次本地 ACP CLI。通过 `n`、`nvm`、`fnm`、`volta`、`mise`、`asdf` 安装，或放在 `~/.local/bin` 的 CLI，即使后台 daemon 在登录时先于 shell 环境启动，也能被发现。
 - **使用自己的命令**可以注册 Registry 未收录的 Agent（或自定义构建）：先自行安装，再填写可执行文件名或绝对路径，以及进入 ACP 模式所需的参数。
 - ACP Agent 进程意外退出时，下一轮会重新拉起它并恢复同一个 provider 会话。
 
@@ -72,6 +74,7 @@ Registry Agent 属于第三方代码：安装前请先查看它的源码和许�
 | 你有 Cursor 订阅 | `acp:cursor` |
 | 你在用 Devin | `acp:devin` |
 | 你想要偏 Grok 的实现 | `acp:grok-build` |
+| 你在用 Google Antigravity | `acp:antigravity-acp` |
 | ACP Registry 上的其他 Agent | `acp:<registry-id>` |
 | 不需要本地工作区写入的轻量对话轮次 | `pi`(Pi) |
 
@@ -133,7 +136,7 @@ Cocurdex 会尽可能复用你已有的 provider 配置(例如 `~/.codex` 下的
 
 ### 其他 ACP Registry Agent
 
-Cursor、Devin 及其他 Registry Agent 在 Cocurdex 侧没有独立的权限模式列表。工具审批遵循 Agent 自身的 ACP 权限请求，和其他 Agent 一样以权限卡片呈现。许多 Registry Agent 仍会在输入框里提供**会话模式**（例如 Devin 的询问 / 计划 / 自主）。这些选项来自已安装的 Agent，而不是 Cocurdex 的一张表。
+Cursor、Devin、Google Antigravity 及其他 Registry Agent 在 Cocurdex 侧没有独立的权限模式列表。工具审批遵循 Agent 自身的 ACP 权限请求，和其他 Agent 一样以权限卡片呈现。许多 Registry Agent 仍会在输入框里提供**会话模式**（例如 Devin 的询问 / 计划 / 自主）。这些选项来自已安装的 Agent，而不是 Cocurdex 的一张表。
 
 ### 内置 Pi(`pi`)
 
@@ -174,6 +177,8 @@ daemon 为每个会话挂载一个本地 MCP 工具服务。工具按组划分�
 | `script_run` | `propose` | 主会话 |
 | `settings` | `list`、`get`、`set`、`propose` | 主会话（也驱动[设置助手](/zh-cn/docs/providers-and-settings/#设置助手)） |
 | `routine` | `list`、`create`、`update`、`run`、`runs`、`delete` 和 `report` | [助理](/zh-cn/docs/assistants/#例行任务)线程。`report` 只在一次例行任务运行进行中提供。助理不能授予**完全权限**，也不能修改或运行已经是完全权限的任务 |
+| `work` | `catalog`、`start`、`list`、`send`、`stop` | 个人助理。把仓库工作交给一个工作会话。例行任务只有在**完全权限**下才能使用。见[委派工作](/zh-cn/docs/assistants/#委派工作) |
+| `applications` | `list`、`tools`、`read`、`call` | 被授予该连接的助理，以及连接允许时的工作模式 Pi 会话。`tools`、`read` 和 `call` 使用连接 id；这个会话对某个应用恰好只有一条可用连接时，也可以用 `notion`、`linear` 或 `github`。`read` 调用提供方声明为只读的工具，**只读加草稿**的例行任务用的就是它。`call` 是一般调用。见[应用](/zh-cn/docs/assistants/#应用) |
 
 脚本编排启动的子 Agent 不获得以上任何工具。能够委派工作的会话还会收到指引：同一 provider、只要结果的工作用 Agent 自带的原生子 Agent；需要其他 provider、已保存角色、独立工作树或任务依赖时，用 Cocurdex 团队或脚本编排。具体用法见[团队与编排](/zh-cn/docs/teams/)。
 
@@ -181,7 +186,7 @@ daemon 为每个会话挂载一个本地 MCP 工具服务。工具按组划分�
 
 一些运行时可以在**不重建** provider 会话的情况下切换**模型**、**思考/推理力度**、**权限**或相关轴。这能保持对话连续性和 provider 侧的缓存。如果某个 Agent 缺少某个控制项，那是有意不支持——没有「暗中重启会话」的兜底。
 
-会话空闲时，也可以在输入框里**切换 Agent**，或**分叉会话**（以及在用户消息上**从这里分叉**）。见[分叉与切换 Agent](/zh-cn/docs/desktop/#分叉与切换-agent)。**执行树**展示嵌套的运行和工具调用。
+会话空闲时，也可以在输入框里**切换 Agent**（该 Agent 菜单的每个选项在名称旁显示品牌图标，与新建会话的 Agent 菜单相同），或**分叉会话**（以及在用户消息上**从这里分叉**）。见[分叉与切换 Agent](/zh-cn/docs/desktop/#分叉与切换-agent)。**执行树**展示嵌套的运行和工具调用。
 
 **设置 → Agent CLI → 运行上限** 限制并发的委派工作；你自己发起的会话不会被排队。见 [Provider 与设置](/zh-cn/docs/providers-and-settings/#agent-cli)。
 

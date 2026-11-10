@@ -73,7 +73,7 @@ cocurdex host push off
 
 **Pair a device → Create pairing code** creates a one-time code, a QR code, and pairing links. Links are listed most reachable first: the relay while it is online, then Tailscale, then LAN.
 
-- **iOS or Android app:** choose **Pair a Computer**, then **Scan to Pair** and scan the QR code, or **Paste Pairing Link** and tap **Pair**. The app adds that computer, selects it, and opens **Approve on Computer**. That screen shows the six-digit **Safety Code** to type on the computer, and closes when the computer allows the phone. You then continue on **Assistant**. A paired phone learns every address the computer reports and switches to the one that answers.
+- **iOS or Android app:** choose **Pair a Computer**, then **Scan to Pair** and scan the QR code, or **Paste Pairing Link** and tap **Pair**. The app adds that computer, selects it, and opens **Approve on Computer**. That screen shows the six-digit **Safety Code** to type on the computer. When the computer allows the phone and the connection is live, the status reads **Paired** and the screen closes. You then continue on **Assistant**. A paired phone learns every address the computer reports and switches to the one that answers.
 - **Browser on another device:** open the pairing link, or paste it on the **Pair** screen. A browser on another device connects only through a [relay](#relay), so turn one on first.
 
 If no address of the computer answers — a different Wi-Fi network, or access-point isolation — **Pair** and the scan screen show **Can't reach the computer. Check that it is online and reachable on your network or through its relay.**
@@ -88,7 +88,7 @@ Turn remote access on first if you want a link the other device can open. Codes 
 
 Redeeming a code does not connect the device yet. It stays pending until this computer approves it. The new device shows a six-digit **safety code**. On the computer, **Allow &#123;name&#125; to use this computer?** asks you to type that code. **Allow** connects it. **Deny** revokes it. Closing the dialog leaves the request pending; **Paired devices** lists it as waiting, without the code, so the code has to be read off the device. Five wrong codes revoke the device. The request expires after 10 minutes.
 
-A browser that is waiting shows **Waiting for approval** and the same code, and opens the workspace once the computer allows it. On the phone, **Approve on Computer** shows the code as soon as you scan or paste a pairing link. Until the computer allows it, that computer reads **Waiting for approval on the computer**, and the phone keeps checking, so **Sessions** fills in shortly after **Allow**. A revoked phone reads **Access revoked**. Approve from the dialog, from **Paired devices**, or with `cocurdex host approve` (below).
+A browser that is waiting shows **Waiting for approval** and the same code, and opens the workspace once the computer allows it. On the phone, **Approve on Computer** shows the **Safety Code** as soon as you scan or paste a pairing link. The computer list shows **Waiting for approval on the computer** for that computer until then, and the phone keeps checking, so **Sessions** fills in shortly after **Allow**. Under the **Safety Code**, the phone shows a live status. While it waits, a spinner appears next to **Waiting for approval on the computer**. If the phone has no network connection, the status reads **Unreachable**. After the computer allows the device and the connection is live, it reads **Paired**. The screen then closes and the phone connects. If the request expired or was revoked, it reads **Pairing expired or was revoked. Pair again from your computer.** A revoked phone's computer row reads **Access revoked**. Approve from the dialog, from **Paired devices**, or with `cocurdex host approve` (below).
 
 A paired device with **Manage devices** can approve or revoke other devices. **Host administration** (change app settings) stays on this computer and cannot be granted.
 
@@ -157,7 +157,7 @@ Each assistant row shows the latest reply, or **Working** while its home thread 
 
 Long-press a row, with **Interact**, for **Edit**, **Pin** / **Unpin** (not on the default), **Mute** / **Unmute**, **Duplicate**, and **Delete**. **Edit** opens **Edit assistant** with the same fields, and **Save** returns to the list. **Duplicate** adds **copy** to the name and opens the copy's thread. **Delete** asks **Delete "&#123;name&#125;"?** and says **This deletes the assistant and its conversation. Its memories stay in the memory store.** A failed action says **Something went wrong. Try again.**
 
-Tap an assistant to open its home thread. **Overview** in the header opens a page for that assistant:
+Tap an assistant to open its home thread. If that thread is still empty and the phone has **Interact**, the assistant writes its greeting then. **Overview** in the header opens a page for that assistant:
 
 | Section | Shows |
 | --- | --- |
@@ -212,9 +212,9 @@ On **Notes**, the line under a title is a plain-text excerpt of the body. On **I
 
 Open a work session and the tab bar hides. The back button reads **Sessions**. The header is the session title, with the workspace and model under it. The transcript updates as the agent runs: your messages, the assistant's messages, and tool calls.
 
-An assistant home thread and a chat thread are a conversation. The assistant header is only the name, with **Overview** beside it. Your messages are bubbles; in an assistant thread they take the avatar color, and replies stay neutral. Tool calls stay out of that transcript, and **Prompts** is not shown. While a reply has not started, one **Working…** line shows, then leaves once the reply streams. The composer is a single line, without the model and mode controls. An empty assistant thread shows **Suggestions**: **What needs my attention today?**, **Send me a brief every morning at 8**, and **What do you remember about me?** Choosing one sends it. The placeholder is **Message** followed by the assistant's name.
+An assistant home thread and a chat thread are a conversation. The assistant header is only the name, with **Overview** beside it. Your messages are bubbles; in an assistant thread they take the avatar color, and replies stay neutral. Tool calls stay out of that transcript, and **Prompts** is not shown. While a reply has not started, one **Working…** line shows, then leaves once the reply streams. The composer is a single line, without the model and mode controls. While an assistant thread is still empty and not running, it shows **Suggestions**: **What needs my attention today?**, **Send me a brief every morning at 8**, and **What do you remember about me?** Choosing one sends it. The placeholder is **Message** followed by the assistant's name.
 
-Assistant messages are Markdown. Tables render. A fenced code block shows the language, a copy button, and syntax highlighting. A fenced `mermaid` block renders as a diagram, in the same theme family as the desktop app. If rendering fails, or the phone is offline and the diagram cannot be drawn, the source is shown as a normal code block. Math is disabled.
+Assistant messages are Markdown. Tables render. A fenced code block shows the language, a copy button, and syntax highlighting. A fenced `mermaid` block renders as a diagram, in the same theme family as the desktop app. If rendering fails, or the phone is offline and the diagram cannot be drawn, the source is shown as a normal code block. Math renders, including inline, display, and table formulas.
 
 Tap an image in the transcript to open a full-screen viewer. Pinch-zoom works on iOS. On Android the viewer is full screen, and pinch-zoom is not available yet. **Close** leaves the viewer.
 
