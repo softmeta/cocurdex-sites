@@ -1,6 +1,6 @@
 ---
 title: Assistants
-description: The Assistants form — personal assistants, overview, delegated work, applications, home threads, routines, the inbox, and today's brief.
+description: The Assistants form — personal assistants, overview, delegated work, applications, home threads, routines, and today's brief.
 ---
 
 **Assistants** is a form in the desktop sidebar, next to **Work** and **Chat**. Each assistant is a saved role (name, model, instructions, avatar) on the built-in **Pi** agent, with one long-lived home thread. The list can be empty. Nothing is created on its own, and deleting the last assistant leaves it empty. The first assistant you create becomes the default.
@@ -17,7 +17,7 @@ Right-click a row:
 | --- | --- |
 | **Edit** | Opens **Edit assistant** for the name, **Model**, **Instructions**, **Persona**, description, and avatar. There is no engine picker |
 | **Pin** / **Unpin** | Keeps the assistant above the unpinned ones. Not offered on the default |
-| **Mute** / **Unmute** | Hides the unread mark on that row. A muted row shows **Muted**. A muted assistant never alerts the desktop or the phone; its threads still reach the inbox |
+| **Mute** / **Unmute** | Hides the unread mark on that row. A muted row shows **Muted**. A muted assistant never notifies the desktop or the phone; what needs you from its threads still shows in the assistant overview and via `cocurdex inbox` |
 | **Mark as unread** | Marks the home thread's latest result unread. Offered when this assistant is not the one open, and that result has already been read |
 | **Duplicate** | Copies the assistant, adds **copy** to the name, and opens the copy |
 | **Delete** | Deletes the assistant, its home thread, and its routines (including every routine run thread). Memories stay. Offered on every assistant, including the default. The confirmation says **This deletes the assistant and its conversation. Memories stay in the memory store.** |
@@ -60,12 +60,14 @@ You can also open this panel from the avatar and name floating over the thread.
 
 | Section | Shows |
 | --- | --- |
-| **Needs you** | Inbox items that need you or have failed, for this assistant, its delegated work, or its routines. Shown only when there is something. A row opens that session, or selects the routine |
+| **Needs you** | What is waiting or has failed for this assistant, its delegated work, or its routines: approvals, questions, and plans, failed sessions, and routine runs that need you, failed, or paused. Shown only when there is something. The line under a row names the kind, such as **Needs approval**, **Has a question**, **Plan ready**, **Failed**, **Needs you**, **Routine failed**, or **Paused after failures**. A row opens that session, or selects the routine |
 | **Delegated work** | Sessions this assistant handed off that are still **Running** or **Idle**. A row shows the workspace and that state. Choose it to open the original work session. With nothing yet, **Work delegated by this assistant will appear here.** A session that is gone says **This work session is no longer available.** |
 | **Recent results** | Those same sessions once they are no longer running or idle: **Turn completed**, **Failed**, **Cancelled**, **Interrupted**, or **Archived**. Shown only when there is something |
 | **Routines** | This assistant's own routines. A row shows the next run time and time zone, or **Paused**, **Paused after failures**, or **No next run scheduled**. Choosing one selects it and opens **Routines**. **Manage this assistant’s routines** opens the list with none selected. The section says **Runs on the connected host while its background service is online.** |
 | **Context and resources** | **Memory**, **Notes**, **Issues**, and **Conversation files** |
 | **Applications** | **Connect applications**. The line under it is **Connect accounts, choose assistant access, and inspect available tools.** |
+
+A status dot on the assistant's roster row, and on session rows, marks the same waiting state. Notifications do too. A routine that needs you or is blocked is labeled **Needs you**, including when the routine is silent. On the phone, **Overview** on the assistant thread opens this **Needs you** list.
 
 A list that fails to load offers **Work could not load. Retry**, **Routines could not load. Retry**, or **Assistant could not load. Retry**.
 
@@ -77,7 +79,7 @@ The assistant's view switcher is **Assistant overview**, **Memory**, **Notes**, 
 
 A personal assistant does not change the repository itself. It hands that work to an ordinary work session in one of your workspaces. The session uses that workspace's most recent agent and model, a saved [agent role](/docs/agents/#agent-roles), or a saved [team template](/docs/teams/#team-templates) that it leads. It can also run in a new [worktree](/docs/desktop/#worktrees). The session shows up under **Work**, where you can follow it or take it over.
 
-The task arrives marked as coming from this assistant. Each time the session finishes a turn, or that turn fails, is cancelled, or is interrupted, the result is posted into the home thread and the assistant tells you what happened. Open the original session from the overview or from that message. Approvals and questions go to the [inbox](#inbox-and-the-daily-brief), not through the assistant. The assistant can list, message, and stop only the sessions it delegated.
+The task arrives marked as coming from this assistant. Each time the session finishes a turn, or that turn fails, is cancelled, or is interrupted, the result is posted into the home thread and the assistant tells you what happened. Open the original session from the overview or from that message. Approvals and questions show under **Needs you** in the [overview](#overview), not through the assistant. The assistant can list, message, and stop only the sessions it delegated.
 
 Ask the assistant to do this. The tools are `work_catalog`, `work_start`, `work_list`, `work_send`, and `work_stop`. `work_catalog` lists workspaces (not chat, and not the assistant's own workspace), saved agent roles, and team templates. Pass a role or a team template, not both. With neither, the session uses the workspace's most recent agent and model. A team template makes the session lead that template, with the template's first member as its own role. A later message enters the current turn when that agent supports it, and otherwise waits until the turn ends. A routine can delegate only with **Full access**. The same actions are `cocurdex persona work`. See [CLI](#cli).
 
@@ -152,11 +154,11 @@ A Notion, Linear, or GitHub connection on the **MCP** tab says **This connection
 | **Read and draft** | Reads and drafts only; nothing is sent or changed. The run may use `read`, `grep`, `find`, `ls`, memory and history, the routine tools, and read-only tools from an allowed application (`applications_list`, `applications_tools`, `applications_read`). Other tools are blocked, including a write nested inside another tool, an application tool that changes data, and delegated work |
 | **Full access** | Runs unattended with every permission |
 
-**Notify** defaults to **Inbox**.
+**Notify** defaults to **On failure**.
 
 | Notify | Meaning |
 | --- | --- |
-| **Inbox** | Results land in the inbox; failures notify you |
+| **On failure** | Results go to the assistant's thread; only failures notify you |
 | **Push** | Also notifies your phone on every result |
 | **Silent** | Only records the run |
 
@@ -165,10 +167,10 @@ Each run finishes by calling `routine_report` once, with a status of `ready`, `d
 | Report | In **Recent runs** | What you see |
 | --- | --- | --- |
 | `ready` | **Succeeded** | Posted to the home thread unless **Notify** is **Silent**. Alerts only when **Notify** is **Push** |
-| `dropped` | **Nothing to report** | Recorded only. Not posted to the home thread or the inbox, and it never alerts |
-| `needs_you` | **Needs you** | Posted to the home thread and listed in the inbox as **Needs you**, even when **Notify** is **Silent**. Alerts once, as a question |
+| `dropped` | **Nothing to report** | Recorded only. Not posted to the home thread, and it never alerts |
+| `needs_you` | **Needs you** | Posted to the home thread and shown under **Needs you** in the assistant overview, even when **Notify** is **Silent**. Alerts once, as a question |
 | `blocked` | **Blocked** | Same as **Needs you** |
-| `failed` | **Failed** | Counts toward the three-failure pause. Alerts when **Notify** is **Inbox** or **Push** |
+| `failed` | **Failed** | Counts toward the three-failure pause. Alerts when **Notify** is **On failure** or **Push** |
 
 A posted result is marked **From routine** plus the routine's name. Choose that line to open the run's thread. A muted assistant never alerts.
 
@@ -178,23 +180,11 @@ A posted result is marked **From routine** plus the routine's name. Choose that 
 
 You can ask the assistant to manage its own routines. It cannot grant **Full access**, and it cannot change or run a routine that already has it. The same actions are the `routine_list`, `routine_create`, `routine_update`, `routine_run`, `routine_runs`, and `routine_delete` tools. `routine_report` is only available during a run. Delegated work and applications are separate tool groups. See [Delegated work](#delegated-work) and [Applications](#applications). The [CLI](#cli) does the same.
 
-## Inbox and the daily brief
+## The daily brief
 
-**Inbox** sits under the roster. It lists assistant threads and work an assistant delegated: approvals, questions, and plans that need you, and failed or unread finished sessions. It also lists routine results, runs that need you, failures, and pauses. Work and chat sessions you started yourself stay in **Work** and **Chat**.
+Finished sessions and routine results that do not need you stay out of **Needs you**. They go to the home thread and the daily brief.
 
-| Kind | Label |
-| --- | --- |
-| Approval | **Needs approval** |
-| Question | **Has a question** |
-| Plan | **Plan ready** |
-| Finished session | **Done** |
-| Failed session | **Failed** |
-| Routine result | **New result** |
-| Routine needs you | **Needs you** |
-| Routine failure | **Routine failed** |
-| Routine paused | **Paused after failures** |
-
-The heading shows the count, as in **Inbox · 3**. Opening an item leaves the sidebar on **Assistants** and opens that session. On the phone, a routine that needs you or is blocked uses the same **Needs you** label.
+`cocurdex inbox` lists what needs you from the CLI, and also finished sessions and routine results. See [CLI](#cli).
 
 The daily brief is no longer a dialog. The app writes it in your locale. **Today's brief** on the switcher's row posts the latest brief into the default assistant's home thread when you are back, and opens that thread. The message is an ordinary reply marked **Today's brief**, with **Needs you**, **Routine results**, and **Failures**. Posting again skips a brief that has not changed. The button is hidden when there is nothing to report, and when there is no assistant. Silent routine results are left out of **Routine results**. A run that needs you still appears under **Needs you**.
 
@@ -218,7 +208,7 @@ cocurdex persona work send <persona> <session-id> <message> [--json]
 cocurdex persona work stop <persona> <session-id> [--json]
 ```
 
-`--provider` and `--model` are passed together. There is no `--agent` flag. `persona send` posts to the home thread. `--wait` prints the reply when the turn settles (the default wait is 600 seconds). `persona thread` prints the latest messages (default 20). `--mute` stops desktop and phone alerts for that assistant. `persona delete` deletes that assistant, including the default: the next one becomes the default, and an empty list stays empty.
+`--provider` and `--model` are passed together. There is no `--agent` flag. `persona send` posts to the home thread. `--wait` prints the reply when the turn settles (the default wait is 600 seconds). `persona thread` prints the latest messages (default 20). `--mute` stops desktop and phone notifications for that assistant. What needs you from its threads still shows in the assistant overview and via `cocurdex inbox`. `persona delete` deletes that assistant, including the default: the next one becomes the default, and an empty list stays empty.
 
 `persona work catalog` lists workspaces, saved agent roles, and team templates. `list` prints `sessionId`, `title`, `workspaceName`, `agentType`, and `state`. `--workspace` is an id or a name. More than one workspace with that name fails with `Several workspaces are named "<name>"; pass its id.` No match fails with `No workspace matches "<name>". List the workspaces first.` `--role` and `--team` are alternatives; both fail with `Pass either an agent role or a team template, not both.` An empty task fails with `Describe the task to delegate.` `send` and `stop` accept only a session this assistant delegated. Anything else fails with `No work session you delegated has this id.`
 
@@ -233,7 +223,7 @@ cocurdex routine runs [<routine>] [--limit <n>]
 cocurdex routine delete <routine>
 ```
 
-`--every` and `--at` are alternatives. `--days` needs `--at`. `--access` is `read-and-draft` (default) or `full`. `--deliver` is `inbox` (default), `push`, or `silent`. `routine runs` lists each run's status, start time, and summary. `--json` also includes `outcome` and `question`.
+`--every` and `--at` are alternatives. `--days` needs `--at`. `--access` is `read-and-draft` (default) or `full`. `--deliver` is `inbox` (default; **On failure** in the app), `push`, or `silent`. `routine runs` lists each run's status, start time, and summary. `--json` also includes `outcome` and `question`.
 
 ```bash
 cocurdex inbox
@@ -242,7 +232,7 @@ cocurdex inbox brief [--tz <zone>]
 cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN]
 ```
 
-`inbox` lists the same items as the sidebar inbox: assistant threads, work an assistant delegated, and routines. `inbox read` marks that item's thread visited, which clears it. `inbox brief` prints today's brief, or `Nothing to brief today.` `inbox brief post` posts that brief into the default assistant's home thread, in the locale you pass. `--locale` is `en-US` or `zh-CN`; omit it to reuse the last locale used for a post. Nothing new to post prints `Nothing new to post.`
+`inbox` lists what needs you, and also finished sessions and routine results: assistant threads, work an assistant delegated, and routines. Work and chat sessions you started yourself are left out. `inbox read` marks that item's thread visited, which clears it. `inbox brief` prints today's brief, or `Nothing to brief today.` `inbox brief post` posts that brief into the default assistant's home thread, in the locale you pass. `--locale` is `en-US` or `zh-CN`; omit it to reuse the last locale used for a post. Nothing new to post prints `Nothing new to post.`
 
 ```bash
 cocurdex apps catalog|list [--json]

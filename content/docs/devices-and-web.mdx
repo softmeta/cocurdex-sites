@@ -144,14 +144,14 @@ Each computer row shows **Connected** with the round-trip in milliseconds, **Che
 
 ### Assistant
 
-**Assistant** lists the assistants for the computer in the toolbar first, with no section heading of their own. **Today** and **Inbox** follow when they have anything to show.
+**Assistant** lists two sections for the computer in the toolbar, when they have anything to show:
 
 | Section | Shows |
 | --- | --- |
 | **Today** | Today's successful routine results that were not silent |
-| **Inbox** | Approvals, questions, and plans from assistant threads and from work an assistant delegated, plus failed or unread finished sessions from those threads, and routine results, failures, and pauses. A routine that needs you or is blocked is labeled **Needs you**, including when the routine is silent. Work and chat sessions you started yourself stay off this list |
+| **Assistants** | The assistants on that computer |
 
-Each assistant row shows the latest reply, or **Working** while its home thread is running. With no reply yet, the line is the description. The row also shows the time of the latest message, a status mark, and a muted bell labeled **Muted** when the assistant is muted. A muted row hides the unread mark.
+Each assistant row shows the latest reply, or **Working** while its home thread is running. With no reply yet, the line is the description. The row also shows the time of the latest message, a status dot, and a muted bell labeled **Muted** when the assistant is muted. A muted row hides the unread mark. A muted assistant does not notify the phone; what needs you still shows under **Needs you** in **Overview**.
 
 **New assistant** in the header opens **New assistant**. It needs **Interact**. The form has **Name**, **Description**, **Model** (**Default** until you pick one), **Instructions**, and **Persona** (up to 20,000 characters). **Create** opens the new home thread. **Couldn't save. Try again.** appears when the save fails.
 
@@ -161,7 +161,7 @@ Tap an assistant to open its home thread. If that thread is still empty and the 
 
 | Section | Shows |
 | --- | --- |
-| **Needs you** | Inbox items for this assistant that are waiting or failed. Hidden when there are none |
+| **Needs you** | What is waiting or has failed for this assistant. Hidden when there are none. A routine that needs you or is blocked is labeled **Needs you**, including when the routine is silent |
 | **Delegated work** | Work this assistant handed to a workspace that is still **Running** or **Idle**. The line under a title is the workspace and that status. With none yet, the footer is **Work delegated by this assistant will appear here.** If the list cannot be loaded, the footer is **Work couldn't load.** |
 | **Recent results** | Delegated work that has finished. The line under a title is the workspace and **Turn completed**, **Failed**, **Cancelled**, **Interrupted**, or **Archived**. Hidden when there is none |
 | **Routines** | A read-only list. The line under a name is **Next run:** and the time, **Paused**, **Paused after failures**, or **No next run scheduled**. Tap a row to open its latest run when it has one. The footer is **Routines run on the connected computer while its background service is online.** If the list cannot be loaded, the footer is **Routines couldn't load.** |
@@ -169,7 +169,7 @@ Tap an assistant to open its home thread. If that thread is still empty and the 
 
 The overview header shows the avatar, the name, and the description. With no description it says **Coordinate work, keep context, and follow through.**
 
-Tap an inbox row or a result to open that session. With no assistants yet, the screen says **No assistants yet** and **Create an assistant on** that computer **to see it here.** If the phone cannot reach the computer, it says **Can't reach** that computer, with **Try Again**.
+Tap a **Needs you** row or a result to open that session. With no assistants yet, the screen says **No assistants yet** and **Create an assistant on** that computer **to see it here.** If the phone cannot reach the computer, it says **Can't reach** that computer, with **Try Again**.
 
 Assistant threads stay out of **Sessions**. In a thread, a posted brief is marked **Today's brief**, and a posted routine result is marked **From routine** plus the routine's name. Each of those is its own turn.
 
