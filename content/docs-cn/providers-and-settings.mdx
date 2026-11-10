@@ -7,13 +7,17 @@ Cocurdex 的大部分配置位于桌面应用的**设置**中。本页覆盖会�
 
 ## Agent CLI
 
-**设置 → Agent CLI** 列出新建会话时可以选用的所有 Agent。每一项会显示探测到的版本和状态（**内置**、**可用**、**未安装**、**需要升级**、**有更新**、**需要登录**）、可复制的安装命令、文档链接，以及——对能上报的 Agent——你的套餐用量。未安装的 Agent 收在 **未安装（N）** 里，展开才看得到。新建会话的 Agent 菜单会藏起这些未安装的 Agent；你已经选中的 Agent 即使后来被卸掉，仍会留在菜单里。**更新到 v…** 安装 ACP Registry 上更新的构建。支持登录的 Registry Agent 提供**登录**和**退出登录**。**从 ACP Registry 添加**可以安装更多 Agent,或用你自己的命令注册一个。见 [Agent](/zh-cn/docs/agents/#acp-registry-agent)。
+**设置 → Agent CLI** 列出新建会话时可以选用的所有 Agent。内置 **Pi** 固定在列表顶部，不能禁用。每一项会显示探测到的版本和状态（**内置**、**可用**、**未安装**、**需要升级**、**有更新**、**需要登录**、**已禁用**）、可复制的安装命令、文档链接，以及——对能上报的 Agent——你的套餐用量。未安装的 Agent 收在 **未安装（N）** 里，展开才看得到。禁用的 Agent 收在 **已禁用（N）** 里，状态为**已禁用**。新建会话的 Agent 菜单会藏起未安装和已禁用的 Agent；你已经选中的 Agent 即使后来被卸掉或禁用，仍会留在菜单里。**更新到 v…** 安装 ACP Registry 上更新的构建。支持登录的 Registry Agent 提供**登录**和**退出登录**。**从 ACP Registry 添加**可以安装更多 Agent,或用你自己的命令注册一个。见 [Agent](/zh-cn/docs/agents/#acp-registry-agent)。
 
 ```bash
 cocurdex agent updates
 cocurdex agent update <agent>
 cocurdex agent login <agent>
 ```
+
+打开已安装 Agent 的详情，用**启用**开关暂时禁用它。Pi 和 **未安装** 分组里的 Agent 没有这个开关。关闭开关时会要求确认，例如**禁用 Codex？**。正文说明：禁用它会停止正在运行的会话，并暂停新建会话、模型探测与用量探测。已有会话记录会保留，之后可随时重新启用。禁用期间，该 Agent 的能力探测、登录，以及为它注入的 MCP 服务器也会暂停。详情行会写**已临时禁用，新建会话、模型探测与用量探测等已暂停。** 重新打开**启用**即可恢复，这一步不再确认。
+
+在 macOS 和 Linux 上，如果某个 CLI 没有被找到，Cocurdex 会刷新登录 shell 的 `PATH`，并重新发现 `cursor-agent`、`devin`、`grok`、`agy` 这类本地 ACP CLI。通过 `n`、`nvm`、`fnm`、`volta`、`mise`、`asdf` 安装，或放在 `~/.local/bin` 下的 CLI，即使后台 daemon 在登录时先于 shell 环境就绪就已启动，也能被检测到。
 
 同一页的**运行上限**限制同时执行的 agent 运行数量。超出上限的委派运行（队友和脚本编排的子 Agent）会排队等待；你自己发起的运行不受限制。
 
@@ -165,7 +169,7 @@ cocurdex mcp import --from codex
 | **编辑器** | 代码 MiniMap |
 | **快捷键** | 可重新绑定的键盘快捷键；`null` 覆盖表示解绑 |
 | **服务商** | Provider 配置与模型目录（见上文） |
-| **Agent CLI** | 已安装的 Agent、版本、安装提示、ACP Registry 与[运行上限](#agent-cli)（见上文） |
+| **Agent CLI** | 已安装的 Agent、版本、安装提示、ACP Registry、**启用**开关与[运行上限](#agent-cli)（见上文） |
 | **角色** | 编辑或删除保存的 Agent 预设及其头像和描述；见 [Agent](/zh-cn/docs/agents/#agent-角色) |
 | **团队** | 可复用的[团队模板](/zh-cn/docs/teams/#团队模板) |
 | **连接** | **应用**、**MCP** 和 **Skills**。**应用**给助理连接 Notion、Linear 和 GitHub（见[应用](/zh-cn/docs/assistants/#应用)）。**MCP** 是上面的工具服务器。**Skills** 是技能管理（见 [Skills](/zh-cn/docs/skills/)） |
