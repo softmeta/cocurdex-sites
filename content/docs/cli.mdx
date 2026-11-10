@@ -40,9 +40,28 @@ Platform notes:
 
 | Flag | Meaning |
 | --- | --- |
-| `--help` / `help` | Print usage |
+| `--help` / `-h` / `help` | Categorized overview, one command, or the full reference; see [Help](#help) |
 | `--version` / `-v` / `-V` / `version` | Print CLI version |
 | `--json` | Machine-readable output where supported |
+
+## Help
+
+`cocurdex --help`, `cocurdex -h`, and `cocurdex help` with no command print a categorized overview. It starts with the CLI version, then these usage lines:
+
+| Usage | Meaning |
+| --- | --- |
+| `cocurdex [path]` | Open a folder in the desktop app (like `code .`) |
+| `cocurdex <command> <action>` | Run a command |
+| `cocurdex <command> --help` | Show a command's actions and flags |
+| `cocurdex help --all` | Show every command's usage |
+
+Commands are grouped under **Knowledge**, **Sessions and agents**, **Setup**, and **App and host**. Each command has a one-line summary. The overview also lists `--json`, `-h, --help`, and `-v, --version`.
+
+`cocurdex <command> --help` and `cocurdex help <command>` print that command's actions and flags, wrapped to the terminal width. The page opens with `Usage: cocurdex <command> <action> [options]`.
+
+`cocurdex help --all` prints the full reference: each command's page, in the same order as the overview.
+
+An unknown command name prints `Unknown command: <name>` and then the overview.
 
 ## Open the desktop app
 
