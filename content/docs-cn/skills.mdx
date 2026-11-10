@@ -5,9 +5,9 @@ description: 安装并使用 Cocurdex 产品 Skills(cocurdex-*)，处理笔记�
 
 **产品 Skills** 教会 Agent 如何使用 Cocurdex 的笔记、Issue、演示文稿和产品知识流。Skill 名称以 `cocurdex-` 前缀做**命名空间隔离**，避免与其他全局 skills 冲突。
 
-Skills **不会自动安装**。从桌面应用的 **设置 → Skills** 安装，或使用 CLI。
+Skills **不会自动安装**。从**设置 → 连接**里的 **Skills** 页安装，或使用 CLI。
 
-**设置 → Skills** 也管理产品包以外的 skill。**发现**会搜索 skills.sh。也可以读取一个 GitHub 仓库（`owner/repo` 或 URL）或这台电脑上的文件夹，再选择要安装的 skill。已安装的 skill 可以打开为**预览**或**源码**；预览被截短时，页面会提示打开文件查看其余内容。**检查更新**和**查看更新**会先列出变更的文件，再由你决定是否应用。**移除**会从每个能看见它的 Agent 上删除这个 skill，并在 `skill-backups` 下保留 14 天的备份。**恢复**把你本地改过的 Cocurdex skill 还原成内置副本。
+**设置 → 连接**里的 **Skills** 页也管理产品包以外的 skill。**发现**会搜索 skills.sh。也可以读取一个 GitHub 仓库（`owner/repo` 或 URL）或这台电脑上的文件夹，再选择要安装的 skill。已安装的 skill 可以打开为**预览**或**源码**；预览被截短时，页面会提示打开文件查看其余内容。**检查更新**和**查看更新**会先列出变更的文件，再由你决定是否应用。**移除**会从每个能看见它的 Agent 上删除这个 skill，并在 `skill-backups` 下保留 14 天的备份。**恢复**把你本地改过的 Cocurdex skill 还原成内置副本。
 
 ## 安装
 
@@ -40,7 +40,7 @@ cocurdex skills remove --scope project
 | `cocurdex-ship` | 实现一个 Issue 或 spec 笔记，运行项目检查，并推进 Issue 的状态列。需要你显式调用，Agent 不会自行启动 |
 | `cocurdex-team` | 领导 [Agent 团队](/zh-cn/docs/teams/)：判断何时需要团队、给队友下达简报、合并报告 |
 | `cocurdex-settings` | 通过 `settings_*` Agent 工具查看与修改应用和项目设置 |
-| `cocurdex-persona` | 通过 CLI 创建并与[助理](/zh-cn/docs/assistants/)对话，并管理它们的例行任务。以 `/cocurdex-persona` 调用 |
+| `cocurdex-persona` | 通过 CLI 创建并与[助理](/zh-cn/docs/assistants/)对话，管理它们的例行任务，并把仓库工作交给一个工作会话。以 `/cocurdex-persona` 调用 |
 
 todo、ticket、backlog item 都指 **Issue**——同一个池子，不是独立的追踪器。
 

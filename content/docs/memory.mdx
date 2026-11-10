@@ -43,11 +43,25 @@ Off by default. **Multi-device sync** opens **Connect cloud memory**, where you 
 
 The page links to the Respire site and source for what rsrs is.
 
+## Status
+
+**Settings → Memory → Status** shows the installed rsrs version, or **rsrs is not installed**. An error under that line says why memory cannot be used as usual:
+
+| You see | Meaning |
+| --- | --- |
+| `Memory is paused in rsrs. Restore it in rsrs before using memory in Cocurdex.` | Memory is paused. Restore it in rsrs before using it here |
+| `Memory is read-only in rsrs. Recall is available, but new memories cannot be saved.` | Recall still works. New memories cannot be saved |
+| `Local memory has not been initialized. For local-only memory, initialize rsrs with rsrs keygen. For multi-device sync, register or sign in from Settings > Memory > Multi-device sync, or run: cocurdex memory cloud register --user <name> (use cloud signin for an existing account).` | This computer has no memory identity yet |
+
+A recall that reports no session, or that you are not signed in, adds the same identity note.
+
+**Run doctor** checks this install. A pass says `rsrs doctor: <status>`. A failure says `rsrs doctor reported a problem`. The status line `doctor: <status> · <pass> pass · <warn> warn · <fail> fail` is shown only for the rsrs version that was checked. After that version changes, the line stays hidden until you choose **Run doctor** again.
+
 ## In the Assistants form
 
 The Assistants sidebar offers **Let your assistants remember**, with **Turn on memory** and **Skip**. Turning it on installs rsrs when it is missing. After you leave that card, the same control is **Long-term memory** in the sidebar footer. See [Assistants](/docs/assistants/).
 
-Which memories an assistant sees still follows **Recall for agent sessions**. When that is on, the thread recalls that assistant's own memories and **About me**, not another assistant's. **Instructions** and **Persona** on the assistant are separate from this library, and both are included on every turn. See [Assistants](/docs/assistants/#home-thread).
+Which memories an assistant sees still follows **Recall for agent sessions**. When that is on, the thread recalls that assistant's own partition and **About me**, not another assistant's. `memory_remember` writes into that assistant's own partition. A fact about you that every assistant should share uses `about` set to `user`, which is **About me**. **Instructions** and **Persona** on the assistant are separate from this library, and both are included on every turn. See [Assistants](/docs/assistants/#home-thread).
 
 ## Browse and edit
 
@@ -59,7 +73,7 @@ Which memories an assistant sees still follows **Recall for agent sessions**. Wh
 | **Tree** | The same entries as a tree |
 | **History** | Edits, deletions, and restores |
 
-**Partition** filters to **All memories**, **About me**, or one assistant. If the installed rsrs cannot split memory this way, the partition menu stays hidden and every assistant uses the one library.
+**Partition** filters to **All memories**, **About me**, or one assistant. The menu is shown only when the installed rsrs can split memory this way. When it cannot, the menu stays hidden, and an assistant's recall or a write that needs a partition fails with `Memory partition support is unavailable; unscoped access was refused.` The assistant does not fall back to searching the whole library. Reading an entry outside the allowed partitions fails with `Memory is outside the permitted partition.` A relation that points outside the partition fails with `Memory relation target was not found in the permitted partition.` A conflict that exists only outside the partition is left alone: `Nothing was saved. The memory provider reported a conflict outside this partition; automatic merging was refused.`
 
 **Filter memories** narrows the list. Select an entry to edit its **Title**, **Content**, or **Tags**. **Delete** asks you to confirm; **Undo** on the **Memory deleted** toast restores it when the installed rsrs can. **History** on an entry lists what changed.
 

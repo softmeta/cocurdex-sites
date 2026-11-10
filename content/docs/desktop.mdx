@@ -13,19 +13,19 @@ Typical peers in the shell:
 | --- | --- |
 | **Sessions** | Track parallel agent runs and which one needs attention |
 | **Chat** | Steer the active agent; one pane among several |
-| **Assistants** | Personal assistants, their home threads, the inbox, and today's brief (see [Assistants](/docs/assistants/)) |
+| **Assistants** | Personal assistants, their home threads, overview, connected applications, the inbox, and today's brief (see [Assistants](/docs/assistants/)). The list can be empty |
 | **Terminal** | Integrated PTY for commands and agent-driven shell work |
 | **Editor** | Inspect and edit project files without leaving the app |
 | **Git** | Diff, stage, and commit workspace changes; review what each agent turn changed |
 | **Browser preview** | Tabbed preview of your dev server; Design Mode annotations go straight to chat |
-| **PDF reader** | Read PDFs from the file tree with outline, thumbnails, search, bookmarks, and highlights |
+| **PDF reader** | Read PDFs from the file tree or a conversation, with outline, thumbnails, search, bookmarks, and highlights |
 | **Worktrees** | Managed git worktrees for isolated session work (**Worktree** checkbox on new sessions; inventory under **Settings → Worktrees**) |
 | **Notes / issues** | App-owned product data (see [Notes and issues](/docs/notes-and-issues/)) |
 | **Decks** | App-owned slide decks: edit, present, and export (see [Slide decks](/docs/decks/)) |
 | **Team panel** | Teammates of the current lead session, their status, and replies (see [Teams](/docs/teams/)) |
 | **Script runs** | Proposed scripts awaiting approval and running subagents (see [Script runs](/docs/teams/#script-runs)) |
 
-The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. Its view switcher includes **Memory** and **Routines** as well as Git, the editor, and the other panes above. Hover an icon-only button to see its action name. On Windows and Linux the window uses themed native window controls in the title bar.
+The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. On **Work** and **Chat**, the switcher includes **Files**, **Git**, **Notes**, **Decks**, **Issues**, **Memory**, **Routines**, **Browser**, **PDF** when a PDF is open, and **Terminal**. Opening an assistant switches this to **Assistant overview**, kept separate from the work view you had open. The assistant's switcher is **Assistant overview**, **Memory**, **Notes**, **Issues**, **Routines**, and **PDF** when a PDF is open. **More views** holds **Conversation files**, **Browser**, and **Decks**. **Git** and **Terminal** stay on the work form. Hover an icon-only button to see its action name. On an assistant thread the name and avatar float over the conversation, and the title bar keeps the panel toggles. On Windows and Linux the window uses themed native window controls in the title bar. See [Assistants](/docs/assistants/#overview).
 
 Chat layout is chosen in **Settings → General → Chat layout** and restored on next launch:
 
@@ -43,9 +43,9 @@ You can also [open the same host in a browser](/docs/devices-and-web/) on this c
 
 ## Sidebar
 
-The switcher at the top of the sidebar chooses **Work**, **Chat**, or **Assistants**. **Open search** is in the title bar, after **Back** and **Forward** (`Primary+P`). The switcher's own row holds that form's action and an icon-only create button: **Add workspace** and **New session** on Work, **New chat** on Chat, and **Today's brief** (when there is one) plus **New assistant** on Assistants.
+The switcher at the top of the sidebar chooses **Work**, **Chat**, or **Assistants**. Each row in that menu has a one-line description: **Build, fix, and ship in your projects**, **Ask anything, get quick answers**, and **Remembers you and minds your day**. **Open search** is in the title bar, after **Back** and **Forward** (`Primary+P`). The switcher's own row holds that form's action and an icon-only create button: **Add workspace** and **New session** on Work, **New chat** on Chat, and **Today's brief** (when there is one) plus **New assistant** on Assistants. With no assistants yet, the pane invites you to create the first one. See [Assistants](/docs/assistants/).
 
-The sidebar footer shows **Proxy status** and **Settings**. **Settings** also opens with `Primary+,`, including while the sidebar is collapsed. On Assistants the footer also shows **Long-term memory**.
+The sidebar footer shows **Proxy status** and **Settings**. **Settings** also opens with `Primary+,`, including while the sidebar is collapsed. On Assistants the footer also shows **Apps**, which opens [Applications](/docs/assistants/#applications), and **Long-term memory**.
 
 ## Sessions and attention
 
@@ -99,7 +99,7 @@ The composer starts every session and every follow-up:
 
 With no folder open, the work-session placeholder is **Open a folder, then describe the task**. Sending still works: Cocurdex opens the folder picker and keeps what you typed if you cancel.
 
-Follow-ups sent while a turn runs are steered into it when the agent supports steering, or queued until the turn finishes (**Settings → General → Follow-up behavior**). When a turn settles, its tool calls fold behind a label that shows how long the turn worked; expand it to review every step.
+Follow-ups sent while a turn runs are steered into it when the agent supports steering, or queued until the turn finishes (**Settings → General → Follow-up behavior**). When a turn settles, its tool calls fold behind a label that shows how long the turn worked; expand it to review every step. While a work-mode turn is still running, the thread shows the elapsed time and the activity: **Thinking**, **Using tools**, **Working**, or **Replying**. Every composer has more space below it. On an assistant thread the composer is a single row, without those agent and model controls, and the live label does not include that elapsed time. See [Assistants](/docs/assistants/#home-thread).
 
 **Settings → General → Transcript view** chooses how much of that work is visible: **Concise** (final replies only), **Standard** (folded summaries), or **Verbose** (everything expanded).
 
@@ -189,7 +189,7 @@ The annotation popover can be dragged out of the way; **Clear all annotations** 
 
 ## PDF reader
 
-PDFs opened from the file tree open in the PDF reader instead of the code editor. It has a table of contents, page thumbnails, search, fit-width / fit-page zoom, page bookmarks, and highlights in four colors. Bookmarks and highlights are saved by the daemon. Select text and choose **Add to Note** to quote it into a [note](/docs/notes-and-issues/).
+PDFs opened from the file tree open in the PDF reader instead of the code editor. A PDF attached to a conversation does the same, including one uploaded into that conversation: choose it under the assistant's **Conversation files**. The reader has a table of contents, page thumbnails, search, fit-width / fit-page zoom, page bookmarks, and highlights in four colors. Bookmarks and highlights are saved for that file. A file the reader refuses shows **Unable to open PDF** and **This PDF could not be opened in the reader.** Select text and choose **Add to Note** to quote it into a [note](/docs/notes-and-issues/).
 
 ## Decks
 
