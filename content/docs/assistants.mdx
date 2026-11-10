@@ -180,7 +180,7 @@ You can ask the assistant to manage its own routines. It cannot grant **Full acc
 
 ## Inbox and the daily brief
 
-**Inbox** sits under the roster. It is one list for every form: permissions, questions, and plans that need you, finished and failed sessions, and routine results, runs that need you, failures, and pauses.
+**Inbox** sits under the roster. It lists assistant threads and work an assistant delegated: approvals, questions, and plans that need you, and failed or unread finished sessions. It also lists routine results, runs that need you, failures, and pauses. Work and chat sessions you started yourself stay in **Work** and **Chat**.
 
 | Kind | Label |
 | --- | --- |
@@ -242,7 +242,7 @@ cocurdex inbox brief [--tz <zone>]
 cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN]
 ```
 
-`inbox` lists what needs you. `inbox read` marks that item's thread visited, which clears it. `inbox brief` prints today's brief, or `Nothing to brief today.` `inbox brief post` posts that brief into the default assistant's home thread, in the locale you pass. `--locale` is `en-US` or `zh-CN`; omit it to reuse the last locale used for a post. Nothing new to post prints `Nothing new to post.`
+`inbox` lists the same items as the sidebar inbox: assistant threads, work an assistant delegated, and routines. `inbox read` marks that item's thread visited, which clears it. `inbox brief` prints today's brief, or `Nothing to brief today.` `inbox brief post` posts that brief into the default assistant's home thread, in the locale you pass. `--locale` is `en-US` or `zh-CN`; omit it to reuse the last locale used for a post. Nothing new to post prints `Nothing new to post.`
 
 ```bash
 cocurdex apps catalog|list [--json]

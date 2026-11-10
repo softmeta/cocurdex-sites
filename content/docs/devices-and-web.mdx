@@ -73,7 +73,7 @@ cocurdex host push off
 
 **Pair a device → Create pairing code** creates a one-time code, a QR code, and pairing links. Links are listed most reachable first: the relay while it is online, then Tailscale, then LAN.
 
-- **iOS or Android app:** choose **Pair a Computer**, then **Scan to Pair** and scan the QR code, or **Paste Pairing Link** and tap **Pair**. The app adds that computer, selects it, and you continue on **Assistant**. A paired phone learns every address the computer reports and switches to the one that answers.
+- **iOS or Android app:** choose **Pair a Computer**, then **Scan to Pair** and scan the QR code, or **Paste Pairing Link** and tap **Pair**. The app adds that computer, selects it, and opens **Approve on Computer**. That screen shows the six-digit **Safety Code** to type on the computer. When the computer allows the phone and the connection is live, the status reads **Paired** and the screen closes. You then continue on **Assistant**. A paired phone learns every address the computer reports and switches to the one that answers.
 - **Browser on another device:** open the pairing link, or paste it on the **Pair** screen. A browser on another device connects only through a [relay](#relay), so turn one on first.
 
 If no address of the computer answers — a different Wi-Fi network, or access-point isolation — **Pair** and the scan screen show **Can't reach the computer. Check that it is online and reachable on your network or through its relay.**
@@ -88,7 +88,7 @@ Turn remote access on first if you want a link the other device can open. Codes 
 
 Redeeming a code does not connect the device yet. It stays pending until this computer approves it. The new device shows a six-digit **safety code**. On the computer, **Allow &#123;name&#125; to use this computer?** asks you to type that code. **Allow** connects it. **Deny** revokes it. Closing the dialog leaves the request pending; **Paired devices** lists it as waiting, without the code, so the code has to be read off the device. Five wrong codes revoke the device. The request expires after 10 minutes.
 
-A browser that is waiting shows **Waiting for approval** and the same code, and opens the workspace once the computer allows it. On the phone, the computer list shows **Waiting for approval on the computer** for that computer until then. Under the **Safety Code**, the phone shows a live status. While it waits, a spinner appears next to **Waiting for approval on the computer**. If the phone has no network connection, the status reads **Unreachable**. After the computer allows the device and the connection is live, it reads **Paired**. The screen then closes and the phone connects. If the request expired or was revoked, it reads **Pairing expired or was revoked. Pair again from your computer.** Approve from the dialog, from **Paired devices**, or with `cocurdex host approve` (below).
+A browser that is waiting shows **Waiting for approval** and the same code, and opens the workspace once the computer allows it. On the phone, **Approve on Computer** shows the **Safety Code** as soon as you scan or paste a pairing link. The computer list shows **Waiting for approval on the computer** for that computer until then, and the phone keeps checking, so **Sessions** fills in shortly after **Allow**. Under the **Safety Code**, the phone shows a live status. While it waits, a spinner appears next to **Waiting for approval on the computer**. If the phone has no network connection, the status reads **Unreachable**. After the computer allows the device and the connection is live, it reads **Paired**. The screen then closes and the phone connects. If the request expired or was revoked, it reads **Pairing expired or was revoked. Pair again from your computer.** A revoked phone's computer row reads **Access revoked**. Approve from the dialog, from **Paired devices**, or with `cocurdex host approve` (below).
 
 A paired device with **Manage devices** can approve or revoke other devices. **Host administration** (change app settings) stays on this computer and cannot be granted.
 
@@ -134,23 +134,42 @@ cocurdex host audit [--limit <n>]
 
 ## Native app
 
-The iOS and Android app has five tabs: **Assistant**, **Sessions**, **Issues**, **Notes**, and **Settings**. **Assistant** is first, and it is the screen the app opens on. **Settings** includes **Computers**, which lists paired computers. **Sessions**, **Issues**, and **Notes** are for the computer named in the toolbar.
+The iOS and Android app has five tabs: **Assistant**, **Sessions**, **Issues**, **Notes**, and **Settings**. **Assistant** is first, and it is the screen the app opens on. The tab bar floats just above the bottom edge. **Settings** includes **Computers**, which lists paired computers. **Sessions**, **Issues**, and **Notes** are for the computer named in the toolbar.
+
+On Android, the launch screen uses the same mark as the desktop app, in light and dark. It stays until the first screen has its data, and hides after 3 seconds if that data has not arrived.
 
 With no computer paired yet, those tabs show **No Computers** and **Pair a Computer**. After you pair, open the computer name in the toolbar to switch hosts, or choose **Pair a Computer** to add another.
 
-Each computer row shows **Connected** with the round-trip in milliseconds, **Checking**, **Unreachable**, **Waiting for approval on the computer**, or **Access revoked**. Open a computer for **Permissions and Connection**, including the **Safety Code**. **Rename** changes the name on this phone only. **Remove This Computer** drops the pairing; if the computer is offline, revoke it later under **Settings → Devices**.
+Each computer row shows **Connected** with the round-trip in milliseconds, **Checking**, **Unreachable**, **Waiting for approval on the computer**, or **Access revoked**. While this phone is waiting for the computer to allow it, the row stays on **Waiting for approval on the computer** and keeps checking, so it shows **Connected** shortly after you allow it. A revoked phone shows **Access revoked**. **Unreachable** is for a computer whose addresses do not answer. Open a computer for **Permissions and Connection**, including the **Safety Code**. **Rename** changes the name on this phone only. **Remove This Computer** drops the pairing; if the computer is offline, revoke it later under **Settings → Devices**.
 
 ### Assistant
 
-**Assistant** lists three sections for the computer in the toolbar, when they have anything to show:
+**Assistant** lists the assistants for the computer in the toolbar first, with no section heading of their own. **Today** and **Inbox** follow when they have anything to show.
 
 | Section | Shows |
 | --- | --- |
 | **Today** | Today's successful routine results that were not silent |
-| **Inbox** | What needs you, and routine results, failures, and pauses. A routine that needs you or is blocked is labeled **Needs you**, including when the routine is silent |
-| **Assistants** | The assistants on that computer. The line under a name is the description, when there is one |
+| **Inbox** | Approvals, questions, and plans from assistant threads and from work an assistant delegated, plus failed or unread finished sessions from those threads, and routine results, failures, and pauses. A routine that needs you or is blocked is labeled **Needs you**, including when the routine is silent. Work and chat sessions you started yourself stay off this list |
 
-Tap an assistant to open its home thread. If that thread is still empty and the phone has **Interact**, the assistant writes its greeting then. Tap an inbox row or a result to open that session. With no assistants yet, the screen says **No assistants yet** and **Create an assistant on** that computer **to see it here.** If the phone cannot reach the computer, it says **Can't reach** that computer, with **Try Again**.
+Each assistant row shows the latest reply, or **Working** while its home thread is running. With no reply yet, the line is the description. The row also shows the time of the latest message, a status mark, and a muted bell labeled **Muted** when the assistant is muted. A muted row hides the unread mark.
+
+**New assistant** in the header opens **New assistant**. It needs **Interact**. The form has **Name**, **Description**, **Model** (**Default** until you pick one), **Instructions**, and **Persona** (up to 20,000 characters). **Create** opens the new home thread. **Couldn't save. Try again.** appears when the save fails.
+
+Long-press a row, with **Interact**, for **Edit**, **Pin** / **Unpin** (not on the default), **Mute** / **Unmute**, **Duplicate**, and **Delete**. **Edit** opens **Edit assistant** with the same fields, and **Save** returns to the list. **Duplicate** adds **copy** to the name and opens the copy's thread. **Delete** asks **Delete "&#123;name&#125;"?** and says **This deletes the assistant and its conversation. Its memories stay in the memory store.** A failed action says **Something went wrong. Try again.**
+
+Tap an assistant to open its home thread. If that thread is still empty and the phone has **Interact**, the assistant writes its greeting then. **Overview** in the header opens a page for that assistant:
+
+| Section | Shows |
+| --- | --- |
+| **Needs you** | Inbox items for this assistant that are waiting or failed. Hidden when there are none |
+| **Delegated work** | Work this assistant handed to a workspace that is still **Running** or **Idle**. The line under a title is the workspace and that status. With none yet, the footer is **Work delegated by this assistant will appear here.** If the list cannot be loaded, the footer is **Work couldn't load.** |
+| **Recent results** | Delegated work that has finished. The line under a title is the workspace and **Turn completed**, **Failed**, **Cancelled**, **Interrupted**, or **Archived**. Hidden when there is none |
+| **Routines** | A read-only list. The line under a name is **Next run:** and the time, **Paused**, **Paused after failures**, or **No next run scheduled**. Tap a row to open its latest run when it has one. The footer is **Routines run on the connected computer while its background service is online.** If the list cannot be loaded, the footer is **Routines couldn't load.** |
+| **Context and resources** | **Notes** and **Issues**, which open those tabs |
+
+The overview header shows the avatar, the name, and the description. With no description it says **Coordinate work, keep context, and follow through.**
+
+Tap an inbox row or a result to open that session. With no assistants yet, the screen says **No assistants yet** and **Create an assistant on** that computer **to see it here.** If the phone cannot reach the computer, it says **Can't reach** that computer, with **Try Again**.
 
 Assistant threads stay out of **Sessions**. In a thread, a posted brief is marked **Today's brief**, and a posted routine result is marked **From routine** plus the routine's name. Each of those is its own turn.
 
@@ -191,19 +210,21 @@ On **Agent**, a row you can choose says **Ready**. The others say **Not installe
 
 On **Notes**, the line under a title is a plain-text excerpt of the body. On **Issues**, the identifier is monospace. On the issue screen, each row under **Sub-issues** opens that issue.
 
-Open a session and the tab bar hides. The back button reads **Sessions**. The header is the session title, with the workspace and model under it. The transcript updates as the agent runs: your messages, the assistant's messages, and tool calls.
+Open a work session and the tab bar hides. The back button reads **Sessions**. The header is the session title, with the workspace and model under it. The transcript updates as the agent runs: your messages, the assistant's messages, and tool calls.
+
+An assistant home thread and a chat thread are a conversation. The assistant header is only the name, with **Overview** beside it. Your messages are bubbles; in an assistant thread they take the avatar color, and replies stay neutral. Tool calls stay out of that transcript, and **Prompts** is not shown. While a reply has not started, one **Working…** line shows, then leaves once the reply streams. The composer is a single line, without the model and mode controls. While an assistant thread is still empty and not running, it shows **Suggestions**: **What needs my attention today?**, **Send me a brief every morning at 8**, and **What do you remember about me?** Choosing one sends it. The placeholder is **Message** followed by the assistant's name.
 
 Assistant messages are Markdown. Tables render. A fenced code block shows the language, a copy button, and syntax highlighting. A fenced `mermaid` block renders as a diagram, in the same theme family as the desktop app. If rendering fails, or the phone is offline and the diagram cannot be drawn, the source is shown as a normal code block. Math renders, including inline, display, and table formulas.
 
 Tap an image in the transcript to open a full-screen viewer. Pinch-zoom works on iOS. On Android the viewer is full screen, and pinch-zoom is not available yet. **Close** leaves the viewer.
 
-Tap a tool-call row to open its detail screen. The header shows the status — **Done**, **Failed**, or **Running** — and the duration in seconds after the call finishes. **Input** and **Output** follow. A long output shows the tail, labeled **Last 64 KB**. When output is on screen, **Copy Output** copies it. If the output cannot be loaded, the screen shows **Couldn't load the output**. The formatting matches the desktop app.
+In a work session, tap a tool-call row to open its detail screen. The header shows the status — **Done**, **Failed**, or **Running** — and the duration in seconds after the call finishes. **Input** and **Output** follow. A long output shows the tail, labeled **Last 64 KB**. When output is on screen, **Copy Output** copies it. If the output cannot be loaded, the screen shows **Couldn't load the output**. The formatting matches the desktop app.
 
-The composer placeholder is **Reply to the agent**. **Attach Photo** adds a PNG, JPEG, GIF, or WebP image up to 10 MB. **Send** posts the message. While the session is running and the field is empty, that control is **Stop**. Sending and stopping need the **Interact** permission from pairing.
+In a work session, the composer placeholder is **Reply to the agent**. **Attach Photo** adds a PNG, JPEG, GIF, or WebP image up to 10 MB. **Send** posts the message. While the session is running and the field is empty, that control is **Stop**. Sending and stopping need the **Interact** permission from pairing.
 
 A file link in the transcript, or a file a tool call names, opens a preview. Markdown can switch between **Show Preview** and **Show Source**. **Copy Contents** copies the text. A long file says **Showing the first 512 KB of this file.** A binary file says **This file can't be previewed.** A path outside the computer's workspaces says **This file is outside the computer's workspaces.**
 
-**Jump to latest** and **Jump to first message** skip a long transcript. The header menu's agent settings show the model, reasoning effort, fast mode, and — when the agent has them — collaboration mode and variant, plus the session's MCP servers. **Save as Role…** stores the current setup on the computer. Forking from a message is **Fork From Here**.
+**Jump to latest** and **Jump to first message** skip a long transcript. **Jump to latest** shows when the latest message is below the visible area. A short thread that already fits does not show it. The header menu's agent settings show the model, reasoning effort, fast mode, and — when the agent has them — collaboration mode and variant, plus the session's MCP servers. **Save as Role…** stores the current setup on the computer. Forking from a message is **Fork From Here**.
 
 When the agent is waiting, a dock at the bottom replaces the composer:
 

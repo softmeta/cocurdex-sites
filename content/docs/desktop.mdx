@@ -45,6 +45,8 @@ You can also [open the same host in a browser](/docs/devices-and-web/) on this c
 
 The switcher at the top of the sidebar chooses **Work**, **Chat**, or **Assistants**. Each row in that menu has a one-line description: **Build, fix, and ship in your projects**, **Ask anything, get quick answers**, and **Remembers you and minds your day**. **Open search** is in the title bar, after **Back** and **Forward** (`Primary+P`). The switcher's own row holds that form's action and an icon-only create button: **Add workspace** and **New session** on Work, **New chat** on Chat, and **Today's brief** (when there is one) plus **New assistant** on Assistants. With no assistants yet, the pane invites you to create the first one. See [Assistants](/docs/assistants/).
 
+Rows, section headings, the assistant roster, and the inbox sit on the same 12px inset as the header icons. The scrollbar draws above the list, including over the sticky **Sessions** heading.
+
 The sidebar footer shows **Proxy status** and **Settings**. **Settings** also opens with `Primary+,`, including while the sidebar is collapsed. On Assistants the footer also shows **Apps**, which opens [Applications](/docs/assistants/#applications), and **Long-term memory**.
 
 ## Sessions and attention
@@ -70,9 +72,12 @@ On **Work**, the **Group and filter sessions** menu on the **Sessions** heading 
 | **Sort by** | Recent activity, created time, or title |
 | **Filters** | Agent, status, environment (local vs worktree), source, unread |
 | **Sessions per group** | Cap how many root sessions show; **Show more** reveals the rest |
-| **Compact mode** | Denser rows |
+| **Properties** | **Last activity**, **Agent**, **Model**, **Role**, **Workspace**, or **Worktree**. A row shows none of these until you choose them, so it has no time by default |
+| **Compact mode** | Denser rows. It keeps **Last activity** only when you chose that property, and hides the others |
 
-**Pin** keeps a session at the top of the list. **Archive** hides one session; **Archive sessions** on a group moves matching sessions to **Settings → Archived sessions**, skipping pinned, running, and waiting ones — **Undo** restores them. Nested subagent sessions expand and collapse in the tree.
+**Pin** keeps a session at the top of the list. **Archive** hides one session; **Archive sessions** on a group moves matching sessions to **Settings → Archived sessions**, skipping pinned, running, and waiting ones — **Undo** restores them. **Delete** or **Archive** on the session you have open selects the next session in the same form — **Work**, **Chat**, or **Assistants**. When that form has none left, the selection clears. Nested subagent sessions expand and collapse in the tree.
+
+Chat rows do not show a time.
 
 ### Execution tree
 
@@ -169,7 +174,7 @@ Send-key behavior for chat (Enter vs Primary+Enter for multiline) is configurabl
 
 ## Approvals in one place
 
-Everything that needs you surfaces inside the session that asked for it: tool permission cards, agent questions, plan reviews, script-run proposals (with **Show script**, an agent limit, **Run** and **Discard**), and teammates that need input. The [Assistants inbox](/docs/assistants/#inbox-and-the-daily-brief) gathers those items from Work, Chat, and Assistants in one list. Nothing runs in the background without a visible state.
+Everything that needs you surfaces inside the session that asked for it: tool permission cards, agent questions, plan reviews, script-run proposals (with **Show script**, an agent limit, **Run** and **Discard**), and teammates that need input. The [Assistants inbox](/docs/assistants/#inbox-and-the-daily-brief) lists approvals, questions, plans, and failed or unread finished sessions from assistant threads and from work an assistant delegated, plus routine results. Work and chat sessions you started yourself stay in their own lists. Nothing runs in the background without a visible state.
 
 ## Themes
 
