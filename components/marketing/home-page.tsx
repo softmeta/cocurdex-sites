@@ -1,7 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { localizedPath, type SiteLocale } from "@/lib/locales";
-import { getMarketingDict, type MarketingDict } from "@/lib/marketing";
+import { getMarketingDict } from "@/lib/marketing";
 import { site } from "@/lib/site";
 import { eyebrow, primaryButton, SiteShell, secondaryButton } from "./shell";
 
@@ -54,87 +55,34 @@ function Section({
   );
 }
 
-function WorkspaceMock({ mock }: { mock: MarketingDict["home"]["mock"] }) {
+const SHOT_WIDTH = 1423;
+const SHOT_HEIGHT = 951;
+
+function ProductShot({
+  src,
+  alt,
+  caption,
+  priority = false,
+}: {
+  src: string;
+  alt: string;
+  caption: string;
+  priority?: boolean;
+}) {
   return (
-    <div
-      aria-hidden
-      className="overflow-hidden rounded-xl border border-fd-border bg-fd-card text-left shadow-2xl shadow-black/10 dark:shadow-black/50"
-    >
-      <div className="flex h-9 items-center gap-2 border-fd-border border-b bg-fd-muted/50 px-3">
-        <span className="size-2.5 rounded-full bg-fd-muted-foreground/25" />
-        <span className="size-2.5 rounded-full bg-fd-muted-foreground/25" />
-        <span className="size-2.5 rounded-full bg-fd-muted-foreground/25" />
-        <span className="ml-3 font-mono text-[0.6875rem] text-fd-muted-foreground">
-          {mock.title}
-        </span>
-      </div>
-      <div className="grid min-h-[22rem] grid-cols-1 sm:grid-cols-[13.5rem_1fr]">
-        <div className="hidden border-fd-border border-r p-2 sm:block">
-          <p className="m-0 px-2 pt-1 pb-2 font-mono text-[0.6875rem] text-fd-muted-foreground uppercase tracking-[0.12em]">
-            {mock.sessionsLabel}
-          </p>
-          <ul className="m-0 grid list-none gap-0.5 p-0">
-            {mock.sessions.map((session, i) => (
-              <li
-                key={session.name}
-                className={`grid gap-0.5 rounded-md px-2 py-1.5 ${i === 0 ? "bg-fd-accent" : ""}`}
-              >
-                <span className="flex items-center gap-2 font-mono text-[0.75rem] text-fd-foreground">
-                  <StateDot state={session.state} />
-                  {session.name}
-                </span>
-                <span className="pl-4 text-[0.6875rem] text-fd-muted-foreground">
-                  {session.agent} · {session.label}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="grid grid-rows-[1fr_auto]">
-          <div className="grid content-start gap-3 p-4">
-            <p className="m-0 font-mono text-[0.6875rem] text-fd-muted-foreground">
-              # {mock.chatTitle}
-            </p>
-            <div className="ml-auto max-w-[85%] rounded-lg bg-fd-muted px-3 py-2 text-[0.8125rem]">
-              {mock.userMsg}
-            </div>
-            <div className="max-w-[90%] text-[0.8125rem] text-fd-foreground">
-              {mock.agentMsg}
-            </div>
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-signal-wait/40 bg-signal-wait/5 px-3 py-2">
-              <span className="flex items-center gap-2 font-mono text-[0.75rem]">
-                <StateDot state="wait" />
-                {mock.permission}
-              </span>
-              <span className="flex gap-1.5">
-                <span className="rounded-md bg-fd-foreground px-2.5 py-1 text-[0.6875rem] text-fd-background">
-                  {mock.allow}
-                </span>
-                <span className="rounded-md border border-fd-border px-2.5 py-1 text-[0.6875rem]">
-                  {mock.deny}
-                </span>
-              </span>
-            </div>
-          </div>
-          <div className="border-fd-border border-t bg-fd-muted/40 px-4 py-3 font-mono text-[0.75rem] leading-relaxed">
-            <p className="m-0 mb-1 text-[0.6875rem] text-fd-muted-foreground uppercase tracking-[0.12em]">
-              {mock.terminalTitle}
-            </p>
-            <p className="m-0 text-fd-muted-foreground">
-              <span className="text-fd-primary">~/web-app</span> ${" "}
-              <span className="text-fd-foreground">pnpm test auth</span>
-            </p>
-            <p className="m-0 text-fd-muted-foreground">
-              ✓ 42 passed <span className="text-fd-foreground/40">(1.8s)</span>
-            </p>
-            <p className="m-0 text-fd-muted-foreground">
-              <span className="text-fd-primary">~/web-app</span> ${" "}
-              <span className="caret inline-block h-3.5 w-1.5 translate-y-0.5 bg-fd-foreground" />
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <figure className="m-0 overflow-hidden rounded-xl border border-fd-border bg-fd-card text-left shadow-2xl shadow-black/10 dark:shadow-black/50">
+      <Image
+        src={src}
+        alt={alt}
+        width={SHOT_WIDTH}
+        height={SHOT_HEIGHT}
+        priority={priority}
+        className="block h-auto w-full"
+      />
+      <figcaption className="border-fd-border border-t px-4 py-3 text-fd-muted-foreground text-sm leading-relaxed">
+        {caption}
+      </figcaption>
+    </figure>
   );
 }
 
@@ -226,8 +174,28 @@ export function HomePage({ locale }: { locale: SiteLocale }) {
                 </li>
               ))}
             </ul>
-            <div className="mx-auto mt-16 max-w-5xl">
-              <WorkspaceMock mock={t.home.mock} />
+            <div className="mx-auto mt-16 grid max-w-5xl gap-4 text-left">
+              <p className="m-0 text-fd-muted-foreground text-sm leading-relaxed">
+                {t.home.shots.note}
+              </p>
+              <ProductShot
+                src="/media/work.webp"
+                alt={t.home.shots.work.alt}
+                caption={t.home.shots.work.caption}
+                priority
+              />
+              <div className="grid gap-4 md:grid-cols-2">
+                <ProductShot
+                  src="/media/chat.webp"
+                  alt={t.home.shots.chat.alt}
+                  caption={t.home.shots.chat.caption}
+                />
+                <ProductShot
+                  src="/media/assistants.webp"
+                  alt={t.home.shots.assistants.alt}
+                  caption={t.home.shots.assistants.caption}
+                />
+              </div>
             </div>
           </div>
         </section>

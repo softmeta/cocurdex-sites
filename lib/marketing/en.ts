@@ -58,44 +58,21 @@ export const dict = {
     ],
     downloadCta: "Download",
     docsCta: "Read the docs",
-    mock: {
-      title: "cocurdex — web-app",
-      sessionsLabel: "Sessions",
-      sessions: [
-        {
-          name: "auth-refactor",
-          agent: "claude-agent",
-          state: "wait",
-          label: "Needs approval",
-        },
-        {
-          name: "fix-flaky-e2e",
-          agent: "codex",
-          state: "busy",
-          label: "Using tools",
-        },
-        {
-          name: "pricing-page",
-          agent: "acp:cursor",
-          state: "busy",
-          label: "Thinking",
-        },
-        {
-          name: "api-review",
-          agent: "acp:grok-build",
-          state: "done",
-          label: "Unread result",
-        },
-        { name: "release-notes", agent: "pi", state: "idle", label: "Ready" },
-      ],
-      chatTitle: "auth-refactor",
-      userMsg:
-        "Move session tokens to httpOnly cookies and update the middleware.",
-      agentMsg: "Plan ready: 3 files, 1 migration. Edits need your approval.",
-      permission: "Edit src/middleware.ts",
-      allow: "Allow",
-      deny: "Deny",
-      terminalTitle: "Terminal",
+    shots: {
+      note: "Real desktop app, opened by the scenario harness. The threads are seeded demonstration data, not a live agent transcript.",
+      work: {
+        alt: "Cocurdex work session in the acme-shop fixture workspace. The seeded thread Add percentage discount codes shows an edit to src/discount.ts.",
+        caption: "Work · acme-shop fixture · Add percentage discount codes",
+      },
+      chat: {
+        alt: "Cocurdex Chat session Debounce vs throttle. The reply is fixture text, and the composer shows the fixture model name E2E Model.",
+        caption: "Chat · fixture session · Debounce vs throttle",
+      },
+      assistants: {
+        alt: "Cocurdex Assistants with the Coach persona from the personal-agents scenario. The greeting and reply come from a local stub model, not a live provider.",
+        caption:
+          "Assistants · personal-agents scenario · Coach, local stub model",
+      },
     },
     statesHeading: "Honest state, across every session",
     statesIntro:

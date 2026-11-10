@@ -58,43 +58,20 @@ export const dict: MarketingDict = {
     ],
     downloadCta: "下载",
     docsCta: "阅读文档",
-    mock: {
-      title: "cocurdex — web-app",
-      sessionsLabel: "会话",
-      sessions: [
-        {
-          name: "auth-refactor",
-          agent: "claude-agent",
-          state: "wait",
-          label: "等待批准",
-        },
-        {
-          name: "fix-flaky-e2e",
-          agent: "codex",
-          state: "busy",
-          label: "正在使用工具",
-        },
-        {
-          name: "pricing-page",
-          agent: "acp:cursor",
-          state: "busy",
-          label: "思考中",
-        },
-        {
-          name: "api-review",
-          agent: "acp:grok-build",
-          state: "done",
-          label: "有未读结果",
-        },
-        { name: "release-notes", agent: "pi", state: "idle", label: "就绪" },
-      ],
-      chatTitle: "auth-refactor",
-      userMsg: "把会话 token 挪到 httpOnly cookie，并更新中间件。",
-      agentMsg: "计划已就绪：3 个文件、1 个迁移。编辑需要你的批准。",
-      permission: "编辑 src/middleware.ts",
-      allow: "允许",
-      deny: "拒绝",
-      terminalTitle: "终端",
+    shots: {
+      note: "真实桌面应用，由项目自带的场景测试打开。对话是预置的演示数据，不是线上 Agent 的实时记录。",
+      work: {
+        alt: "Cocurdex 工作会话，工作区为夹具 acme-shop。预置会话 Add percentage discount codes 显示了对 src/discount.ts 的一处编辑。",
+        caption: "工作 · acme-shop 夹具 · Add percentage discount codes",
+      },
+      chat: {
+        alt: "Cocurdex 聊天会话 Debounce vs throttle。回复来自夹具文本，输入框显示夹具模型名 E2E Model。",
+        caption: "聊天 · 夹具会话 · Debounce vs throttle",
+      },
+      assistants: {
+        alt: "Cocurdex 助理 Coach，来自 personal-agents 场景。问候和回复由本地桩模型生成，不是真实提供商的输出。",
+        caption: "助理 · personal-agents 场景 · Coach，本地桩模型",
+      },
     },
     statesHeading: "所有会话，状态如实",
     statesIntro:
