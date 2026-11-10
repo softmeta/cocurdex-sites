@@ -3,7 +3,7 @@ import type { MarketingDict } from "./en";
 export const dict: MarketingDict = {
   meta: {
     description:
-      "面向专业开发者的多 Agent 开发工作台。对话、终端、编辑器和浏览器预览共处于一个桌面工作台中。",
+      "早期 Beta。任意模型与任意 Agent（ACP 与原生协议），记忆留在你的电脑上。聊天、助理与工作会话同属一个产品，覆盖 Windows、macOS、Linux、iOS、Android 与 Web。",
   },
   nav: {
     docs: "文档",
@@ -12,7 +12,7 @@ export const dict: MarketingDict = {
     footerAria: "页脚",
   },
   footer: {
-    tagline: "预发布。",
+    tagline: "早期 Beta。",
     gettingStarted: "快速上手",
     license: "以 FSL-1.1-ALv2 协议源码可用。",
     product: "产品",
@@ -26,10 +26,36 @@ export const dict: MarketingDict = {
     terms: "服务条款",
   },
   home: {
-    badge: "预发布 · macOS · Windows · Linux",
-    heading: "同时驾驭一队编程 Agent，",
-    headingAccent: "每一个都清清楚楚。",
-    lede: "Cocurdex 是面向多 Agent 开发的桌面工作台。对话、终端、编辑器和浏览器预览共处一个外壳——每个会话都如实告诉你：在干活、在等你，还是已完成。",
+    badge: "早期 Beta · Windows · macOS · Linux · iOS · Android · Web",
+    heading: "任意模型，任意 Agent。",
+    headingAccent: "聊天、助理与工作，是同一个产品。",
+    lede: "Cocurdex 处于早期 Beta。使用你已有的模型和提供商——Cocurdex 不转售模型额度——并通过 ACP 或原生协议运行任意 Agent。聊天、助理与工作会话是同一个产品。欢迎试用，也欢迎反馈问题。",
+    pitch: [
+      {
+        title: "任意模型",
+        body: "使用你已有的模型和提供商。Cocurdex 不转售模型额度。",
+      },
+      {
+        title: "任意 Agent",
+        body: "支持 ACP 与原生协议。",
+      },
+      {
+        title: "一致的记忆",
+        body: "记忆留在你的电脑上。可选的多设备同步经由 rsrs（rsrs.rs）。",
+      },
+      {
+        title: "多端远控",
+        body: "私有部署，或官方中继。",
+      },
+      {
+        title: "全平台",
+        body: "Windows、macOS、Linux、iOS、Android 与 Web。",
+      },
+      {
+        title: "同一个产品",
+        body: "聊天、助理与工作会话集成在一起。",
+      },
+    ],
     downloadCta: "下载",
     docsCta: "阅读文档",
     mock: {
@@ -104,7 +130,7 @@ export const dict: MarketingDict = {
       },
       {
         title: "本地优先的数据",
-        body: "笔记、Issue、演示文稿与搜索索引保存在本机的应用私有存储中，无需注册账号。可在本机浏览器打开同一工作区，或配对另一台设备——在同一网络上，或在离开后通过中继连接。可选的长期记忆留在这台电脑上，直到你打开多设备同步。",
+        body: "笔记、Issue、演示文稿与搜索索引保存在本机的应用私有存储中，无需注册账号。可在本机浏览器打开同一工作区，或配对另一台设备——在同一网络上，或在离开后通过中继连接。可选的长期记忆留在这台电脑上。打开多设备同步后，经由 rsrs（rsrs.rs）。",
         tag: "data",
       },
     ],
@@ -155,17 +181,21 @@ export const dict: MarketingDict = {
     skillsTitle: "产品 Skills",
     skillsBody:
       "可选的 cocurdex-* skill 包，教会 Agent 在同一套数据上执行 笔记 → Issue → 交付 的循环，以及带团队、改设置、做演示文稿。",
-    ctaHeading: "别再在 Agent 之间来回切标签页。",
-    ctaBody: "macOS、Windows 与 Linux 预发布构建。无需账号。",
+    ctaHeading: "欢迎试用早期 Beta。",
+    ctaBody:
+      "Windows、macOS、Linux、iOS、Android 与 Web 都可以用。欢迎反馈问题。",
     gettingStarted: "快速上手",
   },
   download: {
     pageTitle: "下载",
-    metaDescription: "下载 macOS、Windows 和 Linux 版 Cocurdex。预发布。",
-    eyebrow: "预发布",
+    metaDescription:
+      "下载 macOS、Windows、Linux 和 Android 版 Cocurdex 早期 Beta。",
+    eyebrow: "早期 Beta",
     heading: "下载 Cocurdex",
     intro:
-      "macOS、Windows 和 Linux 的预发布构建。各版本之间的 API 与行为可能发生变化。",
+      "macOS、Windows、Linux 和 Android 的早期 Beta 构建。各版本之间的 API 与行为可能发生变化。",
+    desktopHeading: "桌面端",
+    androidHeading: "Android",
     recommended: "推荐用于当前设备",
     builds: {
       "mac-arm64": {
@@ -188,6 +218,14 @@ export const dict: MarketingDict = {
         label: "Linux x64（.deb）",
         note: "Debian / Ubuntu 安装包，用 apt 或 dpkg 安装。",
       },
+      "android-arm64": {
+        label: "Android（arm64-v8a）",
+        note: "适用于大多数手机。旁加载 APK，并允许未知来源。",
+      },
+      "android-armv7": {
+        label: "Android（armeabi-v7a）",
+        note: "仅适用于 32 位设备。",
+      },
     },
     releaseNotes: "发布说明",
     afterHeading: "安装之后",
@@ -206,7 +244,12 @@ export const dict: MarketingDict = {
       },
     ],
     installNote:
-      "在 macOS 上，打开 DMG 并将 Cocurdex 拖入「应用程序」。每个公开的 macOS 构建都经过 Developer ID 签名并由 Apple 公证。Windows 安装包未签名。",
+      "在 macOS 上，打开 DMG 并将 Cocurdex 拖入「应用程序」。每个公开的 macOS 构建都经过 Developer ID 签名并由 Apple 公证。Windows 安装包未签名。在 Android 上旁加载 APK，并允许安装未知来源。arm64-v8a 是通常的选择。",
+    androidNote:
+      "Android 按钮指向实际包含这些 APK 的最新已发布 GitHub Release（包含预发布版本）。桌面端按钮仍使用最新正式版本。如果 Android 按钮打开的是发布列表，请在其中选择包含该文件的最新版本。",
+    devicesNote:
+      "本页没有 iOS 安装包。请把 iPhone 或 Android 手机配对到电脑上的 Cocurdex。",
+    devicesLink: "设备与本地网页",
     sourceHeading: "从源码运行",
     sourceBody: "需要 Node.js 24 和 pnpm。",
     readDocs: "快速上手指南",

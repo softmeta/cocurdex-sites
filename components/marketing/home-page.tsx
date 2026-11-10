@@ -163,7 +163,7 @@ export function HomePage({ locale }: { locale: SiteLocale }) {
     "@type": "SoftwareApplication",
     name: site.name,
     applicationCategory: "DeveloperApplication",
-    operatingSystem: "macOS, Windows, Linux",
+    operatingSystem: "Windows, macOS, Linux, iOS, Android, Web",
     description: t.meta.description,
     url: site.url,
     offers: {
@@ -188,14 +188,14 @@ export function HomePage({ locale }: { locale: SiteLocale }) {
             <div className="mx-auto max-w-3xl text-center">
               <Link
                 href={to("/download/")}
-                className="mb-7 inline-flex items-center gap-2 rounded-full border border-fd-border bg-fd-card px-3 py-1 font-mono text-[0.75rem] text-fd-muted-foreground no-underline transition-colors hover:text-fd-foreground"
+                className="mb-7 inline-flex max-w-full items-center gap-2 rounded-full border border-fd-border bg-fd-card px-3 py-1.5 text-left font-mono text-[0.75rem] text-fd-muted-foreground leading-relaxed no-underline transition-colors hover:text-fd-foreground"
               >
-                <span className="size-1.5 rounded-full bg-fd-primary" />
-                {t.home.badge}
+                <span className="size-1.5 shrink-0 rounded-full bg-fd-primary" />
+                <span className="min-w-0 text-balance">{t.home.badge}</span>
               </Link>
-              <h1 className="mb-6 text-balance font-semibold text-[2.5rem] leading-[1.08] tracking-[-0.03em] sm:text-6xl">
-                {t.home.heading}{" "}
-                <span className="text-fd-muted-foreground">
+              <h1 className="mb-6 font-semibold text-[2.5rem] leading-[1.08] tracking-[-0.03em] sm:text-6xl">
+                <span className="block break-keep">{t.home.heading}</span>
+                <span className="mt-3 block break-keep text-balance text-fd-muted-foreground">
                   {t.home.headingAccent}
                 </span>
               </h1>
@@ -214,6 +214,18 @@ export function HomePage({ locale }: { locale: SiteLocale }) {
                 <span className="text-fd-primary">$</span> cocurdex .
               </p>
             </div>
+            <ul className="mx-auto mt-14 grid max-w-5xl list-none gap-px overflow-hidden rounded-xl border border-fd-border bg-fd-border p-0 text-left sm:grid-cols-2 lg:grid-cols-3">
+              {t.home.pitch.map((item) => (
+                <li key={item.title} className="bg-fd-card p-5">
+                  <p className="m-0 mb-2 font-semibold tracking-tight">
+                    {item.title}
+                  </p>
+                  <p className="m-0 text-fd-muted-foreground text-sm leading-relaxed">
+                    {item.body}
+                  </p>
+                </li>
+              ))}
+            </ul>
             <div className="mx-auto mt-16 max-w-5xl">
               <WorkspaceMock mock={t.home.mock} />
             </div>
