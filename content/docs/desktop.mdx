@@ -13,19 +13,19 @@ Typical peers in the shell:
 | --- | --- |
 | **Sessions** | Track parallel agent runs and which one needs attention |
 | **Chat** | Steer the active agent; one pane among several |
-| **Assistants** | Personal assistants, their home threads, the assistant overview, and today's brief (see [Assistants](/docs/assistants/)) |
+| **Assistants** | Personal assistants, their home threads, overview, connected applications, and today's brief (see [Assistants](/docs/assistants/)). The list can be empty |
 | **Terminal** | Integrated PTY for commands and agent-driven shell work |
 | **Editor** | Inspect and edit project files without leaving the app |
 | **Git** | Diff, stage, and commit workspace changes; review what each agent turn changed |
 | **Browser preview** | Tabbed preview of your dev server; Design Mode annotations go straight to chat |
-| **PDF reader** | Read PDFs from the file tree with outline, thumbnails, search, bookmarks, and highlights |
+| **PDF reader** | Read PDFs from the file tree or a conversation, with outline, thumbnails, search, bookmarks, and highlights |
 | **Worktrees** | Managed git worktrees for isolated session work (**Worktree** checkbox on new sessions; inventory under **Settings → Worktrees**) |
 | **Notes / issues** | App-owned product data (see [Notes and issues](/docs/notes-and-issues/)) |
 | **Decks** | App-owned slide decks: edit, present, and export (see [Slide decks](/docs/decks/)) |
 | **Team panel** | Teammates of the current lead session, their status, and replies (see [Teams](/docs/teams/)) |
 | **Script runs** | Proposed scripts awaiting approval and running subagents (see [Script runs](/docs/teams/#script-runs)) |
 
-The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. Its view switcher includes **Assistant overview**, **Memory**, and **Routines** as well as Git, the editor, and the other panes above. Hover an icon-only button to see its action name. On Windows and Linux the window uses themed native window controls in the title bar.
+The right panel can float over chat or, with its pin button, dock beside it so the chat column shrinks instead; the choice is remembered. **Close editor panel** hides it. On **Work** and **Chat**, the switcher includes **Files**, **Git**, **Notes**, **Decks**, **Issues**, **Memory**, **Routines**, **Browser**, **PDF** when a PDF is open, and **Terminal**. Opening an assistant switches this to **Assistant overview**, kept separate from the work view you had open. The assistant's switcher is **Assistant overview**, **Memory**, **Notes**, **Issues**, **Routines**, and **PDF** when a PDF is open. **More views** holds **Conversation files**, **Browser**, and **Decks**. **Git** and **Terminal** stay on the work form. Hover an icon-only button to see its action name. On an assistant thread the name and avatar float over the conversation, and the title bar keeps the panel toggles. On Windows and Linux the window uses themed native window controls in the title bar. See [Assistants](/docs/assistants/#overview).
 
 Chat layout is chosen in **Settings → General → Chat layout** and restored on next launch:
 
@@ -43,9 +43,11 @@ You can also [open the same host in a browser](/docs/devices-and-web/) on this c
 
 ## Sidebar
 
-The switcher at the top of the sidebar chooses **Work**, **Chat**, or **Assistants**. **Open search** is in the title bar, after **Back** and **Forward** (`Primary+P`). The switcher's own row holds that form's action and an icon-only create button: **Add workspace** and **New session** on Work, **New chat** on Chat, and **Today's brief** (when there is one) plus **New assistant** on Assistants.
+The switcher at the top of the sidebar chooses **Work**, **Chat**, or **Assistants**. Each row in that menu has a one-line description: **Build, fix, and ship in your projects**, **Ask anything, get quick answers**, and **Remembers you and minds your day**. **Open search** is in the title bar, after **Back** and **Forward** (`Primary+P`). The switcher's own row holds that form's action and an icon-only create button: **Add workspace** and **New session** on Work, **New chat** on Chat, and **Today's brief** (when there is one) plus **New assistant** on Assistants. With no assistants yet, the pane invites you to create the first one. See [Assistants](/docs/assistants/).
 
-The sidebar footer shows **Proxy status** and **Settings**. **Settings** also opens with `Primary+,`, including while the sidebar is collapsed. On Assistants the footer also shows **Long-term memory**.
+Rows, section headings, and the assistant roster sit on the same 12px inset as the header icons. The scrollbar draws above the list, including over the sticky **Sessions** heading.
+
+The sidebar footer shows **Proxy status** and **Settings**. **Settings** also opens with `Primary+,`, including while the sidebar is collapsed. On Assistants the footer also shows **Apps**, which opens [Applications](/docs/assistants/#applications), and **Long-term memory**.
 
 ## Sessions and attention
 
@@ -70,9 +72,12 @@ On **Work**, the **Group and filter sessions** menu on the **Sessions** heading 
 | **Sort by** | Recent activity, created time, or title |
 | **Filters** | Agent, status, environment (local vs worktree), source, unread |
 | **Sessions per group** | Cap how many root sessions show; **Show more** reveals the rest |
-| **Compact mode** | Denser rows |
+| **Properties** | **Last activity**, **Agent**, **Model**, **Role**, **Workspace**, or **Worktree**. A row shows none of these until you choose them, so it has no time by default |
+| **Compact mode** | Denser rows. It keeps **Last activity** only when you chose that property, and hides the others |
 
-**Pin** keeps a session at the top of the list. **Archive** hides one session; **Archive sessions** on a group moves matching sessions to **Settings → Archived sessions**, skipping pinned, running, and waiting ones — **Undo** restores them. Nested subagent sessions expand and collapse in the tree.
+**Pin** keeps a session at the top of the list. **Archive** hides one session; **Archive sessions** on a group moves matching sessions to **Settings → Archived sessions**, skipping pinned, running, and waiting ones — **Undo** restores them. **Delete** or **Archive** on the session you have open selects the next session in the same form — **Work**, **Chat**, or **Assistants**. When that form has none left, the selection clears. Nested subagent sessions expand and collapse in the tree.
+
+Chat rows do not show a time.
 
 ### Execution tree
 
@@ -82,7 +87,7 @@ On **Work**, the **Group and filter sessions** menu on the **Sessions** heading 
 
 **Fork session** in the sidebar starts a new session from the current one. On a user message, **Fork from here** starts the fork through that prompt — useful to try a different path without losing the original. The new title gets a `(fork)` suffix.
 
-While a session is not running, pick a different agent in the composer: Cocurdex hands conversation context to the new runtime. Claude Agent and Codex can fork onto the provider's own thread; a marker in the transcript can **Show** / **Hide handed-off context**. Pi sidebar **Chat** conversations cannot be forked or switched this way.
+While a session is not running, pick a different agent in the composer's agent menu. Each option shows that agent's brand icon beside its name, the same way the agent menu on a new session does. Cocurdex hands conversation context to the new runtime. Claude Agent and Codex can fork onto the provider's own thread; a marker in the transcript can **Show** / **Hide handed-off context**. Pi sidebar **Chat** conversations cannot be forked or switched this way.
 
 ## Composer
 
@@ -99,7 +104,7 @@ The composer starts every session and every follow-up:
 
 With no folder open, the work-session placeholder is **Open a folder, then describe the task**. Sending still works: Cocurdex opens the folder picker and keeps what you typed if you cancel.
 
-Follow-ups sent while a turn runs are steered into it when the agent supports steering, or queued until the turn finishes (**Settings → General → Follow-up behavior**). When a turn settles, its tool calls fold behind a label that shows how long the turn worked; expand it to review every step.
+Follow-ups sent while a turn runs are steered into it when the agent supports steering, or queued until the turn finishes (**Settings → General → Follow-up behavior**). When a turn settles, its tool calls fold behind a label that shows how long the turn worked; expand it to review every step. While a work-mode turn is still running, the thread shows the elapsed time and the activity: **Thinking**, **Using tools**, **Working**, or **Replying**. Every composer has more space below it. On an assistant thread the composer is a single row, without those agent and model controls, and the live label does not include that elapsed time. See [Assistants](/docs/assistants/#home-thread).
 
 **Settings → General → Transcript view** chooses how much of that work is visible: **Concise** (final replies only), **Standard** (folded summaries), or **Verbose** (everything expanded).
 
@@ -169,11 +174,13 @@ Send-key behavior for chat (Enter vs Primary+Enter for multiline) is configurabl
 
 ## Approvals in one place
 
-Everything that needs you surfaces inside the session that asked for it: tool permission cards, agent questions, plan reviews, script-run proposals (with **Show script**, an agent limit, **Run** and **Discard**), and teammates that need input. On an assistant, **Needs you** in the [assistant overview](/docs/assistants/#overview-and-the-daily-brief) lists what is waiting for that assistant, and the roster shows a status dot. Nothing runs in the background without a visible state.
+Everything that needs you surfaces inside the session that asked for it: tool permission cards, agent questions, plan reviews, script-run proposals (with **Show script**, an agent limit, **Run** and **Discard**), and teammates that need input. On an assistant, **Needs you** in the [assistant overview](/docs/assistants/#overview) lists approvals, questions, and plans that are waiting, failed sessions, and routine runs that need you, failed, or paused, for that assistant and for work it delegated. The roster shows a status dot. Work and chat sessions you started yourself stay in their own lists. Nothing runs in the background without a visible state.
 
 ## Themes
 
 Dark and light are both first-class. Prefer **system appearance** unless you pin a theme in settings. Theme parity is a product requirement, not a fallback afterthought. The dark theme is eased for long reading. Toasts use the neutral popover surface, and only the status icon carries color. The composer keeps rounded corners rather than a full pill.
+
+When the main window supports it, **Settings → Appearance** adds **Translucent sidebar** and sliders for how much of the desktop shows through the sidebar and the main area. See [Appearance](/docs/providers-and-settings/#appearance).
 
 ## Browser design mode
 
@@ -187,7 +194,7 @@ The annotation popover can be dragged out of the way; **Clear all annotations** 
 
 ## PDF reader
 
-PDFs opened from the file tree open in the PDF reader instead of the code editor. It has a table of contents, page thumbnails, search, fit-width / fit-page zoom, page bookmarks, and highlights in four colors. Bookmarks and highlights are saved by the daemon. Select text and choose **Add to Note** to quote it into a [note](/docs/notes-and-issues/).
+PDFs opened from the file tree open in the PDF reader instead of the code editor. A PDF attached to a conversation does the same, including one uploaded into that conversation: choose it under the assistant's **Conversation files**. The reader has a table of contents, page thumbnails, search, fit-width / fit-page zoom, page bookmarks, and highlights in four colors. Bookmarks and highlights are saved for that file. A file the reader refuses shows **Unable to open PDF** and **This PDF could not be opened in the reader.** Select text and choose **Add to Note** to quote it into a [note](/docs/notes-and-issues/).
 
 ## Decks
 

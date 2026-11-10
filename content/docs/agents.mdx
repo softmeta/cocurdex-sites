@@ -31,8 +31,9 @@ Common registry agents:
 | `acp:cursor` | Cursor | `cursor-agent acp` | Streaming, native write; login via Cursor |
 | `acp:devin` | Devin | `devin acp` | Streaming, native write; login via Devin |
 | `acp:grok-build` | Grok Build | `grok agent stdio` | Plan mode, steering, native write; plan usage meter |
+| `acp:antigravity-acp` | Google Antigravity | `agy acp` | Local CLI, native write; `agy` 1.5.0 or newer |
 
-External agents must be installed and authenticated on your machine. **Settings → Agent CLIs** shows each agent's detected version and status (**Ready**, **Not installed**, **Update required**, **Update available**, **Login required**), a copyable install command, and a docs link. Agents that are not installed are folded under **Not installed (N)**, and the session's agent menu hides them. An agent below its minimum version stays usable, but some capabilities may not work until you update. **Update to v…** installs a newer registry build. **Log in** and **Log out** are on the same page when the agent supports them.
+External agents must be installed and authenticated on your machine. **Settings → Agent CLIs** shows each agent's detected version and status (**Ready**, **Not installed**, **Update required**, **Update available**, **Login required**, **Disabled**), a copyable install command, and a docs link. Agents that are not installed are folded under **Not installed (N)**, and agents you disable are folded under **Disabled (N)**. The session's agent menu hides both; an agent already selected for that session stays listed. Built-in **Pi** is pinned at the top of the list and cannot be disabled. Every other installed agent has an **Enabled** switch in its detail dialog. See [Agent CLIs](/docs/providers-and-settings/#agent-clis). An agent below its minimum version stays usable, but some capabilities may not work until you update. **Update to v…** installs a newer registry build. **Log in** and **Log out** are on the same page when the agent supports them.
 
 ```bash
 cocurdex agent updates
@@ -58,7 +59,8 @@ To add one, open **Settings → Agent CLIs → Add from ACP Registry**, search t
 
 Registry agents are third-party code: review an agent's source and license before installing it. **Remove** uninstalls it again.
 
-- If `cursor-agent`, `devin`, or `grok` is already on your `PATH`, Cocurdex adopts it automatically the first time it starts.
+- If `cursor-agent`, `devin`, `grok`, or `agy` is already on your `PATH`, Cocurdex adopts it automatically. `agy` must be 1.5.0 or newer and start ACP with `agy acp` (Google Antigravity, `acp:antigravity-acp`).
+- If a CLI is still missing, Cocurdex refreshes the login-shell `PATH` on macOS and Linux and looks again. CLIs installed with `n`, `nvm`, `fnm`, `volta`, `mise`, `asdf`, or under `~/.local/bin` are found even when the background daemon started at login before that shell environment was ready.
 - **Use my own command** registers an agent the registry does not list (or a custom build): install it yourself, then enter its executable name or absolute path and the arguments that start ACP mode.
 - If an ACP agent process dies, the next turn respawns it and resumes the same provider session.
 
@@ -72,6 +74,7 @@ Registry agents are third-party code: review an agent's source and license befor
 | You have a Cursor subscription | `acp:cursor` |
 | You use Devin | `acp:devin` |
 | You want Grok-oriented implementation | `acp:grok-build` |
+| You use Google Antigravity | `acp:antigravity-acp` |
 | Another agent from the ACP Registry | `acp:<registry-id>` |
 | Lightweight chat-style turn without native workspace write | `pi` (Pi) |
 
@@ -133,7 +136,7 @@ When the collaboration mode is `plan`, the session uses `claude-plan` (plan only
 
 ### Other ACP Registry agents
 
-Cursor, Devin, and other registry agents have no Cocurdex-side permission-mode list. Tool approval follows the agent's own ACP permission requests, which surface as permission cards like any other agent. Many registry agents still advertise **session modes** in the composer (for example Devin's Ask / Plan / Autonomous). Those choices come from the installed agent, not from a Cocurdex table.
+Cursor, Devin, Google Antigravity, and other registry agents have no Cocurdex-side permission-mode list. Tool approval follows the agent's own ACP permission requests, which surface as permission cards like any other agent. Many registry agents still advertise **session modes** in the composer (for example Devin's Ask / Plan / Autonomous). Those choices come from the installed agent, not from a Cocurdex table.
 
 ### Built-in Pi (`pi`)
 
@@ -174,6 +177,8 @@ Every session gets a local MCP tool server from the daemon. Tools are grouped an
 | `script_run` | `propose` | Main sessions |
 | `settings` | `list`, `get`, `set`, `propose` | Main sessions (also powers the [settings assistant](/docs/providers-and-settings/#settings-assistant)) |
 | `routine` | `list`, `create`, `update`, `run`, `runs`, `delete`, and `report` | [Assistant](/docs/assistants/#routines) threads. `report` is only offered during a routine run. The assistant cannot grant **Full access**, or change or run a routine that already has it |
+| `work` | `catalog`, `start`, `list`, `send`, `stop` | Personal assistants. Hands repository work to a work session. A routine can use it only with **Full access**. See [Delegated work](/docs/assistants/#delegated-work) |
+| `applications` | `list`, `tools`, `read`, `call` | An assistant granted that connection, and a work-mode Pi session when the connection allows it. `tools`, `read`, and `call` take the connection id, or `notion`, `linear`, or `github` when this session is allowed exactly one such connection. `read` calls a tool the provider declares read-only, which is what a **Read and draft** routine uses. `call` is the general call. See [Applications](/docs/assistants/#applications) |
 
 Subagents started by a script run get none of these tools. Sessions that can delegate also receive guidance on when to use the agent's own native subagents (same provider, result only) versus a Cocurdex team or script run (another provider, a saved role, a separate worktree, or task dependencies).
 
@@ -183,7 +188,7 @@ See [Teams and orchestration](/docs/teams/) for what they do.
 
 Some runtimes can change **model**, **thinking / reasoning effort**, **permission**, or related axes **without recreating** the provider session. That preserves conversation continuity and provider-side cache. If a control is missing for an agent, it is intentionally unsupported — there is no silent “restart the session under the hood” fallback.
 
-While a session is idle, you can also **switch the agent** in the composer, or **fork** the session (or **Fork from here** on a user message). See [Fork and switch agent](/docs/desktop/#fork-and-switch-agent). **Execution tree** shows the nested runs and tool calls.
+While a session is idle, you can also **switch the agent** in the composer (each option in that agent menu shows the agent's brand icon beside its name, the same way the agent menu on a new session does), or **fork** the session (or **Fork from here** on a user message). See [Fork and switch agent](/docs/desktop/#fork-and-switch-agent). **Execution tree** shows the nested runs and tool calls.
 
 **Settings → Agent CLIs → Run limits** caps concurrent delegated work; sessions you start yourself are never queued. See [Providers and settings](/docs/providers-and-settings/#agent-clis).
 

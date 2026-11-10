@@ -7,13 +7,17 @@ Most Cocurdex configuration lives in the desktop app's **Settings**. This page c
 
 ## Agent CLIs
 
-**Settings → Agent CLIs** lists every agent you can pick when starting a session. For each one it shows the detected version and status (**Built in**, **Ready**, **Not installed**, **Update required**, **Update available**, **Login required**), a copyable install command, a docs link, and — for agents that report it — your plan usage. Agents that are not installed are folded under **Not installed (N)** until you expand that group. The agent menu on a new session hides those missing agents; an agent you already selected stays visible if it is later uninstalled. **Update to v…** installs a newer ACP Registry build. Registry agents that support it offer **Log in** and **Log out**. **Add from ACP Registry** installs more agents, or registers one with your own command. See [Agents](/docs/agents/#acp-registry-agents).
+**Settings → Agent CLIs** lists every agent you can pick when starting a session. Built-in **Pi** is pinned at the top and cannot be disabled. For each agent it shows the detected version and status (**Built in**, **Ready**, **Not installed**, **Update required**, **Update available**, **Login required**, **Disabled**), a copyable install command, a docs link, and — for agents that report it — your plan usage. Agents that are not installed are folded under **Not installed (N)** until you expand that group. Disabled agents are folded under **Disabled (N)** with status **Disabled**. The agent menu on a new session hides missing and disabled agents; an agent you already selected stays visible if it is later uninstalled or disabled. **Update to v…** installs a newer ACP Registry build. Registry agents that support it offer **Log in** and **Log out**. **Add from ACP Registry** installs more agents, or registers one with your own command. See [Agents](/docs/agents/#acp-registry-agents).
 
 ```bash
 cocurdex agent updates
 cocurdex agent update <agent>
 cocurdex agent login <agent>
 ```
+
+Open an installed agent's detail dialog and use the **Enabled** switch to disable it temporarily. Pi and agents under **Not installed** do not show the switch. Turning it off asks you to confirm — for example **Disable Codex?**. The message says that disabling that agent stops its running sessions and pauses new sessions, model discovery, and usage checks. Existing session history is kept, and you can re-enable it anytime. While it is disabled, capability checks, login, and MCP servers injected for that agent are paused too. The detail line reads **Temporarily disabled. New sessions, model discovery, and usage checks are paused.** Turn **Enabled** back on to resume; that does not ask again.
+
+On macOS and Linux, if a CLI is not found, Cocurdex refreshes the login-shell `PATH` and searches again for local ACP CLIs such as `cursor-agent`, `devin`, `grok`, and `agy`. CLIs installed with `n`, `nvm`, `fnm`, `volta`, `mise`, `asdf`, or under `~/.local/bin` are detected even when the background daemon started at login before that shell environment was populated.
 
 **Run limits** on the same page cap how many agent runs execute at once. Delegated runs (teammates and script-run subagents) past a limit wait in the queue; runs you start yourself are never held back.
 
@@ -34,7 +38,7 @@ A provider config holds:
 | Provider id / name | Stable id and display name |
 | Base URL | Service endpoint |
 | API runtime | `openai-completions`, `openai-responses`, `openai-codex-responses`, `anthropic-messages`, `google-generative-ai`, or `mistral-conversations` |
-| Auth | A provider account via Pi OAuth, or an API key managed by Pi |
+| Auth | A provider account via Pi OAuth, or an API key managed by Pi. A custom provider pointed at a local or proxy endpoint can leave the key empty |
 | Models | Per-model id, display name, capabilities (agent / chat / reasoning / vision), context and output limits, cost per 1M tokens |
 | Advanced | Custom headers, compatibility JSON, thinking-level maps |
 
@@ -51,13 +55,16 @@ Provider configs and models are also scriptable: `cocurdex provider add|update|l
 
 External agent CLIs (`claude`, `codex`, `opencode`, and ACP Registry agents such as `cursor-agent` or `grok`) keep their own authentication — Codex account state under `~/.codex`, for example. Provider configs do not replace that; they give Pi and the desktop a shared model catalog.
 
+A custom, local, or proxy provider with no API key is used the same way for one-shot text as for an agent run. That covers Pi session titles, an assistant's greeting, and a generated commit message.
+
 ## MCP servers
 
-**Settings → MCP** is the tool servers Cocurdex gives to your agents. New sessions pick up changes; a running session keeps the tools it already has.
+**Settings → Connections**, on the **MCP** tab, is the tool servers Cocurdex gives to your agents. The page title is **Connections**. **Apps** and **Skills** are the other tabs. New sessions pick up changes; a running session keeps the tools it already has.
 
 - A **form** (name, local command or remote URL, arguments, environment or headers) and raw **JSON**. The JSON shape is the standard `mcpServers` object.
 - Server names may contain only letters, digits, `_`, and `-`.
 - **Agents** chooses which agents receive the server. Their own MCP configs are left untouched. Some servers can only be used by Pi — for example one that sets a working directory, runs a command value, or signs in through a Pi provider. The row says so.
+- Notion, Linear, and GitHub connections are managed on the **Apps** tab, not assigned to agents here. That row says **This connection is managed in Applications. Choose assistant access there; engine-level MCP assignment does not apply.** See [Applications](/docs/assistants/#applications).
 - **Import from other agents** reads servers already configured for Claude Code, Codex, Cursor, OpenCode, or Antigravity, including project configs. You confirm each one. You can also drop or paste JSON.
 - **Sign in** when a server asks for it. **Test connection** lists its tools.
 - A project server defined in a file on disk is read-only here; edit that file to change it.
@@ -128,21 +135,45 @@ After an update downloads, an **Update available** card offers **Update and Rest
 
 **Keep running in the background** is off until you turn it on. On, the daemon keeps serving the CLI and paired devices after you quit the desktop app, and it starts when you log in: a LaunchAgent on macOS, a Run key on Windows, or an XDG autostart entry on Linux. Off, quitting the app stops the daemon it owns. From the terminal, `cocurdex daemon background on|off|status [--json]` is the same switch. See [CLI](/docs/cli/#daemon-and-workspaces).
 
+## Finding a setting
+
+The settings sidebar has a **Search settings** box at the top. While the box has text, **Clear search** empties it. If nothing matches, the list says **No matching settings**.
+
+Command+F on macOS, and Ctrl+F on Windows and Linux, focuses the box. Escape clears it. Up and Down move through the results, and Enter opens the selected one.
+
+Search matches sections and individual settings, including every shortcut, by title, group, section, and description. It matches both English and 简体中文, so `proxy` and `代理` both work whichever language the interface is using. A setting the current window does not show is left out of the results. Results are grouped by section. Choosing one opens that section. Choosing a setting also scrolls its row into view and highlights it briefly. If that row is not on the page in the current state — the manual proxy fields, while **Proxy mode** is not `manual` — it scrolls to the **Proxy mode** row that reveals them.
+
+## Appearance
+
+**Settings → Appearance** sets the theme (**Light**, **Dark**, or **System**), a color theme preset, and the UI and code fonts.
+
+On the main desktop window, when the system can draw a window material, the page also shows **Translucent sidebar**, on by default: **Let the desktop show through the sidebar.** macOS uses sidebar vibrancy. Windows 11 22H2 or later (build 22621 or newer) uses Mica. Linux, older Windows, the [web client](/docs/devices-and-web/), and a chat window opened with **Open in a separate window** stay solid, and these controls stay hidden. When the system requests reduced transparency, the surfaces stay solid even if the controls are shown.
+
+With the switch on, two sliders appear. Dragging previews the change immediately; the value is saved when you release the slider.
+
+| Control | Range | Default | Meaning |
+| --- | --- | --- | --- |
+| **Sidebar transparency** | 0–100% | 12% | How much of the desktop shows through the sidebar |
+| **Main area transparency** | 0–100% | 10% | How much of the desktop shows through the main area |
+
+**Main area transparency** covers the chat column, the right panel, and the settings content together. The window material follows the theme (**Light**, **Dark**, or **System**). The [settings assistant](#settings-assistant) accepts the same limits as integers: `sidebarTransparency` and `contentTransparency` from 0 to 100 (defaults 12 and 10). They apply only on a desktop host with a window material.
+
+When that material is showing, the editor **Code MiniMap** stays opaque. It uses the same solid surface as the sticky editor chrome, so it does not appear black over the transparent editor.
+
 ## Other settings
 
 | Section | Covers |
 | --- | --- |
 | **General** | Chat layout, transcript view, HTML preview location, send shortcut, follow-up queue/steer, language, notifications (including a completion sound), **Shell command** (install `cocurdex` on your `PATH`), daemon status, **Keep running in the background**, and restart |
-| **Appearance** | Theme (system / dark / light — parity is a product requirement), color theme presets, UI and code fonts |
+| **Appearance** | Theme (**Light** / **Dark** / **System** — parity is a product requirement), color theme presets, UI and code fonts, and a [translucent sidebar](#appearance) when the window supports it |
 | **Editor** | Code MiniMap |
 | **Shortcuts** | Rebindable keyboard shortcuts; `null` override unbinds an action |
 | **Providers** | Provider configs and model catalogs (above) |
-| **Agent CLIs** | Installed agents, versions, install hints, ACP Registry, and [run limits](#agent-clis) (above) |
+| **Agent CLIs** | Installed agents, versions, install hints, ACP Registry, the **Enabled** switch, and [run limits](#agent-clis) (above) |
 | **Roles** | Edit or delete saved agent presets, their avatars and descriptions; see [Agents](/docs/agents/#agent-roles) |
 | **Teams** | Reusable [team templates](/docs/teams/#team-templates) |
-| **MCP** | Tool servers for your agents, including import (above) |
+| **Connections** | **Apps**, **MCP**, and **Skills**. **Apps** connects Notion, Linear, and GitHub for assistants ([Applications](/docs/assistants/#applications)). **MCP** is the tool servers above. **Skills** is the skill manager ([Skills](/docs/skills/)) |
 | **Memory** | Long-term recall and optional multi-device sync; see [Memory](/docs/memory/) |
-| **Skills** | The `cocurdex-*` pack, plus other skills from skills.sh, a GitHub repo, or a folder |
 | **Network** | Outbound proxy (above) |
 | **Git** | Commit-message model (above) |
 | **Worktrees** / **Workspaces** | Managed worktree root and inventory; per-workspace scripts and actions (above) |
