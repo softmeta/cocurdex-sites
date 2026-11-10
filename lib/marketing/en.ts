@@ -3,7 +3,7 @@ import type { BuildId } from "../../lib/site";
 export const dict = {
   meta: {
     description:
-      "Multi-agent development workspace for professional developers. Chat, terminal, editor, and browser preview in one desktop shell.",
+      "Early beta. Any model and any agent — ACP and native protocols — with memory on your computer. Chat, assistants, and work in one product, on Windows, macOS, Linux, iOS, Android, and Web.",
   },
   nav: {
     docs: "Docs",
@@ -12,7 +12,7 @@ export const dict = {
     footerAria: "Footer",
   },
   footer: {
-    tagline: "Pre-release.",
+    tagline: "Early beta.",
     gettingStarted: "Getting started",
     license: "Source-available under FSL-1.1-ALv2.",
     product: "Product",
@@ -26,50 +26,53 @@ export const dict = {
     terms: "Terms",
   },
   home: {
-    badge: "Pre-release · macOS · Windows · Linux",
-    heading: "Run a fleet of coding agents.",
-    headingAccent: "Keep every one of them legible.",
-    lede: "Cocurdex is a desktop workspace for multi-agent development. Chat, terminal, editor, and browser preview share one shell — and every session tells you honestly whether it is working, waiting, or done.",
+    badge: "Early beta · Windows · macOS · Linux · iOS · Android · Web",
+    heading: "Any model. Any agent.",
+    headingAccent: "Chat, assistants, and work — one product.",
+    lede: "Cocurdex is in early beta. Bring the models and providers you already use — Cocurdex does not resell model access — and run any agent over ACP or a native protocol. Chat, Assistants, and work sessions are one product. Try it, and send feedback.",
+    pitch: [
+      {
+        title: "Any model",
+        body: "Use the models and providers you already have. Cocurdex does not resell model access.",
+      },
+      {
+        title: "Any agent",
+        body: "ACP and native protocols.",
+      },
+      {
+        title: "Consistent memory",
+        body: "Memories stay on your computer. Optional multi-device sync is via rsrs (rsrs.rs).",
+      },
+      {
+        title: "Multi-device remote control",
+        body: "Self-hosted private deployment, or the official relay.",
+      },
+      {
+        title: "Every platform",
+        body: "Windows, macOS, Linux, iOS, Android, and Web.",
+      },
+      {
+        title: "One product",
+        body: "Chat, Assistants, and work sessions live together.",
+      },
+    ],
     downloadCta: "Download",
     docsCta: "Read the docs",
-    mock: {
-      title: "cocurdex — web-app",
-      sessionsLabel: "Sessions",
-      sessions: [
-        {
-          name: "auth-refactor",
-          agent: "claude-agent",
-          state: "wait",
-          label: "Needs approval",
-        },
-        {
-          name: "fix-flaky-e2e",
-          agent: "codex",
-          state: "busy",
-          label: "Using tools",
-        },
-        {
-          name: "pricing-page",
-          agent: "acp:cursor",
-          state: "busy",
-          label: "Thinking",
-        },
-        {
-          name: "api-review",
-          agent: "acp:grok-build",
-          state: "done",
-          label: "Unread result",
-        },
-        { name: "release-notes", agent: "pi", state: "idle", label: "Ready" },
-      ],
-      chatTitle: "auth-refactor",
-      userMsg:
-        "Move session tokens to httpOnly cookies and update the middleware.",
-      agentMsg: "Plan ready: 3 files, 1 migration. Edits need your approval.",
-      permission: "Edit src/middleware.ts",
-      allow: "Allow",
-      deny: "Deny",
-      terminalTitle: "Terminal",
+    shots: {
+      note: "Real desktop app, opened by the scenario harness. The threads are seeded demonstration data, not a live agent transcript.",
+      work: {
+        alt: "Cocurdex work session in the acme-shop fixture workspace. The seeded thread Add percentage discount codes shows an edit to src/discount.ts.",
+        caption: "Work · acme-shop fixture · Add percentage discount codes",
+      },
+      chat: {
+        alt: "Cocurdex Chat session Debounce vs throttle. The reply is fixture text, and the composer shows the fixture model name E2E Model.",
+        caption: "Chat · fixture session · Debounce vs throttle",
+      },
+      assistants: {
+        alt: "Cocurdex Assistants with the Coach persona from the personal-agents scenario. The greeting and reply come from a local stub model, not a live provider.",
+        caption:
+          "Assistants · personal-agents scenario · Coach, local stub model",
+      },
     },
     statesHeading: "Honest state, across every session",
     statesIntro:
@@ -117,7 +120,7 @@ export const dict = {
       },
       {
         title: "Local-first data",
-        body: "Notes, issues, slide decks, and search live in app-owned storage on your machine. No account required. Open the same workspace in a browser on this computer, or pair another device — on your network, or through a relay when you are away. Optional long-term memory stays on this computer until you turn on multi-device sync.",
+        body: "Notes, issues, slide decks, and search live in app-owned storage on your machine. No account required. Open the same workspace in a browser on this computer, or pair another device — on your network, or through a relay when you are away. Optional long-term memory stays on this computer. When you turn on multi-device sync, it goes through rsrs (rsrs.rs).",
         tag: "data",
       },
     ],
@@ -168,19 +171,21 @@ export const dict = {
     skillsTitle: "Product skills",
     skillsBody:
       "An optional cocurdex-* skill pack teaches agents the note → issue → ship loop, team leadership, settings, and slide decks against the same data.",
-    ctaHeading: "Stop tab-hopping between agents.",
+    ctaHeading: "Try the early beta.",
     ctaBody:
-      "Pre-release builds for macOS, Windows, and Linux. No account required.",
+      "Windows, macOS, Linux, iOS, Android, and Web. Feedback is welcome.",
     gettingStarted: "Getting started",
   },
   download: {
     pageTitle: "Download",
     metaDescription:
-      "Download Cocurdex for macOS, Windows, and Linux. Pre-release.",
-    eyebrow: "Pre-release",
+      "Download the Cocurdex early beta for macOS, Windows, Linux, and Android.",
+    eyebrow: "Early beta",
     heading: "Download Cocurdex",
     intro:
-      "Pre-release builds for macOS, Windows, and Linux. APIs and behavior may change between versions.",
+      "Early beta builds for macOS, Windows, Linux, and Android. APIs and behavior may change between versions.",
+    desktopHeading: "Desktop",
+    androidHeading: "Android",
     recommended: "Recommended for this device",
     builds: {
       "mac-arm64": {
@@ -203,6 +208,14 @@ export const dict = {
         label: "Linux x64 (.deb)",
         note: "Debian / Ubuntu package. Install with apt or dpkg.",
       },
+      "android-arm64": {
+        label: "Android (arm64-v8a)",
+        note: "Most phones. Sideload the APK and allow unknown sources.",
+      },
+      "android-armv7": {
+        label: "Android (armeabi-v7a)",
+        note: "32-bit devices only.",
+      },
     } satisfies Record<BuildId, { label: string; note: string }>,
     releaseNotes: "Release notes",
     afterHeading: "After you install",
@@ -221,7 +234,12 @@ export const dict = {
       },
     ],
     installNote:
-      "On macOS, open the DMG and drag Cocurdex to Applications. Every public macOS build is signed with Developer ID and notarized by Apple. Windows installers are unsigned.",
+      "On macOS, open the DMG and drag Cocurdex to Applications. Every public macOS build is signed with Developer ID and notarized by Apple. Windows installers are unsigned. On Android, sideload the APK and allow installation from unknown sources. arm64-v8a is the usual choice.",
+    androidNote:
+      "Android buttons use the newest published GitHub Release that includes these APKs, including prereleases. Desktop buttons stay on the latest release. If an Android button opens the releases list, choose the newest release that contains the file.",
+    devicesNote:
+      "There is no iOS package on this page. Pair an iPhone or Android phone with Cocurdex on your computer.",
+    devicesLink: "Devices and web",
     sourceHeading: "Run from source",
     sourceBody: "Node.js 24 and pnpm required.",
     readDocs: "Getting started guide",

@@ -37,6 +37,10 @@ describe("marketing dictionaries", () => {
   it("zh-cn has exactly the same keys as en", () => {
     expect(deepKeys(zhCn).sort()).toEqual(deepKeys(en).sort());
   });
+
+  it("keeps the homepage pitch the same length in both locales", () => {
+    expect(zhCn.home.pitch).toHaveLength(en.home.pitch.length);
+  });
 });
 
 describe("docs content", () => {

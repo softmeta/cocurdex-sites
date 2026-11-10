@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { localizedPath, type SiteLocale } from "@/lib/locales";
 import { getMarketingDict } from "@/lib/marketing";
-import { desktopDownloads, githubLatestReleaseUrl, site } from "@/lib/site";
+import { downloadBuilds, githubLatestReleaseUrl, site } from "@/lib/site";
 import { DownloadBuilds } from "./download-builds";
-import { eyebrow, SiteShell, secondaryButton } from "./shell";
+import { SiteShell, secondaryButton } from "./shell";
 
 export function DownloadPage({ locale }: { locale: SiteLocale }) {
   const t = getMarketingDict(locale);
@@ -14,7 +14,9 @@ export function DownloadPage({ locale }: { locale: SiteLocale }) {
       <main className="relative flex-1 overflow-hidden">
         <div aria-hidden className="bg-grid -z-10 absolute inset-0" />
         <div className="mx-auto w-full max-w-4xl px-4 pt-20 pb-24 sm:px-6">
-          <p className={eyebrow}>{t.download.eyebrow}</p>
+          <p className="mb-3 font-mono text-[0.75rem] text-fd-primary tracking-[0.14em]">
+            {t.download.eyebrow}
+          </p>
           <h1 className="mb-4 font-semibold text-4xl tracking-[-0.03em] sm:text-5xl">
             {t.download.heading}
           </h1>
@@ -23,22 +25,32 @@ export function DownloadPage({ locale }: { locale: SiteLocale }) {
           </p>
 
           <DownloadBuilds
-            builds={desktopDownloads}
+            builds={downloadBuilds}
             labels={t.download.builds}
             recommendedLabel={t.download.recommended}
             actionLabel={t.nav.download}
+            desktopHeading={t.download.desktopHeading}
+            androidHeading={t.download.androidHeading}
           />
 
-          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+          <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
             <a
               href={githubLatestReleaseUrl}
               className="text-fd-primary no-underline hover:underline"
             >
               {t.download.releaseNotes} →
             </a>
-            <p className="m-0 text-fd-muted-foreground">
-              {t.download.installNote}
-            </p>
+            <Link
+              href={to("/docs/devices-and-web/")}
+              className="text-fd-primary no-underline hover:underline"
+            >
+              {t.download.devicesLink} →
+            </Link>
+          </div>
+          <div className="mt-4 grid max-w-3xl gap-3 text-fd-muted-foreground text-sm leading-relaxed">
+            <p className="m-0">{t.download.installNote}</p>
+            <p className="m-0">{t.download.androidNote}</p>
+            <p className="m-0">{t.download.devicesNote}</p>
           </div>
 
           <h2 className="mt-20 mb-6 font-semibold text-2xl tracking-tight">
