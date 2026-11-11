@@ -48,7 +48,7 @@ description: 助理表单——个人助理、概览、委派工作、应用、�
 
 **指令**说明这个助理负责什么、应该怎么做事。**人设**是它对你是谁：语气、性格，以及和你说话的方式（最多 20,000 个字符）。在**编辑助理**里填写，或用 CLI 的 `--instructions` / `--instructions-file` 和 `--soul` / `--soul-file`。两者每一轮都会作为系统提示里的一节带上，所以修改从下一条消息起生效。保存时如果没有带上指令或 skills，已经存下的内容会保留，包括用 CLI 设过的指令。
 
-应用贴进主线程的消息会带一行来源。**今日简报**是每日简报。**来自例行任务**加上任务名称，是一次例行任务的结果；点它打开那次运行的线程。委派出去的会话在完成、失败、取消或中断后，也会同样贴回主线程，助理再接一轮告诉你发生了什么。见[委派工作](#委派工作)。问候没有来源行。
+应用贴进主线程的消息会带一行来源。**今日简报**是每日简报。**来自例行任务**加上任务名称，是一次例行任务的结果；点它打开那次运行的线程。委派出去的会话在完成、失败、取消或中断后，也会同样贴回主线程，助理再接一轮告诉你发生了什么。交给另一台电脑的工作用**来自 &#123;host&#125; 上的 &#123;sender&#125;**。见[委派工作](#委派工作)。问候没有来源行。
 
 ## 概览
 
@@ -61,8 +61,8 @@ description: 助理表单——个人助理、概览、委派工作、应用、�
 | 区块 | 显示 |
 | --- | --- |
 | **需要你处理** | 这个助理、它委派的工作或它的例行任务里还在等你、或已经失败的事项：审批、提问和计划，失败的会话，以及需要你处理、失败或暂停的例行任务运行。有内容时才出现。一行下面的文字标明类型，例如**等你审批**、**有问题要问你**、**计划待确认**、**失败了**、**需要你处理**、**例行任务失败**或**连续失败已暂停**。点一行会打开那个会话，或选中对应的例行任务 |
-| **委派工作** | 这个助理交出去、并且仍是**执行中**或**空闲**的会话。一行显示工作区和这个状态。点它打开原来的工作会话。还没有内容时写着**此助理委派的工作会显示在这里。** 会话已经不在时提示**这个工作会话已不可用。** |
-| **最近结果** | 同一批会话在不再执行、也不再空闲之后：**本轮已完成**、**失败**、**已取消**、**已中断**或**已归档**。有内容时才出现 |
+| **委派工作** | 这个助理交出去、并且仍是**执行中**或**空闲**的会话。一行显示工作区和这个状态。交给另一台电脑的工作还会写上那台电脑的名称。点本机上的一行打开会话。点另一台电脑上的一行打开那台电脑的窗口；见[另一台电脑](#另一台电脑)。还没有内容时写着**此助理委派的工作会显示在这里。** 会话已经不在时提示**这个工作会话已不可用。** |
+| **最近结果** | 同一批会话在不再执行、也不再空闲之后：**本轮已完成**、**失败**、**已取消**、**已中断**或**已归档**。有内容时才出现。另一台电脑上的一行会写上那台电脑的名称，并用同样的方式打开它的窗口 |
 | **例行任务** | 这个助理自己的例行任务。一行显示下次运行时间和时区，或者**已暂停**、**因连续失败已暂停**、**暂无下次运行时间**。点一条会选中它并打开**例行任务**。**管理此助理的例行任务**打开列表，不预选任何一条。这一段写着**由当前连接的主机执行，需要其后台服务在线。** |
 | **上下文与资料** | **记忆**、**笔记**、**事项**和**会话文件** |
 | **应用** | **连接应用**。下面一行是**连接账号，设置助理使用权限，并查看可用工具。** |
@@ -79,9 +79,23 @@ description: 助理表单——个人助理、概览、委派工作、应用、�
 
 个人助理自己不改仓库。它把这件事交给你某个工作区里的普通工作会话。会话使用这个工作区最近用过的 Agent 和模型，或一份已保存的 [Agent 角色](/zh-cn/docs/agents/#agent-角色)，或带领一份已保存的[团队模板](/zh-cn/docs/teams/#团队模板)。也可以在一棵新的[工作树](/zh-cn/docs/desktop/#工作树)里运行。会话出现在**工作**里，你可以跟进，也可以自己接手。
 
-任务进到那个会话时，会标明来自这个助理。会话每完成一轮，或者这一轮失败、被取消、被中断，结果都会贴回主线程，助理再告诉你发生了什么。你可以从概览打开原来的会话，也可以从那条消息打开。需要批准和提问的事项出现在[概览](#概览)的**需要你处理**里，不经过助理。助理只能列出、发消息和停止它自己委派的会话。
+任务进到那个会话时，会标明来自这个助理。会话每完成一轮，或者这一轮失败、被取消、被中断，结果都会贴回主线程，助理再告诉你发生了什么。你可以从概览打开原来的会话，也可以从那条消息打开。本机上的工作需要批准和提问时，出现在[概览](#概览)的**需要你处理**里，不经过助理。助理只能列出、发消息和停止它自己委派的会话。
 
-可以直接让助理做这件事。工具是 `work_catalog`、`work_start`、`work_list`、`work_send` 和 `work_stop`。`work_catalog` 列出工作区（不包括聊天，也不包括助理自己的工作区）、已保存的 Agent 角色和团队模板。角色和团队模板二选一。都不填时，会话使用这个工作区最近用过的 Agent 和模型。团队模板让这个会话带领那份模板，并用模板里的第一名成员作为它自己的角色。后续消息在这个 Agent 支持插入时会进入当前这一轮，否则等到这一轮结束。例行任务只有在**完全权限**下才能委派。同样的操作是 `cocurdex persona work`。见 [CLI](#cli)。
+可以直接让助理做这件事。工具是 `work_catalog`、`work_start`、`work_list`、`work_send` 和 `work_stop`。`work_catalog` 列出工作区（不包括聊天，也不包括助理自己的工作区）、已保存的 Agent 角色和团队模板。这台电脑已经配对了其他电脑时，还会返回 `hosts`：每台电脑的 id、名称和状态。角色和团队模板二选一。都不填时，会话使用这个工作区最近用过的 Agent 和模型。团队模板让这个会话带领那份模板，并用模板里的第一名成员作为它自己的角色。后续消息在这个 Agent 支持插入时会进入当前这一轮，否则等到这一轮结束。例行任务只有在**完全权限**下才能委派。`work_catalog` 和 `work_start` 还可以带 `host`，指向一台已配对的电脑。同样的操作是 `cocurdex persona work`。见[另一台电脑](#另一台电脑)和 [CLI](#cli)。
+
+### 另一台电脑
+
+助理可以把工作交给[其他电脑](/zh-cn/docs/devices-and-web/#其他电脑)里的一台。会话在那台电脑上运行，用它自己的 Agent、文件和权限模式。工作区来自那台电脑的目录。这台电脑的**工作**列出的是这里的会话。远程会话从概览打开，或从主线程的来源行打开。
+
+`work_catalog` 可以带 `host`，即那份列表里的 id 或名称。带上 `host` 时，目录列出那台电脑的工作区和 Agent 角色，团队模板是空的。从这份目录里选工作区。`work_start` 使用同一个 `host`。在那边不能用团队模板，会失败，提示 `Team templates run only on this computer; pick an agent role for a paired computer.` 没有匹配的电脑时提示 `No paired computer matches "<name>". List them with work_catalog.` 多台电脑同名时提示 `Several paired computers are named "<name>"; pass its id.`
+
+在另一台电脑上，任务标为**来自 &#123;host&#125; 上的 &#123;sender&#125;**：这个助理的名称，以及这台电脑的名称（配对时的 `--label`，或这台电脑的主机名）。主线程里的回复用同一行来源。那里的 sender 是工作会话的标题，host 是另一台电脑的名称。在桌面应用里点这一行，会打开另一台电脑的窗口并定位到那个会话。
+
+审批、提问和计划在另一台电脑上回答。概览里的一行把那台电脑的名称和工作区写在一起。它在等你、并且那台电脑有应答时，状态是**在 &#123;host&#125; 等你确认**。本机上正在等待的工作写着**等你确认**。那台电脑没有应答时，状态是 **&#123;host&#125; 离线**。点远程的一行会打开那台电脑的窗口。在本地网页客户端里，或在已经显示另一台电脑的窗口里，应用会提示**请在这台电脑的桌面应用中查看 &#123;host&#125; 上的工作。** 本机工作的一行仍然打开本地会话。
+
+这台电脑大约每 15 秒检查这些会话。一轮完成、失败、被取消或被中断后，回复会作为来自那台电脑的消息贴进主线程，助理再接一轮。`work_send` 和 `work_stop` 用会话 id 以同样的方式到达远程会话。电脑离线时，start、send 和 stop 会失败，提示以 `<name> is not reachable right now:` 开头，后面是原因。`work_list` 保留上次已知的状态。`--json` 里 `host.reachable` 为 `false`。
+
+另一台电脑要授予这台电脑**读取**、**交互**和**启动任务**（`read`、`interact` 和 `execute`）。在**其他电脑**里**移除**之后，这里不再跟踪那边的工作。
 
 ## 应用
 
@@ -201,16 +215,16 @@ cocurdex persona duplicate <persona> --name <name>
 cocurdex persona delete <persona>
 cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>]
 cocurdex persona thread <persona> [--limit <n>]
-cocurdex persona work catalog [--json]
+cocurdex persona work catalog [--host <paired computer>] [--json]
 cocurdex persona work list <persona> [--json]
-cocurdex persona work start <persona> --workspace <id|name> --prompt <text>|--prompt-file <path> [--title <title>] [--role <role>|--team <template>] [--worktree] [--json]
+cocurdex persona work start <persona> --workspace <id|name> --prompt <text>|--prompt-file <path> [--title <title>] [--role <role>|--team <template>] [--worktree] [--host <paired computer>] [--json]
 cocurdex persona work send <persona> <session-id> <message> [--json]
 cocurdex persona work stop <persona> <session-id> [--json]
 ```
 
 `--provider` 和 `--model` 要一起给出。没有 `--agent` 参数。`persona send` 发到主线程。`--wait` 在这一轮结束时打印回复（默认等待 600 秒）。`persona thread` 打印最近的消息（默认 20 条）。`--mute` 停止这个助理的桌面和手机通知。它的线程里需要你处理的事项仍会出现在助理概览里，也可以用 `cocurdex inbox` 查看。`persona delete` 会删除那个助理，包括默认助理：列表里的下一个成为默认助理；一个都不剩时列表保持为空。
 
-`persona work catalog` 列出工作区、已保存的 Agent 角色和团队模板。`list` 打印 `sessionId`、`title`、`workspaceName`、`agentType` 和 `state`。`--workspace` 是 id 或名称。名称匹配到不止一个工作区时失败，提示 `Several workspaces are named "<name>"; pass its id.` 没有匹配时提示 `No workspace matches "<name>". List the workspaces first.` `--role` 和 `--team` 二选一；两个都给会失败，提示 `Pass either an agent role or a team template, not both.` 任务是空的会失败，提示 `Describe the task to delegate.` `send` 和 `stop` 只接受这个助理委派过的会话。其他会话会失败，提示 `No work session you delegated has this id.`
+`persona work catalog` 列出工作区、已保存的 Agent 角色和团队模板。已经配对了其他电脑时，还会列出 `hosts`。`--host` 改为列出那台电脑的工作区和 Agent 角色；那边的团队模板是空的。`list` 打印 `sessionId`、`title`、`host`、`workspaceName`、`agentType`、`state` 和 `waitingFor`。`host` 是已配对电脑的名称，本机上的工作这一列为空。`waitingFor` 是 `permission`、`question`、`plan`，或为空。`--json` 包含 `host.reachable`。`--workspace` 是 `--host` 所指电脑上的 id 或名称。名称匹配到不止一个工作区时失败，提示 `Several workspaces are named "<name>"; pass its id.` 没有匹配时提示 `No workspace matches "<name>". List the workspaces first.` `--role` 和 `--team` 二选一；两个都给会失败，提示 `Pass either an agent role or a team template, not both.` `--team` 和 `--host` 一起给会失败，提示 `Team templates run only on this computer; pick an agent role for a paired computer.` 找不到这台电脑时提示 `No paired computer matches "<name>". List them with work_catalog.` 多台电脑同名时提示 `Several paired computers are named "<name>"; pass its id.` 任务是空的会失败，提示 `Describe the task to delegate.` 那台电脑离线时，`start`、`send` 和 `stop` 会失败，提示以 `<name> is not reachable right now:` 开头。`send` 和 `stop` 只接受这个助理委派过的会话。其他会话会失败，提示 `No work session you delegated has this id.`
 
 ```bash
 cocurdex routine list [--persona <persona>]

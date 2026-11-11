@@ -1,9 +1,9 @@
 ---
 title: 设备与本地网页
-description: 在本机浏览器中打开 Cocurdex，把另一台设备按权限配对，或在同一 daemon 上使用 iOS 与 Android 应用。
+description: 在本机浏览器中打开 Cocurdex，把另一台设备按权限配对，把工作交给另一台电脑，或在同一 daemon 上使用 iOS 与 Android 应用。
 ---
 
-桌面应用是主机。**设置 → 设备** 让你从浏览器使用这台主机——本机，或你配对的另一台设备——也可以从 iOS 与 Android 应用使用。
+桌面应用是主机。**设置 → 设备** 让你从浏览器使用这台主机——本机，或你配对的另一台设备——也可以从 iOS 与 Android 应用使用。同一页上的**其他电脑**是另一个方向：这台电脑可以打开并派活的电脑。
 
 这里不会替换 daemon。浏览器和手机应用连的都是已经在这台机器上运行的 Cocurdex 实例，不会另开一个工作区，也不需要云账号。
 
@@ -131,6 +131,61 @@ cocurdex host audit [--limit <n>]
 ```
 
 **访问记录**记录本机上的配对、吊销、中继和远程访问变更。
+
+## 其他电脑
+
+**设置 → 设备 → 其他电脑**列出这台电脑可以打开并派活的电脑。这一组的说明是**这台电脑可以打开并派活的其他电脑。用另一台电脑生成的配对链接来配对。** 还没有时，写着**还没有配对其他电脑。**
+
+配对只走一个方向。在另一台电脑上，这台电脑出现在**已配对设备**里，和普通已配对设备一样。那台电脑上的**其他电脑**一行，要在那边另行配对才会出现。
+
+在另一台电脑上打开**设置 → 设备**，创建一条允许**启动任务**（`execute`）的配对，同时带上**读取**和**交互**。复制它的配对链接。在那台电脑的 CLI 上：
+
+```bash
+cocurdex host pair --label "<this computer>" --scopes read,interact,execute
+```
+
+还要别的权限时，写在同一份 `--scopes` 里。这台电脑要把工作交过去，需要 `execute`。默认权限 `read,interact,approvals` 不含它。要让另一台电脑给出这台电脑能打开的链接，请先在那边开启远程访问。见[配对设备](#配对设备)。
+
+在这台电脑上，**配对电脑**打开**配对另一台电脑**。把链接粘贴进**配对链接**（占位是**粘贴另一台电脑上的配对链接**），然后点**配对**。对话框写着**在另一台电脑上打开 设置 > 设备，配对设备时勾选“启动任务”，然后复制配对链接。** 配对之后，对话框显示安全码，以及**已与 &#123;名称&#125; 配对。请确认两台电脑上的安全码一致。** 点**完成**关闭。
+
+在这台电脑上，CLI 是同一步：
+
+```bash
+cocurdex host remotes pair <pairing link> [--label <name for this computer>]
+```
+
+`--label` 是另一台电脑上显示的这台电脑的名称。省略时，名称是这台电脑的主机名。命令打印 `Paired with <name> (<host id>)` 和 `Safety code: <code>`。配对还在等待时，还会打印 `On <name>, approve this computer: cocurdex host approve <device-id> --code <code>`。
+
+这一行是**等待批准**时，在另一台电脑上核对安全码一致后再批准。对话框写着**在 &#123;名称&#125; 上打开 设置 > 设备，确认安全码一致后批准这台电脑。** 可以在那个对话框里批准，也可以在另一台电脑的**已配对设备**里批准，或用 `cocurdex host approve <device-id> --code <code>`。
+
+缺少**读取**、**交互**或**启动任务**时，对话框写着**要把工作交给 &#123;名称&#125;，它还需要允许：&#123;权限&#125;。** 这里的权限名是权限标题，例如**读取**、**交互**和**启动任务**。CLI 打印 `To delegate work there, <name> must also grant: <scopes> (cocurdex host scopes <device-id> --scopes ...)`，其中 `<scopes>` 是缺少的权限 id，例如 `read, interact, execute`。
+
+每一行显示状态和安全码，格式是 **&#123;状态&#125; · 安全码 &#123;安全码&#125;**：
+
+| 状态 | 在 `cocurdex host remotes list` 里 |
+| --- | --- |
+| **检查中** | `unknown` |
+| **已连接** | `connected` |
+| **等待批准** | `pending` |
+| **离线** | `offline` |
+| **访问已撤销** | `rejected` |
+
+`list` 的列是 `hostId`、`name`、`status`、`scopes`、`safetyCode` 和 `pairedAt`。还没有配对的电脑时，它打印 `No records`。
+
+**打开**在独立的桌面窗口里打开那台电脑。窗口标题是那台电脑的名称，窗口里跑的是同一个应用，连的是那台电脑的 daemon。**打开**属于桌面应用。本地网页客户端不放这个按钮，已经在显示另一台电脑的窗口里也不放。状态是**访问已撤销**时，**打开**保持隐藏。
+
+**移除**会在另一台机器上吊销这台电脑，并停止跟踪派到那里的工作。确认标题是**移除 &#123;名称&#125;？**，说明是**这台电脑将失去对它的访问，派到那里的工作也不再在这里跟踪。** CLI 打印 `Removed <name>`。
+
+```bash
+cocurdex host remotes list [--json]
+cocurdex host remotes pair <pairing link> [--label <name for this computer>] [--json]
+cocurdex host remotes workspaces <computer> [--json]
+cocurdex host remotes remove <computer>
+```
+
+`<computer>` 是 host id 或完全一致的名称。多台电脑同名时，传 id。这时 CLI 提示 `Several paired computers are named "<name>"; pass its id`。没有匹配时提示 `No paired computer matches "<name>"`。`workspaces` 打印那台电脑上工作区的 `id` 和 `name`。
+
+把助理的工作交给其中一台电脑，见[另一台电脑](/zh-cn/docs/assistants/#另一台电脑)。iOS 与 Android 应用不列出**其他电脑**，也不会打开这些窗口。
 
 ## 原生应用
 

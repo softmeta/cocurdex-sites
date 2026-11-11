@@ -230,9 +230,9 @@ cocurdex persona duplicate <persona> --name <name> [--json]
 cocurdex persona delete <persona>
 cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>] [--json]
 cocurdex persona thread <persona> [--limit <n>] [--json]
-cocurdex persona work catalog [--json]
+cocurdex persona work catalog [--host <paired computer>] [--json]
 cocurdex persona work list <persona> [--json]
-cocurdex persona work start <persona> --workspace <id|name> --prompt <text>|--prompt-file <path> [--title <title>] [--role <role>|--team <template>] [--worktree] [--json]
+cocurdex persona work start <persona> --workspace <id|name> --prompt <text>|--prompt-file <path> [--title <title>] [--role <role>|--team <template>] [--worktree] [--host <paired computer>] [--json]
 cocurdex persona work send <persona> <session-id> <message> [--json]
 cocurdex persona work stop <persona> <session-id> [--json]
 cocurdex routine list [--persona <persona>] [--json]
@@ -251,7 +251,7 @@ cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN] [--json]
 
 Personal assistants always run on Pi. There is no `--agent` flag on `persona create` or `persona update`. `--provider` and `--model` go together. `persona send --wait` prints the reply (default timeout 600 seconds). `persona delete` removes that assistant, including the default: the next one in the list becomes the default, and an empty list stays empty. `routine create` needs `--prompt` or `--prompt-file`, and either `--every` (at least 5) or `--at`. `--access` is `read-and-draft` (default) or `full`. `--deliver` is `inbox` (default; **On failure** in the app), `push`, or `silent`. `inbox` lists what needs you, and also finished sessions and routine results: assistant threads, work an assistant delegated, and routines. Work and chat sessions you started yourself are left out. `inbox read` marks the item's thread visited. `inbox brief` prints `Nothing to brief today.` when there is nothing to report. `inbox brief post` writes today's brief into the default assistant's home thread. `--locale` is `en-US` or `zh-CN`; omit it to reuse the last locale used for a post. Nothing new to post prints `Nothing new to post.`
 
-`persona work` hands repository work to a work session. `catalog` lists workspaces, saved agent roles, and team templates. `list` prints `sessionId`, `title`, `workspaceName`, `agentType`, and `state`. `--workspace` is an id or a name. More than one workspace with that name fails with `Several workspaces are named "<name>"; pass its id.` `--role` and `--team` are alternatives (`Pass either an agent role or a team template, not both.`). `--prompt-file` reads the task from a file. `--worktree` uses a new git worktree. `send` and `stop` accept only a session this assistant delegated (`No work session you delegated has this id.`). See [Delegated work](/docs/assistants/#delegated-work).
+`persona work` hands repository work to a work session, on this computer or on a [paired computer](/docs/assistants/#on-another-computer). `catalog` lists workspaces, saved agent roles, and team templates. With paired computers it also lists `hosts`. `--host` lists that computer's workspaces and agent roles; team templates there are empty. `list` prints `sessionId`, `title`, `host`, `workspaceName`, `agentType`, `state`, and `waitingFor`. `host` is the paired computer's name, empty for work on this computer. `waitingFor` is `permission`, `question`, `plan`, or empty. `--json` includes `host.reachable`. `--workspace` is an id or a name on the computer named with `--host`. More than one workspace with that name fails with `Several workspaces are named "<name>"; pass its id.` `--role` and `--team` are alternatives (`Pass either an agent role or a team template, not both.`). `--team` with `--host` fails with `Team templates run only on this computer; pick an agent role for a paired computer.` An unknown computer fails with `No paired computer matches "<name>". List them with work_catalog.` Several computers with that name fail with `Several paired computers are named "<name>"; pass its id.` `--prompt-file` reads the task from a file. `--worktree` uses a new git worktree, including on the paired computer. When that computer is offline, `start`, `send`, and `stop` fail with `<name> is not reachable right now:`. `send` and `stop` accept only a session this assistant delegated (`No work session you delegated has this id.`). See [Delegated work](/docs/assistants/#delegated-work).
 
 ## Search
 
@@ -319,9 +319,15 @@ cocurdex host relay off
 cocurdex host push set <url> | off
 cocurdex host push status [--json]
 cocurdex host audit [--limit <n>] [--json]
+cocurdex host remotes list [--json]
+cocurdex host remotes pair <pairing link> [--label <name for this computer>] [--json]
+cocurdex host remotes workspaces <computer> [--json]
+cocurdex host remotes remove <computer>
 ```
 
 `--scopes` is a comma-separated list of `read`, `interact`, `execute`, `files.read`, `files.write`, `git.destructive`, `approvals`, `credentials`, and `devices`. Default pairing scopes are `read,interact,approvals`. `host.admin` cannot be granted. `host approve` types the safety code shown on the device that is waiting.
+
+`host remotes` is **Settings → Devices → Other computers**. `pair` redeems a pairing link created on the other computer. `--label` is the name that computer shows for this one. `list` columns are `hostId`, `name`, `status`, `scopes`, `safetyCode`, and `pairedAt`. `status` is `unknown`, `connected`, `pending`, `offline`, or `rejected` (**Checking**, **Connected**, **Waiting for approval**, **Offline**, **Access removed**). `<computer>` is the host id or the exact name. Several computers with the same name: pass the id (`Several paired computers are named "<name>"; pass its id`). No match says `No paired computer matches "<name>"`. `workspaces` prints that computer's workspace `id` and `name`. `remove` revokes this computer there and prints `Removed <name>`. See [Other computers](/docs/devices-and-web/#other-computers).
 
 ## Worktrees
 
