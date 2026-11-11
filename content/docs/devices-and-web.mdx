@@ -1,9 +1,9 @@
 ---
 title: Devices and local web
-description: Open Cocurdex in a browser on this computer, pair another device, or use the iOS and Android app on the same daemon.
+description: Open Cocurdex in a browser on this computer, pair another device, hand work to another computer, or use the iOS and Android app on the same daemon.
 ---
 
-The desktop app is the host. **Settings → Devices** lets you use that same host from a browser — on this computer, or on another device you pair — and from the iOS and Android app.
+The desktop app is the host. **Settings → Devices** lets you use that same host from a browser — on this computer, or on another device you pair — and from the iOS and Android app. **Other computers** on that page is the other direction: computers this one can open and hand work to.
 
 Nothing here replaces the daemon. The browser and the phone app talk to the Cocurdex instance already running on the machine; that connection does not create a second workspace or a cloud account.
 
@@ -131,6 +131,61 @@ cocurdex host audit [--limit <n>]
 ```
 
 **Access log** records pairing, revoke, relay, and remote-access changes on this host.
+
+## Other computers
+
+**Settings → Devices → Other computers** lists computers this one can open and hand work to. The group says **Computers this one can open and hand work to. Pair with a link created on the other computer.** With none yet, it says **No other computers paired yet.**
+
+Pairing runs in one direction. On the other computer, this one shows up as an ordinary paired device under **Paired devices**. An **Other computers** row on that machine is a separate pairing started there.
+
+On the other computer, open **Settings → Devices** and create a pairing that allows **Start work** (`execute`), together with **Read** and **Interact**. Copy its pairing link. From the CLI on that computer:
+
+```bash
+cocurdex host pair --label "<this computer>" --scopes read,interact,execute
+```
+
+Add any further scopes you want on that same `--scopes` list. `execute` is what this computer needs before it can hand work over. The default scopes `read,interact,approvals` do not include it. Turn remote access on first when the other computer should offer a link this one can open. See [Pair a device](#pair-a-device).
+
+On this computer, **Pair a computer** opens **Pair another computer**. Paste the link into **Pairing link** (the placeholder is **Paste the pairing link from the other computer**) and choose **Pair**. The dialog says **On the other computer, open Settings > Devices, pair a device with Start work allowed, and copy its link.** After it pairs, the dialog shows the safety code and **Paired with &#123;name&#125;. Check that the safety code matches on both computers.** Choose **Done** to close it.
+
+The same step from the CLI, run on this computer:
+
+```bash
+cocurdex host remotes pair <pairing link> [--label <name for this computer>]
+```
+
+`--label` is the name the other computer shows for this one. Omit it and that name is this computer's hostname. The command prints `Paired with <name> (<host id>)` and `Safety code: <code>`. While the pairing is still pending it also prints `On <name>, approve this computer: cocurdex host approve <device-id> --code <code>`.
+
+While the row says **Waiting for approval**, approve on the other computer when the safety code matches. The dialog says **On &#123;name&#125;, open Settings > Devices and approve this computer when its safety code matches.** Approve from that dialog, from **Paired devices** on the other computer, or with `cocurdex host approve <device-id> --code <code>`.
+
+If **Read**, **Interact**, or **Start work** is missing, the dialog says **To hand work to &#123;name&#125;, it must also allow: &#123;scopes&#125;.** The scope names are the permission titles, such as **Read**, **Interact**, and **Start work**. The CLI prints `To delegate work there, <name> must also grant: <scopes> (cocurdex host scopes <device-id> --scopes ...)`, with the missing scope ids, such as `read, interact, execute`.
+
+Each row shows the status and the safety code, as **&#123;status&#125; · Safety code &#123;code&#125;**:
+
+| Status | In `cocurdex host remotes list` |
+| --- | --- |
+| **Checking** | `unknown` |
+| **Connected** | `connected` |
+| **Waiting for approval** | `pending` |
+| **Offline** | `offline` |
+| **Access removed** | `rejected` |
+
+`list` columns are `hostId`, `name`, `status`, `scopes`, `safetyCode`, and `pairedAt`. With no computers paired, it prints `No records`.
+
+**Open** opens that computer in its own desktop window. The window title is the computer's name, and the window runs this same app against that computer's daemon. **Open** belongs to the desktop app. The local web client leaves it out, and a window that is already showing another computer leaves it out too. **Open** stays hidden while the status is **Access removed**.
+
+**Remove** revokes this computer on the other machine and stops tracking work delegated there. The confirmation title is **Remove &#123;name&#125;?** and the text is **This computer loses access to it, and work delegated there is no longer tracked here.** The CLI prints `Removed <name>`.
+
+```bash
+cocurdex host remotes list [--json]
+cocurdex host remotes pair <pairing link> [--label <name for this computer>] [--json]
+cocurdex host remotes workspaces <computer> [--json]
+cocurdex host remotes remove <computer>
+```
+
+`<computer>` is the host id or the exact name. When several computers share a name, pass the id. The CLI then says `Several paired computers are named "<name>"; pass its id`. No match says `No paired computer matches "<name>"`. `workspaces` prints that computer's workspace `id` and `name`.
+
+Handing an assistant's work to one of these computers is [On another computer](/docs/assistants/#on-another-computer). The iOS and Android app does not list **Other computers** and does not open these windows.
 
 ## Native app
 
