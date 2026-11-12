@@ -189,7 +189,7 @@ Handing an assistant's work to one of these computers is [On another computer](/
 
 ## Native app
 
-The iOS and Android app has five tabs: **Assistant**, **Sessions**, **Issues**, **Notes**, and **Settings**. **Assistant** is first, and it is the screen the app opens on. The tab bar floats just above the bottom edge. **Settings** includes **Computers**, which lists paired computers. **Sessions**, **Issues**, and **Notes** are for the computer named in the toolbar.
+The iOS and Android app has four tabs: **Sessions**, **Issues**, **Notes**, and **Settings**. The tab bar floats just above the bottom edge. The app opens on **Assistant**. The title on the **Sessions** tab switches among **Assistant**, **Work**, and **Chat**, with the descriptions **Talk to your assistants**, **Run workspace tasks**, and **Chat with a model**. **Settings** includes **Computers**, which lists paired computers. **Assistant**, **Work**, **Chat**, **Issues**, and **Notes** are for the computer named in the toolbar.
 
 On Android, the launch screen uses the same mark as the desktop app, in light and dark. It stays until the first screen has its data, and hides after 3 seconds if that data has not arrived.
 
@@ -226,11 +226,11 @@ The overview header shows the avatar, the name, and the description. With no des
 
 Tap a **Needs you** row or a result to open that session. With no assistants yet, the screen says **No assistants yet** and **Assistants keep context, follow up on work, and report back to you.** **New assistant** is on that screen, and it needs **Interact**. If the phone cannot reach the computer, it says **Can't reach** that computer, with **Try Again**.
 
-Assistant threads stay out of **Sessions**. In a thread, a posted brief is marked **Today's brief**, and a posted routine result is marked **From routine** plus the routine's name. Each of those is its own turn. A delegated report the assistant has not answered yet is one muted line, not a bubble: the session title, the outcome (**Done**, **Needs you**, **Blocked**, **Failed**, **Cancelled**, or **Interrupted**), and **waiting for the assistant**. After the assistant answers, the reply shows **Based on** and the session title. The title opens that session.
+Assistant threads stay out of **Work**. In a thread, a posted brief is marked **Today's brief**, and a posted routine result is marked **From routine** plus the routine's name. Each of those is its own turn. A delegated report the assistant has not answered yet is one muted line, not a bubble: the session title, the outcome (**Done**, **Needs you**, **Blocked**, **Failed**, **Cancelled**, or **Interrupted**), and **waiting for the assistant**. After the assistant answers, the reply shows **Based on** and the session title. The title opens that session.
 
 **Issues** and **Notes** can be edited when the phone was paired with **Interact**. See [Notes and issues](/docs/notes-and-issues/#on-the-phone).
 
-**Display Options** on the list matches the desktop controls that fit on a phone: **Group By** (workspace, status, agent, last updated, or none), **Sort By**, filters for agent, status, and environment (local or worktree), **Sessions per Group**, and **Archived Sessions**. When **Group By** is not **None**, the list is not being searched, and more than one group is showing, a row of chips under the title lists **All** and every group of that grouping, including **Pinned** when a session is pinned. **All** has no count. Each other chip shows that group's session count. Choosing a group shows only that group, in full, with no section header and no footer to show more. The choice is kept, and returns to **All** when **Group By** changes. The row hides while searching, and when the list is ungrouped. **Pin** keeps a row at the top. A row's menu can **Rename**, **Fork Session**, **Mark as Unread**, **Archive**, or **Delete**. **Search sessions** filters the list. A child session rolls its state up to the root row:
+On **Work**, **Display Options** matches the desktop controls that fit on a phone: **Group By** (workspace, status, agent, last updated, or none), **Sort By**, filters for agent, status, and environment (local or worktree), **Sessions per Group**, and **Archived Sessions**. When **Group By** is not **None**, the list is not being searched, and more than one group is showing, a row of chips under the title lists **All** and every group of that grouping, including **Pinned** when a session is pinned. **All** has no count. Each other chip shows that group's session count. Choosing a group shows only that group, in full, with no section header and no footer to show more. The choice is kept, and returns to **All** when **Group By** changes. The row hides while searching, and when the list is ungrouped. **Pin** keeps a row at the top. A row's menu can **Rename**, **Fork Session**, **Mark as Unread**, **Archive**, or **Delete**. **Search sessions** filters the list. A child session rolls its state up to the root row:
 
 | Status | Meaning |
 | --- | --- |
@@ -244,7 +244,7 @@ If the phone cannot reach the computer but already has a list, it keeps that lis
 
 ### Start a session
 
-The **Sessions** toolbar shows a **New session** button when this computer was paired with **Start work** (`execute`). It opens a sheet titled **New session**.
+On **Work**, the toolbar shows a **New session** button when this computer was paired with **Start work** (`execute`). It opens a sheet titled **New session**.
 
 The prompt placeholder is **What should the agent do?**. **Start** stays disabled until that prompt has text, and reads **Starting…** while the session is opening. Under **Run on**:
 
@@ -265,9 +265,17 @@ On **Agent**, a row you can choose says **Ready**. The others say **Not installe
 
 On **Notes**, the line under a title is a plain-text excerpt of the body. On **Issues**, the identifier is monospace. On the issue screen, each row under **Sub-issues** opens that issue.
 
-Open a work session and the tab bar hides. The back button reads **Sessions**. The header is the session title, with the workspace and model under it. The transcript updates as the agent runs: your messages, the assistant's messages, and tool calls.
+Open a work session and the tab bar hides. The back button reads **Sessions**. The header is the session title, with the workspace and model under it. The transcript updates as the agent runs: your messages, the assistant's messages, and tool calls. While the turn is running, an activity line reads **Working…**, **Thinking**, or **Responding**. A tool in progress is named on that line.
 
-An assistant home thread and a chat thread are a conversation. The assistant header is the avatar and the name, with **Overview** beside it. Your messages are bubbles; in an assistant thread they take the avatar color, and replies stay neutral. Tool calls stay out of that transcript, and **Prompts** is not shown. While a reply has not started, one **Working…** line shows, then leaves once the reply streams. On an assistant thread the avatar sits beside that line. The composer is a single line, without the model and mode controls. While an assistant thread is still empty and not running, it shows **Suggestions**: **What needs my attention today?**, **Send me a brief every morning at 8**, and **What do you remember about me?** Choosing one sends it. While a new assistant is writing its greeting, that list is replaced by the avatar and a shimmering **Working**. The placeholder is **Message** followed by the assistant's name.
+An assistant home thread and a chat thread are a conversation. The assistant header is the avatar and the name, with **Overview** beside it. Your messages are bubbles; in an assistant thread they take the avatar color, and replies stay neutral. Tool calls stay out of that transcript, and **Prompts** is not shown.
+
+A chat turn reads **Thinking** before a reply is in the thread, and **Responding** when the turn is still running after a reply has landed. It does not read **Working…**. An assistant turn matches the [desktop home thread](/docs/assistants/#home-thread): the avatar and **Thinking**, then **Still thinking** after 15 seconds, then **Taking longer than usual, hang tight** after 40 seconds. While a tool is running, the line is **Working on it**. The line leaves once the reply is streaming.
+
+A finished chat or assistant reply has **Copy**, which briefly reads **Copied**. A chat reply can show how long the turn took, and **Stopped** when the turn was stopped, joined as **Stopped · 12s**. An assistant reply can show **Stopped** without that duration. An assistant thread shows a time between messages when an hour has passed, or the day has changed.
+
+The assistant composer is a single line, without the model, thinking, or mode controls. While an assistant thread is still empty and not running, it shows **Suggestions**: **What needs my attention today?**, **Send me a brief every morning at 8**, and **What do you remember about me?** Choosing one sends it. While a new assistant is writing its greeting, that list is replaced by the avatar and a shimmering **Working**. The placeholder is **Message** followed by the assistant's name.
+
+In an existing chat, when the phone was paired with **Start tasks**, the composer can switch the model and **Reasoning effort** in place. **New Chat** has the same controls. **Reasoning effort** is shown only when the model offers more than one level. A new chat starts from the latest chat's level when this model still offers it, and otherwise from **Medium**. The placeholder is **Message a model**.
 
 Assistant messages are Markdown. Tables render. A fenced code block shows the language, a copy button, and syntax highlighting. A fenced `mermaid` block renders as a diagram, in the same theme family as the desktop app. If rendering fails, or the phone is offline and the diagram cannot be drawn, the source is shown as a normal code block. Math renders, including inline, display, and table formulas.
 
@@ -279,7 +287,7 @@ In a work session, the composer placeholder is **Reply to the agent**. **Attach 
 
 A file link in the transcript, or a file a tool call names, opens a preview. Markdown can switch between **Show Preview** and **Show Source**. In **Show Preview**, the Markdown can be selected with the system selection toolbar, and a code block keeps the copy button in its header. **Copy Contents** copies the text. A long file says **Showing the first 512 KB of this file.** A binary file says **This file can't be previewed.** A path outside the computer's workspaces says **This file is outside the computer's workspaces.**
 
-**Jump to latest** and **Jump to first message** skip a long transcript. **Jump to latest** shows when the latest message is below the visible area. A short thread that already fits does not show it. The header menu's agent settings show the model, reasoning effort, fast mode, and — when the agent has them — collaboration mode and variant, plus the session's MCP servers. **Save as Role…** stores the current setup on the computer. Forking from a message is **Fork From Here**.
+**Jump to latest** and **Jump to first message** skip a long transcript. **Jump to latest** shows when the latest message is below the visible area. A short thread that already fits does not show it. The header menu's agent settings show the model, reasoning effort, fast mode, and — when the agent has them — collaboration mode and variant, plus the session's MCP servers. **Save as Role…** stores the current setup on the computer. In a work session, a finished reply has **Copy**, which briefly reads **Copied**, and **Fork From Here**. It can also show how long the turn took, and **Stopped** when the turn was stopped, joined as **Stopped · 12s**.
 
 When the agent is waiting, a dock at the bottom replaces the composer:
 

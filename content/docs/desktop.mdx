@@ -103,11 +103,11 @@ The composer starts every session and every follow-up:
 | **+ → Memory** | Turn [memory](/docs/memory/) on, sync it, or open its settings |
 | **Worktree** checkbox (new session) | Run the session in a fresh [managed worktree](#worktrees) |
 
-Chat's **+** menu is **Attach**, **Issue**, **Note**, and **Memory**.
+Chat's **+** menu is **Attach**, **Issue**, **Note**, and **Memory**. On **Chat**, **Reasoning effort** is shown only when the model offers more than one level.
 
 With no folder open, the work-session placeholder is **Open a folder, then describe the task**. Sending still works: Cocurdex opens the folder picker and keeps what you typed if you cancel.
 
-Follow-ups sent while a turn runs are steered into it when the agent supports steering, or queued until the turn finishes (**Settings → General → Follow-up behavior**). When a turn settles, the label is **Thought for 1s** when the turn only reasoned (typical of a short Chat reply) and **Worked for** when it used tools. Tool calls fold behind that label; expand it to review every step. While a work-mode turn is still running, the thread shows the elapsed time and the activity: **Thinking**, **Using tools**, **Working**, or **Replying**. Every composer has more space below it. On an assistant thread the composer is a single row, without those agent and model controls, and the live label does not include that elapsed time. See [Assistants](/docs/assistants/#home-thread).
+Follow-ups sent while a turn runs are steered into it when the agent supports steering, or queued until the turn finishes (**Settings → General → Follow-up behavior**). A chat turn that has not started replying reads **Thinking**. When it settles, the duration always reads **Thought for 1s**, including when the turn had interim replies. A work-mode turn reads **Thought for** when it only reasoned and **Worked for** when it used tools. Tool calls fold behind that label; expand it to review every step. While a work-mode turn is still running, the thread shows the elapsed time and the activity: **Thinking**, **Using tools**, **Working**, or **Replying**. Every composer has more space below it. On an assistant thread the composer is a single row, without those agent and model controls, and the live label does not include that elapsed time. See [Assistants](/docs/assistants/#home-thread).
 
 **Settings → General → Transcript view** chooses how much of that work is visible: **Concise** (final replies only), **Standard** (folded summaries), or **Verbose** (everything expanded).
 
