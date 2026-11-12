@@ -29,7 +29,7 @@ On macOS and Linux, if a CLI is not found, Cocurdex refreshes the login-shell `P
 
 ## Providers and models
 
-**Settings → Providers** manages **provider configs**: named service endpoints with credentials and a model catalog. These configs feed the built-in **Pi** runtime and in-session model controls.
+**Settings → Providers** manages **provider configs**: named service endpoints with credentials and a model catalog. These configs are the model list for built-in **Pi**, including the model menu in a Pi session. Claude Agent, Codex, OpenCode, and ACP Registry agents show the catalog that agent owns. See [Agents](/docs/agents/#providers-and-models).
 
 A provider config holds:
 
@@ -53,7 +53,7 @@ cocurdex provider models <provider-id>
 
 Provider configs and models are also scriptable: `cocurdex provider add|update|login|key|model|default|import|export` — see [CLI](/docs/cli/#providers).
 
-External agent CLIs (`claude`, `codex`, `opencode`, and ACP Registry agents such as `cursor-agent` or `grok`) keep their own authentication — Codex account state under `~/.codex`, for example. Provider configs do not replace that; they give Pi and the desktop a shared model catalog.
+External agent CLIs (`claude`, `codex`, `opencode`, and ACP Registry agents such as `cursor-agent` or `grok`) keep their own authentication — Codex account state under `~/.codex`, for example. Their model menus use that agent's catalog. Pi uses the provider configs on this page.
 
 API keys you save on a provider config stay on this computer. The desktop app stores them only in the system keyring. A headless Linux install stores them in an owner-only (`0600`) `credentials.json` in the [data directory](/docs/concepts/workspaces-and-data/#data-directory). Headless macOS and Windows use the system keyring, and that file only when the keyring is unavailable. `cocurdex daemon health` prints `credentials    system keyring` or `credentials    owner-only file in the data directory`.
 
@@ -100,7 +100,7 @@ Scope notes:
 
 ## Git
 
-**Settings → Git** picks the agent and model used to generate commit messages. When the commit message is left blank, the selected model writes a Conventional Commits subject from the staged changes. Choose **None** to always type messages yourself.
+**Settings → Git** picks the agent and model used to generate commit messages. When the commit message is left blank, the selected model writes a Conventional Commits subject from the staged changes. The model menu follows the agent you pick: Pi lists [provider configs](#providers-and-models); Claude Agent, Codex, OpenCode, and ACP Registry agents list models from their own catalogs. Choose **None** to always type messages yourself. When the selected model reports speed tiers, the menu also includes **Speed**. **Standard** is the first choice; the other entries are the tiers that model reports.
 
 ## Worktree environments
 

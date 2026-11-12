@@ -80,14 +80,16 @@ Registry Agent 属于第三方代码：安装前请先查看它的源码和许�
 
 ## Provider 与模型
 
-Agent 使用应用中注册的 **provider 配置**（API base URL、凭据、目录）和**模型**。在桌面 UI 中配置 provider;从 CLI 列出：
+**设置 → 服务商** 提供 Pi 模型菜单里的模型。Claude Agent、Codex、OpenCode 和 ACP Registry Agent 显示的是该 Agent 自己的模型目录。Codex、Claude Agent 和 ACP Registry Agent 把这份目录显示成一份列表，没有 provider 分组标题。OpenCode 按它自己报告的 provider 名称分组。
+
+在桌面里配置 Pi 的服务商，再用 CLI 列出：
 
 ```bash
 cocurdex provider list
 cocurdex provider models <provider-id>
 ```
 
-Cocurdex 会尽可能复用你已有的 provider 配置(例如 `~/.codex` 下的 Codex 账户状态)。不要把密钥贴进产品笔记或公开文档站。
+这些 Agent 仍使用各自的登录。Codex 的账户状态在 `~/.codex`。不要把密钥贴进产品笔记或公开文档站。
 
 ## 权限模式
 

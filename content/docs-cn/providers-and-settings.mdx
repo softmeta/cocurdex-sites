@@ -29,7 +29,7 @@ cocurdex agent login <agent>
 
 ## Provider 与模型
 
-**设置 → 服务商** 管理 **Provider 配置**:一组带凭据和模型目录的命名服务端点。这些配置为内置 **Pi** 运行时和会话内模型控件提供数据。
+**设置 → 服务商** 管理 **Provider 配置**:一组带凭据和模型目录的命名服务端点。这些配置是内置 **Pi** 的模型列表，包括 Pi 会话里的模型菜单。Claude Agent、Codex、OpenCode 和 ACP Registry Agent 显示的是该 Agent 自己的目录。见 [Agent](/zh-cn/docs/agents/#provider-与模型)。
 
 一个 Provider 配置包含：
 
@@ -53,7 +53,7 @@ cocurdex provider models <provider-id>
 
 Provider 配置与模型同样可以脚本化：`cocurdex provider add|update|login|key|model|default|import|export`——见 [CLI](/zh-cn/docs/cli/#provider)。
 
-外部 Agent CLI(`claude`、`codex`、`opencode`,以及 `cursor-agent`、`grok` 等 ACP Registry Agent)保留各自的认证——例如 Codex 的账号状态在 `~/.codex` 下。Provider 配置不替代它们；它为 Pi 和桌面端提供统一的模型目录。
+外部 Agent CLI(`claude`、`codex`、`opencode`,以及 `cursor-agent`、`grok` 等 ACP Registry Agent)保留各自的认证——例如 Codex 的账号状态在 `~/.codex` 下。它们的模型菜单使用该 Agent 自己的目录。Pi 使用本页的 Provider 配置。
 
 你保存在 Provider 配置上的 API key 留在这台电脑上。桌面应用只把它们放进系统钥匙串。Headless 的 Linux 安装把它们放在[数据目录](/zh-cn/docs/concepts/workspaces-and-data/#数据目录)里一份仅所有者可读写（`0600`）的 `credentials.json` 中。Headless 的 macOS 和 Windows 使用系统钥匙串，只有钥匙串不可用时才用那份文件。`cocurdex daemon health` 会打印 `credentials    system keyring` 或 `credentials    owner-only file in the data directory`。
 
@@ -100,7 +100,7 @@ cocurdex mcp import --from codex
 
 ## Git
 
-**设置 → Git** 选择用于生成提交信息的 Agent 与模型。提交信息留空时，所选模型根据暂存变更生成一条 Conventional Commits 主题。选择 **None** 则始终手动输入。
+**设置 → Git** 选择用于生成提交信息的 Agent 与模型。提交信息留空时，所选模型根据暂存变更生成一条 Conventional Commits 主题。模型菜单跟着所选 Agent 走：Pi 列出[服务商配置](#provider-与模型)；Claude Agent、Codex、OpenCode 和 ACP Registry Agent 列出各自目录里的模型。选择 **None** 则始终手动输入。所选模型带有速度档位时，菜单里还会出现**速度**。**标准**排在第一项；其余是该模型报告的档位。
 
 ## 工作树环境
 

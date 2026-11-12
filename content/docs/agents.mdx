@@ -80,14 +80,16 @@ Registry agents are third-party code: review an agent's source and license befor
 
 ## Providers and models
 
-Agents use **provider configs** (API base URL, credentials, catalog) and **models** registered in the app. Configure providers in the desktop UI; list them from the CLI:
+**Settings → Providers** supplies the models in Pi's model menu. Claude Agent, Codex, OpenCode, and ACP Registry agents show the models from that agent's own catalog. Codex, Claude Agent, and ACP Registry agents show that catalog as one list, with no provider headings. OpenCode groups its models under the provider names OpenCode reports.
+
+Configure Pi's providers in the desktop UI, then list them from the CLI:
 
 ```bash
 cocurdex provider list
 cocurdex provider models <provider-id>
 ```
 
-Cocurdex reuses your existing provider setup where possible (for example Codex account state under `~/.codex`). Do not paste secrets into product notes or the public docs site.
+Those agents still sign in on their own. Codex account state stays under `~/.codex`. Do not paste secrets into product notes or the public docs site.
 
 ## Permission modes
 

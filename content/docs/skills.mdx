@@ -15,20 +15,40 @@ Skills are **not auto-installed**. Install from **Settings → Connections**, on
 cocurdex skills list
 cocurdex skills status --scope project
 cocurdex skills install --scope project
-# or for your user-wide skills directory
+# or into ~/.agents/skills
 cocurdex skills install --scope global
 ```
 
 | Scope | Meaning |
 | --- | --- |
-| `project` | Install under the project root (`--root` defaults to `cwd`) |
-| `global` | Install into the user global skills location |
+| `project` | Install under the workspace's `.agents/skills` (`--root` defaults to `cwd`) |
+| `global` | Install into `~/.agents/skills` |
 
 Managed installs write a marker file so Cocurdex can update or remove its own pack. Updating a managed install also deletes skills that were retired from the pack, so old names do not linger. If skills already exist **without** that marker, install reports a conflict — rename or remove the conflicting folders and retry.
 
 ```bash
 cocurdex skills remove --scope project
 ```
+
+## Where agents find skills
+
+**Settings → Connections**, on the **Skills** tab, and the composer `/` menu for Claude Agent, Codex, OpenCode, and ACP Registry agents use the same directory resolver. `CLAUDE_CONFIG_DIR`, `CODEX_HOME`, and `XDG_CONFIG_HOME` apply in both places, so a skill under a custom `CODEX_HOME` shows in Settings and in Codex's `/` menu. Pi fills its `/` menu from the Pi runtime.
+
+| Place | Shared | Claude | Codex | OpenCode |
+| --- | --- | --- | --- | --- |
+| Home | `~/.agents/skills` | `$CLAUDE_CONFIG_DIR/skills`, or `~/.claude/skills` when unset | `$CODEX_HOME/skills`, or `~/.codex/skills` when unset | `$XDG_CONFIG_HOME/opencode/skills`, or `~/.config/opencode/skills` when unset |
+| Workspace | `.agents/skills` | `.claude/skills` | `.codex/skills` | `.opencode/skills` |
+
+OpenCode reads the shared, Claude, and OpenCode columns, including `.claude/skills` in the workspace. Its home OpenCode directory is `~/.config/opencode/skills` (or `$XDG_CONFIG_HOME/opencode/skills`). The list has no `~/.opencode/skills` path.
+
+| Agent | Directories the `/` menu checks, first to last |
+| --- | --- |
+| Claude Agent | Shared home, Claude home, shared workspace, Claude workspace |
+| Codex | Shared home, Codex home, shared workspace, Codex workspace |
+| OpenCode | Shared home, Claude home, OpenCode home, shared workspace, Claude workspace, OpenCode workspace |
+| ACP Registry agents | Shared home, shared workspace |
+
+The last directory that contains a skill name is the one in the menu. Every workspace directory comes after that agent's home directories, so a workspace skill replaces a home skill of the same name.
 
 ## Skill catalog
 
@@ -79,7 +99,7 @@ Skills must not invent issue ids or rewrite status by hand-editing files.
 ## Using skills in a session
 
 1. Install the skill pack (project or global).
-2. Start an agent session that can load skills from that location.
+2. Start an agent session. Claude Agent, Codex, OpenCode, and ACP Registry agents load skills from the directories in [Where agents find skills](#where-agents-find-skills).
 3. Invoke with the slash form your agent supports (for example `/cocurdex-issue`), type `/` in the composer, or pick one from the composer's **+ → Skill** menu.
 4. Attach an issue or note from **+ → Issue** / **+ → Note**: the agent receives its full content in the prompt, so the skill does not need to fetch it again.
 
