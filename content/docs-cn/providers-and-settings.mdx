@@ -55,6 +55,8 @@ Provider 配置与模型同样可以脚本化：`cocurdex provider add|update|lo
 
 外部 Agent CLI(`claude`、`codex`、`opencode`,以及 `cursor-agent`、`grok` 等 ACP Registry Agent)保留各自的认证——例如 Codex 的账号状态在 `~/.codex` 下。Provider 配置不替代它们；它为 Pi 和桌面端提供统一的模型目录。
 
+你保存在 Provider 配置上的 API key 留在这台电脑上。桌面应用只把它们放进系统钥匙串。Headless 的 Linux 安装把它们放在[数据目录](/zh-cn/docs/concepts/workspaces-and-data/#数据目录)里一份仅所有者可读写（`0600`）的 `credentials.json` 中。Headless 的 macOS 和 Windows 使用系统钥匙串，只有钥匙串不可用时才用那份文件。`cocurdex daemon health` 会打印 `credentials    system keyring` 或 `credentials    owner-only file in the data directory`。
+
 没有 API key 的自定义、本地或代理 Provider，生成一句短文本时和跑一轮 Agent 用的是同一种方式。这包括 Pi 会话标题、助理的问候，以及自动写的提交说明。
 
 ## MCP 服务器
@@ -127,13 +129,13 @@ cocurdex mcp import --from codex
 
 ## 诊断
 
-**设置 → 诊断**（或菜单 **帮助 → 导出诊断日志…**）会把脱敏后的应用日志与运行时信息打包成一个文件，方便附到 GitHub Issue 中。复现问题时可以打开**详细诊断日志**记录更多细节；无论开关与否，日志都会脱敏。同一组操作是 `cocurdex diagnostics export` 和 `cocurdex diagnostics level debug|info`。`cocurdex daemon health` 打印进程、内存和正在进行的工作。
+**设置 → 诊断**（或菜单 **帮助 → 导出诊断日志…**）会把脱敏后的应用日志与运行时信息打包成一个文件，方便附到 GitHub Issue 中。复现问题时可以打开**详细诊断日志**记录更多细节；无论开关与否，日志都会脱敏。同一组操作是 `cocurdex diagnostics export` 和 `cocurdex diagnostics level debug|info`。`cocurdex daemon health` 打印进程、内存、正在进行的工作，以及一行 `credentials`（`system keyring` 或 `owner-only file in the data directory`）。
 
 ## Daemon
 
 **设置 → 常规 → Daemon** 显示本地 daemon（socket、协议版本、启动时间）。未运行时按钮是**启动**，运行中是**重启**。笔记、Issue、演示文稿或 Agent 无响应时，用**重启**把它换掉。打开**后台常驻**后，状态行会写**运行中（…），后台常驻，退出应用后继续运行。**
 
-**后台常驻**默认关闭。打开后，退出桌面应用时 daemon 继续为 CLI 和已配对设备服务，并在登录时启动：macOS 使用 LaunchAgent，Windows 使用 Run 键，Linux 使用 XDG autostart。关闭后，退出应用会停掉它自己管理的 daemon。终端里的同一开关是 `cocurdex daemon background on|off|status [--json]`。见 [CLI](/zh-cn/docs/cli/#daemon-与工作区)。
+**后台常驻**默认关闭。打开后，退出桌面应用时 daemon 继续为 CLI 和已配对设备服务，并在登录时启动：macOS 使用 LaunchAgent，Windows 使用 Run 键，Linux 使用 XDG autostart。关闭后，退出应用会停掉它自己管理的 daemon。终端里的同一开关是 `cocurdex daemon background on|off|status [--json]`。这些桌面登录项没有变。Headless 安装使用同一条命令，没有设置界面。在 Linux 上它登记的是 systemd 用户单元，而不是 XDG 条目，并尝试开启 lingering；macOS 和 Windows 仍使用 LaunchAgent 和 Run 键。状态行和 `daemon stop` 见 [CLI](/zh-cn/docs/cli/#daemon-与工作区)。
 
 ## 查找设置
 

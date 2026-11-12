@@ -3,11 +3,11 @@ title: Devices and local web
 description: Open Cocurdex in a browser on this computer, pair another device, hand work to another computer, or use the iOS and Android app on the same daemon.
 ---
 
-The desktop app is the host. **Settings → Devices** lets you use that same host from a browser — on this computer, or on another device you pair — and from the iOS and Android app. **Other computers** on that page is the other direction: computers this one can open and hand work to.
+The daemon on this computer is the host. The desktop app starts it, and so does a [headless install](/docs/getting-started/#headless-install) that has no desktop app. **Settings → Devices** lets you use that host from a browser — on this computer, or on another device you pair — and from the iOS and Android app. **Other computers** on that page is the other direction: computers this one can open and hand work to.
 
 Nothing here replaces the daemon. The browser and the phone app talk to the Cocurdex instance already running on the machine; that connection does not create a second workspace or a cloud account.
 
-Opening the desktop app starts that daemon. **Keep running in the background** (**Settings → General → Daemon**) keeps it running after you quit and starts it at login, so the browser and paired devices keep working with the desktop window closed. The CLI packaged with the app can start the daemon when it is down. See [Daemon](/docs/providers-and-settings/#daemon).
+Opening the desktop app starts that daemon. The CLI packaged with the app, and the CLI from a headless install, start it when nothing is listening. **Keep running in the background** (**Settings → General → Daemon**) keeps the desktop app's daemon running after you quit and starts it at login, so the browser and paired devices keep working with the desktop window closed. A headless install uses `cocurdex daemon background on` for the same idea. See [Daemon](/docs/providers-and-settings/#daemon) and [Headless install](/docs/cli/#headless-install).
 
 ## Open in browser (this computer)
 
@@ -19,7 +19,7 @@ The CLI prints that URL:
 cocurdex web
 ```
 
-The daemon must be running to serve the client. The URL includes a local token; treat it like access to this machine.
+The daemon must be running to serve the client. A headless install serves this same client. The URL includes a local token; treat it like access to this machine.
 
 ## Remote access
 
@@ -71,7 +71,7 @@ cocurdex host push off
 
 ## Pair a device
 
-**Pair a device → Create pairing code** creates a one-time code, a QR code, and pairing links. Links are listed most reachable first: the relay while it is online, then Tailscale, then LAN.
+**Pair a device → Create pairing code** creates a one-time code, a QR code, and pairing links. Links are listed most reachable first: the relay while it is online, then Tailscale, then LAN. A headless install has no Settings screen. `cocurdex host pair` creates the same code, and `cocurdex host approve` types the safety code.
 
 - **iOS or Android app:** choose **Pair a Computer**, then **Scan to Pair** and scan the QR code, or **Paste Pairing Link** and tap **Pair**. The app adds that computer, selects it, and opens **Approve on Computer**. That screen shows the six-digit **Safety Code** to type on the computer. When the computer allows the phone and the connection is live, the status reads **Paired** and the screen closes. You then continue on **Assistant**. A paired phone learns every address the computer reports and switches to the one that answers.
 - **Browser on another device:** open the pairing link, or paste it on the **Pair** screen. A browser on another device connects only through a [relay](#relay), so turn one on first.

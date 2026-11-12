@@ -31,7 +31,7 @@ Cocurdex 是一个**桌面优先的多 Agent 开发工作台**。对话、集成
 | 界面 | 作用 |
 | --- | --- |
 | **桌面应用** | 运行 Agent、编辑文件、预览 UI、管理笔记、Issue 与演示文稿的主要场所 |
-| **Daemon** | 本地进程，掌管数据库、会话、团队、脚本编排、工作树和已安装的 ACP Agent |
+| **Daemon** | 本地进程，掌管数据库、会话、团队、脚本编排、工作树和已安装的 ACP Agent。桌面应用会启动它。[Headless 安装](/zh-cn/docs/getting-started/#headless-安装)可以在没有桌面应用时运行它 |
 | **CLI（`cocurdex`）** | 打开文件夹；管理笔记、Issue、演示文稿、搜索、Skills、Provider 与工作树；驱动会话和团队 |
 | **产品 Skills** | 可选的 Agent skills（`cocurdex-*`），在应用私有数据上完成 PRD → Issue → 交付，以及演示文稿 |
 
@@ -48,5 +48,5 @@ Cocurdex 是一个**桌面优先的多 Agent 开发工作台**。对话、集成
 | 本地存了什么、为什么 | [工作区与数据](/zh-cn/docs/concepts/workspaces-and-data/) |
 
 <Callout title="预发布">
-API、安装包和文档仍在变化。公开构建覆盖 **macOS**（Apple silicon 与 Intel）、**Windows** x64 和 **Linux** x64(AppImage 与 `.deb`)。如果文档与应用不一致，以应用为准——欢迎[提交 Issue](https://github.com/softmeta/cocurdex/issues)。
+API、安装包和文档仍在变化。公开的桌面构建覆盖 **macOS**（Apple silicon 与 Intel）、**Windows** x64 和 **Linux** x64（AppImage 与 `.deb`）。Headless daemon 与 CLI 安装包覆盖这些平台，另外还有 **Linux** arm64。Linux arm64 只有 headless 安装包，没有 Linux arm64 桌面应用。如果文档与应用不一致，以应用为准——欢迎[提交 Issue](https://github.com/softmeta/cocurdex/issues)。
 </Callout>

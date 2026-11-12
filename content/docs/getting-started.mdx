@@ -12,6 +12,7 @@ This guide gets you from install to a useful first agent session.
 | **macOS** | Apple silicon and Intel |
 | **Windows** | x64 (unsigned NSIS installer) |
 | **Linux** | x64 AppImage or `.deb` |
+| **Headless daemon and CLI** | macOS (Apple silicon and Intel), Windows x64, Linux x64 and arm64, with no desktop app. Linux arm64 is this archive only; the desktop app has no Linux arm64 build |
 | **Agent runtime** | At least one supported agent CLI or provider you already use (see [Agents](/docs/agents/)) |
 | **Disk / project** | A project directory on disk that agents and the editor can use as the workspace root |
 
@@ -23,16 +24,53 @@ This guide gets you from install to a useful first agent session.
 2. Install and open **Cocurdex**.
 3. On first launch, the **Welcome to cocurdex** screen shows what's available on this machine. **Open a folder** to start with a workspace—agents run inside the folder you choose. The built-in **Pi** agent needs a provider; other agent CLIs bring their own. The screen also offers **Configure a model provider**, **Skip**, and **Don't show this again**.
 
+### Headless install
+
+Run the daemon and the `cocurdex` CLI on a machine with no desktop app. The installers are Release assets:
+
+```bash
+# macOS or Linux
+curl -fsSL https://github.com/softmeta/cocurdex/releases/latest/download/install.sh | sh
+```
+
+```powershell
+# Windows PowerShell
+irm https://github.com/softmeta/cocurdex/releases/latest/download/install.ps1 | iex
+```
+
+The script detects this machine and downloads `cocurdex-headless-<os>-<arch>.tar.gz` (a `.zip` on Windows) plus the matching `.sha256`. It refuses to continue when the checksum does not match (`cocurdex install: checksum mismatch for <file>`). macOS and Linux need `curl` or `wget`, and `sha256sum` or `shasum`. `install.sh` accepts `darwin-arm64`, `darwin-x64`, `linux-x64`, and `linux-arm64`. Any other `uname` is rejected; on Windows the message tells you to use `install.ps1`. The Windows script supports x64 only.
+
+| Item | Default |
+| --- | --- |
+| macOS and Linux install directory | `$XDG_DATA_HOME/cocurdex`, or `~/.local/share/cocurdex` when `XDG_DATA_HOME` is unset |
+| Windows install directory | `%LOCALAPPDATA%\Programs\cocurdex` |
+| macOS and Linux command | A link at `$HOME/.local/bin/cocurdex`, or `COCURDEX_BIN_DIR` when that is set. If the directory is not on `PATH`, the script prints `Add <dir> to PATH to run cocurdex` |
+| Windows command | The install `bin` directory is added to your user `PATH`, and the script tells you to open a new terminal. `COCURDEX_NO_MODIFY_PATH=1` leaves `PATH` unchanged |
+
+| Variable | Effect |
+| --- | --- |
+| `COCURDEX_VERSION` | Install that release tag, with or without a leading `v` |
+| `COCURDEX_DOWNLOAD_URL` | Base URL of a mirror that already holds the release assets |
+| `COCURDEX_INSTALL_DIR` | Install directory |
+| `COCURDEX_BIN_DIR` | macOS and Linux only. Directory for the `cocurdex` link |
+| `COCURDEX_NO_MODIFY_PATH` | Windows only. Set to `1` to leave the user `PATH` unchanged |
+
+Running the script again upgrades the existing install in place. It runs `cocurdex daemon stop --json` first. If the daemon is busy, the script fails with `cocurdex install: could not stop the running daemon; retry when it is idle`. Unexpected output fails with `cocurdex install: unexpected output from cocurdex daemon stop`. Either failure leaves the current install as it is. When a daemon was running, the script replaces the tree and starts it again: `cocurdex daemon status` on macOS and Linux, and a windowless start of `cocurdex.cmd daemon status` on Windows. You will see `Stopped the daemon to upgrade it` or `No running daemon to stop`, then `Installed <version> to <dir>`, and `Restarted the daemon` when it had been running. On Windows, a restart that does not come up fails with `` `cocurdex install: could not restart the daemon; run `cocurdex daemon status` to start it` ``.
+
+A fresh install does not register a login item. The script tells you what to run next. On macOS and Linux: `` `Run `cocurdex daemon background on` to keep the daemon running across reboots` ``. On Windows: `` `Run `cocurdex daemon background on` to start the daemon when you sign in` ``.
+
+The installed CLI starts the daemon when nothing is listening, and `cocurdex web` prints the local web client URL. Autostart, `daemon stop`, and where provider credentials are stored: [CLI](/docs/cli/#headless-install).
+
 ### CLI on your PATH
 
-After install, open **Settings → General → Shell command** and click **Install** so the `cocurdex` launcher is available in the terminal.
+After a desktop install, open **Settings → General → Shell command** and click **Install** so the `cocurdex` launcher is available in the terminal. A headless install already links `cocurdex` onto `PATH`, as above.
 
 ```bash
 cocurdex --version
 cocurdex --help
 ```
 
-If the binary cannot find the desktop app, open Cocurdex once from the Dock/Applications, or set `COCURDEX_ELECTRON` to the app executable. See [CLI](/docs/cli/).
+`cocurdex` and `cocurdex open` open the desktop app, so they need a desktop install. On a headless machine, list workspaces and run sessions from the CLI instead. If the desktop launcher cannot find the app, open Cocurdex once from the Dock/Applications, or set `COCURDEX_ELECTRON` to the app executable. See [CLI](/docs/cli/).
 
 ## Open a workspace
 
@@ -71,7 +109,7 @@ Before the first useful run:
 
 Supported agent ids and permission modes are documented on [Agents](/docs/agents/).
 
-Check provider configs from the CLI (the daemon must be running). Opening the desktop app starts it, and the CLI packaged with the app starts it when it is down:
+Check provider configs from the CLI (the daemon must be running). Opening the desktop app starts it. The CLI packaged with the app, and the CLI from a headless install, start it when it is down:
 
 ```bash
 cocurdex provider list
@@ -93,7 +131,7 @@ Prefer narrow permission modes until you trust the task. Elevated or “full acc
 
 ## First session (CLI TUI)
 
-With the daemon running (the desktop app is open, **Keep running in the background** is on, or the packaged CLI can start it):
+With the daemon running (the desktop app is open, **Keep running in the background** is on, or the packaged CLI or a headless install can start it):
 
 ```bash
 cocurdex session tui \
@@ -150,7 +188,7 @@ See [Skills](/docs/skills/).
 | --- | --- |
 | An agent shows as unavailable | Install and log in to its CLI, then check **Settings → Agent CLIs** (it also flags versions that need an update) |
 | An agent says it needs you to sign in | Choose **Sign in to …** from the composer's model menu, then send again |
-| CLI data commands fail | `cocurdex daemon status`. The packaged CLI starts the daemon if it is down; if it cannot, open the desktop app. **Keep running in the background** leaves the daemon running after you quit |
+| CLI data commands fail | `cocurdex daemon status`. The packaged CLI and a headless install start the daemon if it is down. A development CLI that cannot start one tells you to open the desktop app (`Cocurdex is not running. Open the Cocurdex desktop app, then retry.`). **Keep running in the background** leaves the desktop app's daemon running after you quit |
 | Notes, issues, or agents stop responding | **Settings → General → Daemon → Restart** |
 | A browser asks to pair | On the computer running Cocurdex, open **Settings → Devices**, create a pairing code, then open its link or enter the code. See [Devices and local web](/docs/devices-and-web/) |
 | The phone lists computers but not sessions | The app opens on **Assistant**. Work sessions are on the **Sessions** tab, for the computer named in the toolbar. Assistant threads are not in that list. See [Devices and local web](/docs/devices-and-web/#native-app) |

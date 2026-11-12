@@ -179,11 +179,11 @@ export const dict = {
   download: {
     pageTitle: "Download",
     metaDescription:
-      "Download the Cocurdex early beta for macOS, Windows, Linux, and Android.",
+      "Download the Cocurdex early beta for macOS, Windows, Linux, and Android, or install the headless daemon and CLI.",
     eyebrow: "Early beta",
     heading: "Download Cocurdex",
     intro:
-      "Early beta builds for macOS, Windows, Linux, and Android. APIs and behavior may change between versions.",
+      "Early beta builds for macOS, Windows, Linux, and Android, plus a headless daemon and CLI for machines with no desktop app. APIs and behavior may change between versions.",
     desktopHeading: "Desktop",
     androidHeading: "Android",
     recommended: "Recommended for this device",
@@ -240,6 +240,14 @@ export const dict = {
     devicesNote:
       "There is no iOS package on this page. Pair an iPhone or Android phone with Cocurdex on your computer.",
     devicesLink: "Devices and web",
+    headlessHeading: "Headless daemon and CLI",
+    headlessNote: "No desktop app",
+    headlessUnixLabel: "macOS or Linux",
+    headlessWindowsLabel: "Windows PowerShell",
+    headlessBody:
+      "The script installs cocurdex-headless for this machine: macOS (Apple silicon and Intel), Windows x64, Linux x64, and Linux arm64. Linux arm64 is this archive only — the desktop app has no Linux arm64 build. macOS and Linux need curl or wget, and sha256sum or shasum. The script checks the archive checksum and refuses a mismatch. After a fresh install, run cocurdex daemon background on.",
+    headlessDocs: "Headless install",
+    headlessDocsPath: "/docs/getting-started/#headless-install",
     sourceHeading: "Run from source",
     sourceBody: "Node.js 24 and pnpm required.",
     readDocs: "Getting started guide",
@@ -590,7 +598,7 @@ export const dict = {
       {
         question: "The app says it can’t reach my computer.",
         answer:
-          "Check that the computer is awake, the Cocurdex desktop app is running, remote access is on, and both devices are on the same network or Tailscale tailnet.",
+          "Check that the computer is awake and the daemon is running — the desktop app is open, or a headless install is serving it — remote access is on, and both devices are on the same network or Tailscale tailnet.",
         docPath: "/docs/devices-and-web/",
       },
       {

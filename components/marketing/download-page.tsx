@@ -5,6 +5,11 @@ import { downloadBuilds, githubLatestReleaseUrl, site } from "@/lib/site";
 import { DownloadBuilds } from "./download-builds";
 import { SiteShell, secondaryButton } from "./shell";
 
+const headlessUnixInstall =
+  "curl -fsSL https://github.com/softmeta/cocurdex/releases/latest/download/install.sh | sh";
+const headlessWindowsInstall =
+  "irm https://github.com/softmeta/cocurdex/releases/latest/download/install.ps1 | iex";
+
 export function DownloadPage({ locale }: { locale: SiteLocale }) {
   const t = getMarketingDict(locale);
   const to = (p: string) => localizedPath(locale, p);
@@ -52,6 +57,41 @@ export function DownloadPage({ locale }: { locale: SiteLocale }) {
             <p className="m-0">{t.download.androidNote}</p>
             <p className="m-0">{t.download.devicesNote}</p>
           </div>
+
+          <div className="mt-16 overflow-hidden rounded-xl border border-fd-border bg-fd-card">
+            <div className="flex items-center justify-between gap-4 border-fd-border border-b bg-fd-muted/50 px-4 py-2 text-sm">
+              <span className="font-semibold">
+                {t.download.headlessHeading}
+              </span>
+              <span className="text-fd-muted-foreground">
+                {t.download.headlessNote}
+              </span>
+            </div>
+            <pre className="m-0 overflow-x-auto p-4 font-mono text-[0.8125rem] leading-7">
+              <div className="text-fd-muted-foreground">
+                {t.download.headlessUnixLabel}
+              </div>
+              <div>
+                <span className="text-fd-primary">$</span> {headlessUnixInstall}
+              </div>
+              <div className="mt-2 text-fd-muted-foreground">
+                {t.download.headlessWindowsLabel}
+              </div>
+              <div>
+                <span className="text-fd-primary">$</span>{" "}
+                {headlessWindowsInstall}
+              </div>
+            </pre>
+          </div>
+          <p className="mt-4 max-w-3xl text-fd-muted-foreground text-sm leading-relaxed">
+            {t.download.headlessBody}{" "}
+            <Link
+              href={to(t.download.headlessDocsPath)}
+              className="text-fd-primary no-underline hover:underline"
+            >
+              {t.download.headlessDocs} →
+            </Link>
+          </p>
 
           <h2 className="mt-20 mb-6 font-semibold text-2xl tracking-tight">
             {t.download.afterHeading}

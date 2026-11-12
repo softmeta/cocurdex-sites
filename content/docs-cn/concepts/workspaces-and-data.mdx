@@ -33,7 +33,7 @@ cocurdex workspace list
 
 重要规则：
 
-1. **桌面 daemon** 是唯一打开本地数据库的进程。
+1. **daemon** 是唯一打开本地数据库的进程。桌面应用会启动它，[headless 安装](/zh-cn/docs/getting-started/#headless-安装)也会。
 2. **CLI** 是自动化和 Agent 受支持的外部读写边界。
 3. Markdown 导入导出是**显式**的——不是第二个活数据库。
 4. 私有表结构和文件路径**不是**公开 API。
@@ -51,6 +51,7 @@ cocurdex workspace list
 | 托管的 git 工作树 | 由 daemon 在配置的工作树根目录下创建 |
 | 项目源文件 | 磁盘上你的工作区目录 |
 | Agent provider 授权（如 Codex） | 该工具自己的配置(例如 `~/.codex` 下) |
+| Cocurdex 保存的 Provider API key | 桌面应用：只用系统钥匙串。Headless Linux：数据目录里仅所有者可读写（`0600`）的 `credentials.json`。Headless macOS 与 Windows：系统钥匙串；钥匙串不可用时用那份文件 |
 | 产品 skill 文件（可选） | 安装后的项目或全局 skills 目录 |
 | 长期记忆 | 打开记忆后，保存在本机的 rsrs 存储 `~/.rsrs`。可选的多设备同步使用 rsrs 账号，在你连接之前保持关闭。见[记忆](/zh-cn/docs/memory/) |
 
@@ -80,7 +81,7 @@ Daemon 负责：
 cocurdex daemon status
 ```
 
-如果 CLI 数据命令失败，运行 `cocurdex daemon status`。打包的 CLI 能启动 daemon 时会自己启动；否则打开桌面应用后重试。开启**后台常驻**后，退出应用时 daemon 会继续运行。
+如果 CLI 数据命令失败，运行 `cocurdex daemon status`。随桌面应用打包的 CLI，以及 headless 安装，能启动 daemon 时会自己启动。开发用的 CLI 如果启动不了，会让你打开桌面应用。开启**后台常驻**后，退出桌面应用时它的 daemon 会继续运行。
 
 ## 云端与团队（以后）
 
