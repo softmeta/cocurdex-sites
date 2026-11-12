@@ -406,8 +406,8 @@ cocurdex session stop <session-id>
 | --- | --- | --- |
 | `--workspace` | create，以及 tui 创建时 | 工作区 id 或文件系统路径 |
 | `--agent` | 可选 | Agent id：`claude-agent`、`codex`、`opencode`、`pi`，或已安装的 ACP Registry Agent，如 `acp:cursor`、`acp:devin`、`acp:grok-build` |
-| `--provider` | 可选，须与 `--model` 同时给出 | `provider list` 中的 provider 配置 id |
-| `--model` | 可选，须与 `--provider` 同时给出 | `provider models` 中的模型 id |
+| `--provider` | 可选，须与 `--model` 同时给出 | Pi：`provider list` 里的 provider id。Claude Agent、Codex、OpenCode 和 ACP Registry Agent：该 Agent 目录中的 provider id |
+| `--model` | 可选，须与 `--provider` 同时给出 | Pi：`provider models` 里的模型 id。其他 Agent：该 Agent 目录中的模型 id |
 | `--permission` | 可选 | 该 Agent 的权限模式 id。Id 见 [Agent](/zh-cn/docs/agents/#权限模式) |
 | `--title` | 可选 | 会话标题。省略时标题为该 Agent 的名称 |
 | `--role` | 可选 | 已保存的 [Agent 角色](/zh-cn/docs/agents/#agent-角色)。它提供 Agent、模型和权限 |
@@ -466,7 +466,7 @@ cocurdex script-run cancel --run <run-id>
 
 ## Provider
 
-Provider 配置为内置 Pi Agent 和共享模型目录提供数据。见 [Provider 与设置](/zh-cn/docs/providers-and-settings/#provider-与模型)。
+Provider 配置是内置 Pi Agent 的模型目录。Claude Agent、Codex、OpenCode 和 ACP Registry Agent 使用各自的目录。见 [Provider 与设置](/zh-cn/docs/providers-and-settings/#provider-与模型)。
 
 ```bash
 cocurdex provider list [--json]

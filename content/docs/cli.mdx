@@ -406,8 +406,8 @@ cocurdex session stop <session-id>
 | --- | --- | --- |
 | `--workspace` | create, and tui when creating | Workspace id or filesystem path |
 | `--agent` | optional | Agent id: `claude-agent`, `codex`, `opencode`, `pi`, or an installed ACP Registry agent such as `acp:cursor`, `acp:devin`, `acp:grok-build` |
-| `--provider` | optional, with `--model` | Provider config id from `provider list` |
-| `--model` | optional, with `--provider` | Model id from `provider models` |
+| `--provider` | optional, with `--model` | Pi: a provider id from `provider list`. Claude Agent, Codex, OpenCode, and ACP Registry agents: the provider id in that agent's catalog |
+| `--model` | optional, with `--provider` | Pi: a model id from `provider models`. Other agents: a model id from that agent's catalog |
 | `--permission` | optional | Permission mode id for that agent. Ids: [Agents](/docs/agents/#permission-modes) |
 | `--title` | optional | Session title. Omit it and the title is the agent's name |
 | `--role` | optional | Saved [agent role](/docs/agents/#agent-roles). It supplies the agent, model, and permissions |
@@ -466,7 +466,7 @@ cocurdex script-run cancel --run <run-id>
 
 ## Providers
 
-Provider configs feed the built-in Pi agent and the shared model catalog. See [Providers and settings](/docs/providers-and-settings/#providers-and-models).
+Provider configs are the model catalog for the built-in Pi agent. Claude Agent, Codex, OpenCode, and ACP Registry agents use their own catalogs. See [Providers and settings](/docs/providers-and-settings/#providers-and-models).
 
 ```bash
 cocurdex provider list [--json]

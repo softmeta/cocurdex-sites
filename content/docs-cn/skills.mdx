@@ -15,20 +15,40 @@ Skills **不会自动安装**。从**设置 → 连接**里的 **Skills** 页安
 cocurdex skills list
 cocurdex skills status --scope project
 cocurdex skills install --scope project
-# 或安装到你的用户级 skills 目录
+# 或安装到 ~/.agents/skills
 cocurdex skills install --scope global
 ```
 
 | 范围 | 含义 |
 | --- | --- |
-| `project` | 安装到项目根目录下(`--root` 默认为 `cwd`) |
-| `global` | 安装到用户全局 skills 位置 |
+| `project` | 安装到工作区的 `.agents/skills`（`--root` 默认为 `cwd`） |
+| `global` | 安装到 `~/.agents/skills` |
 
 托管安装会写一个标记文件，以便 Cocurdex 更新或移除自己的 skill 包。更新托管安装时，已从包中移除的 skill 也会被删除，旧名字不会残留。如果同名 skills 已存在但**没有**该标记，安装会报告冲突——重命名或移除冲突目录后重试。
 
 ```bash
 cocurdex skills remove --scope project
 ```
+
+## Agent 从哪里找到 skills
+
+**设置 → 连接**里的 **Skills** 页，以及 Claude Agent、Codex、OpenCode 和 ACP Registry Agent 在输入框里的 `/` 菜单，使用同一套目录解析。`CLAUDE_CONFIG_DIR`、`CODEX_HOME` 和 `XDG_CONFIG_HOME` 在这两处都生效，所以自定义 `CODEX_HOME` 下的 skill 会同时出现在设置里和 Codex 的 `/` 菜单中。Pi 的 `/` 菜单来自 Pi 运行时。
+
+| 位置 | 共享 | Claude | Codex | OpenCode |
+| --- | --- | --- | --- | --- |
+| 用户主目录 | `~/.agents/skills` | 已设置时为 `$CLAUDE_CONFIG_DIR/skills`，否则为 `~/.claude/skills` | 已设置时为 `$CODEX_HOME/skills`，否则为 `~/.codex/skills` | 已设置时为 `$XDG_CONFIG_HOME/opencode/skills`，否则为 `~/.config/opencode/skills` |
+| 工作区 | `.agents/skills` | `.claude/skills` | `.codex/skills` | `.opencode/skills` |
+
+OpenCode 读取共享、Claude 和 OpenCode 这三列，包括工作区里的 `.claude/skills`。它在用户主目录下的 OpenCode 目录是 `~/.config/opencode/skills`（或 `$XDG_CONFIG_HOME/opencode/skills`）。这份列表里没有 `~/.opencode/skills`。
+
+| Agent | `/` 菜单的检查顺序，从前到后 |
+| --- | --- |
+| Claude Agent | 共享（主目录）、Claude（主目录）、共享（工作区）、Claude（工作区） |
+| Codex | 共享（主目录）、Codex（主目录）、共享（工作区）、Codex（工作区） |
+| OpenCode | 共享（主目录）、Claude（主目录）、OpenCode（主目录）、共享（工作区）、Claude（工作区）、OpenCode（工作区） |
+| ACP Registry Agent | 共享（主目录）、共享（工作区） |
+
+同名 skill 出现在多个目录时，菜单采用最后检查到的那一份。每个 Agent 的工作区目录都排在它的主目录之后，所以工作区里的 skill 会替换同名的用户级 skill。
 
 ## Skill 目录
 
@@ -79,7 +99,7 @@ Skills 不得编造 issue id,也不得通过手工编辑文件改写状态。
 ## 在会话中使用 skills
 
 1. 安装 skill 包（project 或 global）。
-2. 启动一个能从该位置加载 skills 的 Agent 会话。
+2. 启动一个 Agent 会话。Claude Agent、Codex、OpenCode 和 ACP Registry Agent 从[Agent 从哪里找到 skills](#agent-从哪里找到-skills)里的目录加载 skills。
 3. 用你的 Agent 支持的 slash 形式调用(例如 `/cocurdex-issue`)，在输入框里输入 `/`，或从输入框的 **+ → Skill** 菜单中选择。
 4. 通过 **+ → Issue** / **+ → 笔记** 附加 Issue 或笔记：Agent 会在提示词中直接拿到完整内容，skill 无需再次读取。
 
