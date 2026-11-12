@@ -95,16 +95,19 @@ The composer starts every session and every follow-up:
 
 | Input | Does |
 | --- | --- |
-| `/` | Pick a skill or an agent-advertised slash command |
+| `/` | On a Work or assistant composer, pick a skill or an agent-advertised slash command. Chat does not list skills |
 | `@` | Mention workspace files as context |
-| **+ → Skill / Issue / Note** | Insert a skill, or attach an issue or note as a pill; the agent gets its full content in the prompt |
+| **+ → Skill** | Insert a skill. Work and assistant composers only; Chat does not offer **Skill** |
+| **+ → Issue / Note** | Attach an issue or note as a pill; the agent gets its full content in the prompt |
 | Model menu | Agent, provider, model, reasoning effort, permission mode; **Save as role** stores the setup as an [agent role](/docs/agents/#agent-roles). A saved role leads that control: its avatar and name sit with the model |
 | **+ → Memory** | Turn [memory](/docs/memory/) on, sync it, or open its settings |
 | **Worktree** checkbox (new session) | Run the session in a fresh [managed worktree](#worktrees) |
 
+Chat's **+** menu is **Attach**, **Issue**, **Note**, and **Memory**.
+
 With no folder open, the work-session placeholder is **Open a folder, then describe the task**. Sending still works: Cocurdex opens the folder picker and keeps what you typed if you cancel.
 
-Follow-ups sent while a turn runs are steered into it when the agent supports steering, or queued until the turn finishes (**Settings → General → Follow-up behavior**). When a turn settles, its tool calls fold behind a label that shows how long the turn worked; expand it to review every step. While a work-mode turn is still running, the thread shows the elapsed time and the activity: **Thinking**, **Using tools**, **Working**, or **Replying**. Every composer has more space below it. On an assistant thread the composer is a single row, without those agent and model controls, and the live label does not include that elapsed time. See [Assistants](/docs/assistants/#home-thread).
+Follow-ups sent while a turn runs are steered into it when the agent supports steering, or queued until the turn finishes (**Settings → General → Follow-up behavior**). When a turn settles, the label is **Thought for 1s** when the turn only reasoned (typical of a short Chat reply) and **Worked for** when it used tools. Tool calls fold behind that label; expand it to review every step. While a work-mode turn is still running, the thread shows the elapsed time and the activity: **Thinking**, **Using tools**, **Working**, or **Replying**. Every composer has more space below it. On an assistant thread the composer is a single row, without those agent and model controls, and the live label does not include that elapsed time. See [Assistants](/docs/assistants/#home-thread).
 
 **Settings → General → Transcript view** chooses how much of that work is visible: **Concise** (final replies only), **Standard** (folded summaries), or **Verbose** (everything expanded).
 
