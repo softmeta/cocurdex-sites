@@ -49,6 +49,8 @@ Tables have click/drag handles on the edge (**Click to add, drag to add more**).
 
 Saves show as **Saving…** / **Saved**. The editor also shows when the note was **Created** and **Edited**. Prefer stable titles and links so agents and humans can find the same record later.
 
+Once a note has at least three headings with text (levels 1–4), a **Table of contents** lists them. On a wide pane the list is a side rail titled **Table of contents**. On a narrow pane, an icon button at the top-right opens the same list; the button has no text, and hovering it shows **Table of contents**. Choosing a heading scrolls it to the top of the pane. The section in view is highlighted in the rail and marked selected in the menu, and nested headings are indented.
+
 **Linked** on a note (and on an issue) lists sessions, notes, issues, and decks tied to that record. **Link an item** searches those four kinds. Remove a link from the same list. The CLI uses the same links:
 
 ```bash
@@ -244,6 +246,8 @@ With **Interact**, long-press a note or a folder for **Rename**, **New Subpage**
 An empty computer shows **No Notes** — **Notes you write on** that computer **appear here.** A search with no matches shows **No notes match** the query. If the list cannot load, the screen is **Couldn’t load notes from** that computer, and **Try Again**.
 
 The note page shows the title, the workspace, and how long ago it changed. When the note has linked items, that line has a chip that reads **1 linked** or **2 linked**. Tapping it opens **Linked**. The Markdown body uses the same rendering as a session transcript. **Edit** (with **Interact**) opens the body: the placeholder is **Write something, or type / to insert headings, lists, and to-dos**. The format bar covers **Bold**, lists, and **Text Style** (body and headings). **Insert** adds a quote, code block, divider, list, checklist, or table. Saves show **Saving…** / **Saved**, or **Not saved**. **Done Editing** leaves the editor. **Note Properties** can set the **Parent Note**. A deleted note shows **This note was deleted on the computer.**
+
+A note with at least three headings with text (levels 1–4) adds a **Table of contents** button to the header. It opens a sheet titled **Table of contents**. Choosing a heading scrolls the editor to it. Nested headings are indented, and the heading for the section in view is marked selected. The button stays hidden when there are fewer than three such headings.
 
 ## What not to do
 
