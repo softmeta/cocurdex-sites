@@ -42,7 +42,9 @@ A provider config holds:
 | Models | Per-model id, display name, capabilities (agent / chat / reasoning / vision), context and output limits, cost per 1M tokens |
 | Advanced | Custom headers, compatibility JSON, thinking-level maps |
 
-**Model parameters** on a model row edits the API runtime, context and output limits, capabilities, reasoning, and the advanced JSON. Built-in catalog models can be edited too: the fields you change are kept when the catalog updates, and the row is marked **Edited**. **Reset to default** restores the catalog values. Adding or deleting a built-in model is not offered.
+The model list shows **Models** (the name and id, plus **Default** and **Edited** when they apply), **Context**, **Output**, and **Capabilities**. The **Models** column stays pinned at the start. **Model parameters** and the enable switch stay pinned at the end; the columns between them scroll sideways when they do not fit. Long names and ids are shortened, and hovering shows the full value. **Capabilities** wraps the applicable labels in the row: **Chat**, **Agent**, **Vision**, and — when the model supports reasoning — **Reasoning**. **Model runtime** appears only when that provider's listed models use more than one API runtime.
+
+**Model parameters** on a model row edits the API runtime, context and output limits, capabilities, reasoning, cost per 1M tokens, and the advanced JSON (thinking-level maps and compatibility). When every listed model uses the same API runtime, change **Model runtime** in this dialog. Built-in catalog models can be edited too: the fields you change are kept when the catalog updates, and the row is marked **Edited**. **Reset to default** restores the catalog values. Adding or deleting a built-in model is not offered.
 
 Templates fill the endpoint for common providers; **Import JSON** bulk-loads a provider definition. Manage everything in the UI, then verify from the CLI:
 
