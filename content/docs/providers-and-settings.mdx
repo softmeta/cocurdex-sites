@@ -31,6 +31,8 @@ On macOS and Linux, if a CLI is not found, Cocurdex refreshes the login-shell `P
 
 **Settings → Providers** manages **provider configs**: named service endpoints with credentials and a model catalog. These configs are the model list for built-in **Pi**, including the model menu in a Pi session. Claude Agent, Codex, OpenCode, and ACP Registry agents show the catalog that agent owns. See [Agents](/docs/agents/#providers-and-models).
 
+On a wide pane the provider list sits beside the detail. On a narrow pane only the list is shown. Choosing a row opens the detail across the pane. **Back to list** returns to the list.
+
 A provider config holds:
 
 | Field | Meaning |
@@ -64,6 +66,8 @@ A custom, local, or proxy provider with no API key is used the same way for one-
 ## MCP servers
 
 **Settings → Connections**, on the **MCP** tab, is the tool servers Cocurdex gives to your agents. The page title is **Connections**. **Apps** and **Skills** are the other tabs. New sessions pick up changes; a running session keeps the tools it already has.
+
+On a wide pane the server list sits beside the detail. On a narrow pane only the list is shown. Choosing a row opens the detail across the pane. **Back to list** returns to the list.
 
 - A **form** (name, local command or remote URL, arguments, environment or headers) and raw **JSON**. The JSON shape is the standard `mcpServers` object.
 - Server names may contain only letters, digits, `_`, and `-`.
@@ -140,6 +144,8 @@ After an update downloads, an **Update available** card offers **Update and Rest
 **Keep running in the background** is off until you turn it on. On, the daemon keeps serving the CLI and paired devices after you quit the desktop app, and it starts when you log in: a LaunchAgent on macOS, a Run key on Windows, or an XDG autostart entry on Linux. Off, quitting the app stops the daemon it owns. From the terminal, `cocurdex daemon background on|off|status [--json]` is the same switch. Those desktop login items are unchanged. A headless install uses the same command and has no Settings screen. On Linux it registers a systemd user unit instead of the XDG entry and tries to enable lingering; macOS and Windows stay on the LaunchAgent and the Run key. Status text and `daemon stop`: [CLI](/docs/cli/#daemon-and-workspaces).
 
 ## Finding a setting
+
+The settings sidebar docks beside the page only when the window still leaves room for the settings content. On a narrower window it is not docked. The title-bar button has no text; hovering it shows **Toggle sidebar**. It opens the sidebar as an overlay on the left, and stays in the title bar while the overlay is open. Choosing a section, pressing Escape, or pressing outside the overlay closes it. If **Search settings** has text and focus, Escape still clears the search.
 
 The settings sidebar has a **Search settings** box at the top. While the box has text, **Clear search** empties it. If nothing matches, the list says **No matching settings**.
 
