@@ -100,9 +100,11 @@ Skills 不得编造 issue id,也不得通过手工编辑文件改写状态。
 
 ## 在会话中使用 skills
 
+聊天模式的 **+** 菜单没有 **Skill**，`/` 菜单也不列出 skill。工作和助理的输入框仍有这两处。
+
 1. 安装 skill 包（project 或 global）。
 2. 启动一个 Agent 会话。Claude Agent、Codex、OpenCode 和 ACP Registry Agent 从[Agent 从哪里找到 skills](#agent-从哪里找到-skills)里的目录加载 skills。
-3. 用你的 Agent 支持的 slash 形式调用(例如 `/cocurdex-issue`)，在输入框里输入 `/`，或从输入框的 **+ → Skill** 菜单中选择。
+3. 用你的 Agent 支持的 slash 形式调用(例如 `/cocurdex-issue`)，在**工作**或**助理**的输入框里输入 `/`，或从该输入框的 **+ → Skill** 菜单中选择。
 4. 通过 **+ → Issue** / **+ → 笔记** 附加 Issue 或笔记：Agent 会在提示词中直接拿到完整内容，skill 无需再次读取。
 
 你的环境中可能还有其他非产品 skills(`tdd`、code review 等)；产品知识工作应留在 `cocurdex-*` 这一组里，以保证数据边界正确。

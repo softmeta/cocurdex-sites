@@ -3,7 +3,7 @@ title: Memory
 description: Long-term memory in Cocurdex — recall before a turn, save a conversation, and optional encrypted sync across your devices.
 ---
 
-**Memory** lets Cocurdex recall things you have saved and, when you ask, write a conversation into that store. It is off until you turn it on. Entries live in the local [rsrs](https://rsrs.rs) store (`~/.rsrs`), not in `cocurdex.sqlite`. Nothing is uploaded until you turn on multi-device sync.
+**Memory** lets Cocurdex recall things you have saved and write finished chat into that store. It is off until you turn it on. Entries live in the local [rsrs](https://rsrs.rs) store (`~/.rsrs`), not in `cocurdex.sqlite`. Nothing is uploaded until you turn on multi-device sync.
 
 Intel Macs have no rsrs build, so memory stays off on those machines. The status line says so.
 
@@ -29,7 +29,7 @@ The same page installs rsrs when it is missing (**Install**), and **Run doctor**
 | **Save chat turns** | Appends each finished chat exchange to today's memory diary |
 | **Save chat sessions on end** | Summarizes a chat session when you archive or delete it |
 
-On a chat session, the brain button beside the composer is **Save to memory**. If that conversation is already stored, the app says so. A failed recall for the current turn is reported on the same control.
+A chat composer has no brain button and no **Save to memory** control. With memory on, **Save chat turns** stores each finished turn, and **Save chat sessions on end** summarizes the session when you archive or delete it. A failed recall for the current turn is reported with a toast. Save a session by hand with `cocurdex memory save-session`.
 
 ## Multi-device sync
 

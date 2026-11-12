@@ -100,9 +100,11 @@ Skills must not invent issue ids or rewrite status by hand-editing files.
 
 ## Using skills in a session
 
+Chat mode does not offer **Skill** in the **+** menu, or skills in the `/` menu. Work and assistant composers do.
+
 1. Install the skill pack (project or global).
 2. Start an agent session. Claude Agent, Codex, OpenCode, and ACP Registry agents load skills from the directories in [Where agents find skills](#where-agents-find-skills).
-3. Invoke with the slash form your agent supports (for example `/cocurdex-issue`), type `/` in the composer, or pick one from the composer's **+ → Skill** menu.
+3. Invoke with the slash form your agent supports (for example `/cocurdex-issue`), type `/` in a Work or assistant composer, or pick one from that composer's **+ → Skill** menu.
 4. Attach an issue or note from **+ → Issue** / **+ → Note**: the agent receives its full content in the prompt, so the skill does not need to fetch it again.
 
 Other non-product skills (`tdd`, code review, etc.) may still exist in your environment; product knowledge work should stay on the `cocurdex-*` set so data boundaries stay correct.
