@@ -31,7 +31,7 @@ Cocurdex is a **desktop-first multi-agent development workspace**. Chat, integra
 | Surface | Role |
 | --- | --- |
 | **Desktop app** | Primary place to run agents, edit files, preview UI, and manage notes, issues, and decks |
-| **Daemon** | Local process that owns the database, sessions, teams, script runs, worktrees, and installed ACP agents |
+| **Daemon** | Local process that owns the database, sessions, teams, script runs, worktrees, and installed ACP agents. The desktop app starts it. A [headless install](/docs/getting-started/#headless-install) runs it with no desktop app |
 | **CLI (`cocurdex`)** | Open folders; manage notes, issues, decks, search, skills, providers, and worktrees; drive sessions and teams |
 | **Product skills** | Optional agent skills (`cocurdex-*`) for PRD → issue → ship work, and for slide decks, against app-owned data |
 
@@ -48,5 +48,5 @@ Cocurdex is a **desktop-first multi-agent development workspace**. Chat, integra
 | What is stored locally and why | [Workspaces and data](/docs/concepts/workspaces-and-data/) |
 
 <Callout title="Pre-release">
-APIs, installers, and docs are still moving. Public builds cover **macOS** (Apple silicon and Intel), **Windows** x64, and **Linux** x64 (AppImage and `.deb`). If something here disagrees with the app, the app wins — please [open an issue](https://github.com/softmeta/cocurdex/issues).
+APIs, installers, and docs are still moving. Public desktop builds cover **macOS** (Apple silicon and Intel), **Windows** x64, and **Linux** x64 (AppImage and `.deb`). Headless daemon and CLI archives cover those platforms plus **Linux** arm64. Linux arm64 is the headless archive only; there is no Linux arm64 desktop app. If something here disagrees with the app, the app wins — please [open an issue](https://github.com/softmeta/cocurdex/issues).
 </Callout>

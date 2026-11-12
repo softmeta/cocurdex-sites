@@ -1,13 +1,13 @@
 ---
 title: CLI
-description: cocurdex CLI 参考——打开桌面应用，管理笔记、事项、记忆、助理、委派工作、应用、例行任务、演示文稿、会话、团队、脚本编排、设备、provider、MCP 与 skills。
+description: cocurdex CLI 参考——headless daemon 安装、打开桌面应用，管理笔记、事项、记忆、助理、委派工作、应用、例行任务、演示文稿、会话、团队、脚本编排、设备、provider、MCP 与 skills。
 ---
 
 **`cocurdex` CLI** 是应用私有产品数据和 daemon 操作受支持的命令行边界。外部工具和 Agent 应该使用 CLI,而不是读取私有数据库文件。
 
-大多数数据和会话命令需要**桌面 daemon**。打开桌面应用会启动它。随安装包提供的 CLI 会在没有 daemon 监听时自己启动 daemon，因此桌面窗口关掉后命令仍然可用。如果这个启动器拉不起来，打开桌面应用后再试。
+大多数数据和会话命令需要 **daemon**。打开桌面应用会启动它。随桌面应用打包的 CLI，以及 [headless 安装](#headless-安装)里的 CLI，会在没有 daemon 监听时自己启动 daemon，因此桌面窗口关掉后、或者根本没有桌面应用时，命令仍然可用。不是 headless 安装、又启动不了 daemon 的开发用 CLI，仍会让你打开桌面应用，原文是 `Cocurdex is not running. Open the Cocurdex desktop app, then retry.`
 
-**后台常驻**（**设置 → 常规 → Daemon**）默认关闭。打开后，退出应用时 daemon 继续为 CLI 和已配对设备服务，并在登录时启动。关闭后，退出桌面应用会停掉它自己管理的 daemon。见 [Daemon 与工作区](#daemon-与工作区)。
+**后台常驻**（**设置 → 常规 → Daemon**）默认关闭。在桌面应用里打开后，退出时 daemon 继续为 CLI 和已配对设备服务，并在登录时启动。关闭后，退出桌面应用会停掉它自己管理的 daemon。Headless 安装使用同一条命令。它登记什么、状态行怎么写，见 [Daemon 与工作区](#daemon-与工作区)。
 
 ## 安装
 
@@ -19,6 +19,32 @@ cocurdex --help
 ```
 
 在 monorepo 开发中，使用 workspace 里的 CLI 包(`apps/cli`)。
+
+### Headless 安装
+
+Headless 安装是 CLI 和 daemon，跑在安装包自带的 Node 运行时上，没有桌面应用。在 Windows 上，后台 daemon 不会弹出控制台窗口。安装包里带有本地网页客户端，daemon 起来之后 `cocurdex web` 就能用。安装步骤、目录和环境变量见[快速上手](/zh-cn/docs/getting-started/#headless-安装)。命令是：
+
+```bash
+# macOS 或 Linux
+curl -fsSL https://github.com/softmeta/cocurdex/releases/latest/download/install.sh | sh
+```
+
+```powershell
+# Windows PowerShell
+irm https://github.com/softmeta/cocurdex/releases/latest/download/install.ps1 | iex
+```
+
+安装包有 `darwin-arm64`、`darwin-x64`、`linux-x64`、`linux-arm64` 和 `win32-x64`。Linux arm64 只有这份安装包；桌面应用没有 Linux arm64 构建。新安装完成后，运行 `cocurdex daemon background on`。macOS 和 Linux 的脚本说这样可以让 daemon 跨重启保持运行。Windows 的脚本说这样会在你登录时启动 daemon。
+
+这份安装里的 CLI 会在没有进程监听时自己启动 daemon，和随桌面应用打包的 CLI 一样。
+
+Provider 凭据：
+
+- 桌面应用只把它们放在系统钥匙串里。
+- Headless 的 Linux 安装把它们放在[数据目录](/zh-cn/docs/concepts/workspaces-and-data/#数据目录)里一份仅所有者可读写（`0600`）的 `credentials.json` 中。服务器上常常没有可用的系统钥匙串。
+- Headless 的 macOS 和 Windows 使用系统钥匙串，只有钥匙串不可用时才用那份文件。
+
+`cocurdex daemon health` 会报告当前用的是哪一种。见[诊断](#诊断)。
 
 ### 找到桌面二进制
 
@@ -276,26 +302,40 @@ cocurdex skills remove --scope project|global [--root <path>] [--json]
 
 ```bash
 cocurdex daemon status
+cocurdex daemon stop [--json]
 cocurdex daemon background on|off|status [--json]
 cocurdex workspace list
 ```
 
-`daemon background` 就是 **设置 → 常规 → Daemon → 后台常驻**。
+`daemon stop` 会停掉空闲的 daemon。它打印 `Stopped daemon <pid>`。加上 `--json` 时打印 `{ "status": "stopped", "pid": <pid> }`。如果没有在运行，它打印 `Daemon is not running`；加上 `--json` 时是 `{ "status": "notRunning" }`。如果还有工作在跑，命令会失败。提示里会给出 agent 回合、排队输入、搜索和进行中的请求数量，并让你等它空闲后再试：
 
-- `on` 让 daemon 在退出 Cocurdex 后继续运行，并登记为登录时启动：macOS 用 LaunchAgent，Windows 用 Run 键，Linux 用 XDG autostart。
-- `off` 移除该登录项。之后退出桌面应用会停掉它自己管理的 daemon。
+```text
+Daemon is busy (<agent turns> agent turns, <queued inputs> queued inputs, <searches> searches, <requests> requests); retry when it is idle
+```
+
+如果进程没有退出，命令会失败，提示 `Timed out waiting for daemon <pid> to exit`。
+
+`daemon background` 在桌面应用里就是 **设置 → 常规 → Daemon → 后台常驻**。桌面应用的登录项没有变：macOS 用 LaunchAgent，Windows 用 Run 键，Linux 用 XDG autostart。Headless 的 Linux 安装改为登记一个 systemd 用户单元，并尝试开启 lingering，让用户服务可以在开机时启动。Headless 的 macOS 和 Windows 仍使用 LaunchAgent 和 Run 键。
+
+- `on` 让 daemon 在退出 Cocurdex 后继续运行，并登记这个登录项。
+- `off` 移除它。之后退出桌面应用会停掉它自己管理的 daemon。
 - `status` 打印一行。更改成功后，`on` 和 `off` 也打印这一行：
   - 后台模式关闭：退出 Cocurdex 时 daemon 停止
-  - 后台模式开启：退出 Cocurdex 后 daemon 继续运行，并在登录时启动
+  - 后台模式开启：退出 Cocurdex 后 daemon 继续运行，并在这台电脑开机时启动。原文是 `Background mode is on: the daemon keeps running after Cocurdex quits and starts when this computer boots`
+  - 后台模式开启：退出 Cocurdex 后 daemon 继续运行，并在你登录时启动。若要在重启后、尚未登录时就已经在跑，请为这个账号打开自动登录。原文是 `Background mode is on: the daemon keeps running after Cocurdex quits and starts when you sign in. To have it running after a restart without signing in, turn on automatic login for this account`
+  - 后台模式开启：退出 Cocurdex 后 daemon 继续运行，并在你登录时启动。若要在重启后、尚未登录时就已经在跑，运行 `sudo loginctl enable-linger <username>`。原文是 `` `Background mode is on: the daemon keeps running after Cocurdex quits and starts when you sign in. To have it running after a restart without signing in, run `sudo loginctl enable-linger <username>` ``
   - 后台模式已开启，但登录项缺失；再运行 `cocurdex daemon background on` 可以补回
   - 源码构建不可用。终端原文是 `Background mode is not available for this daemon (source build)`。此时 **设置 → 常规 → Daemon** 不显示这个开关，`on` 或 `off` 会失败，原文是 `Background mode is not available for this daemon`
-- `--json` 打印 `enabled`、`available` 和 `registered`。
 
-只有这台电脑能更改这项设置。已配对设备会被拒绝，原文是 `Only this computer can change background mode`。`daemon status` 和 `daemon health` 也列在[诊断](#诊断)下。
+开机那一行在 `startsAt` 为 `boot` 时打印，也就是 lingering 已开启的 headless Linux 安装。其他情况下，状态都说 daemon 在你登录时启动。macOS 和 Windows 上的下一步是为这个账号打开自动登录。Linux 上是那条 `loginctl` 命令，用户名已经填好。桌面应用在 Linux 上仍使用 XDG autostart，所以它的 `startsAt` 保持 `login`，你看到的就是这行 `loginctl`。Headless 的 Linux 安装如果没能打开 lingering，看到的也是同一行。
+
+- `--json` 打印 `enabled`、`available`、`registered` 和 `startsAt`（`boot` 或 `login`）。lingering 开启时 `startsAt` 是 `boot`，否则是 `login`。
+
+只有这台电脑能更改这项设置。已配对设备会被拒绝，原文是 `Only this computer can change background mode`。`daemon status`、`daemon stop` 和 `daemon health` 也列在[诊断](#诊断)下。
 
 ## 设备与本地网页
 
-打印本地网页客户端 URL。daemon 必须在运行。**后台常驻**让它在退出桌面应用后继续提供服务，打包的 CLI 也会在它没在跑时启动它：
+打印本地网页客户端 URL。daemon 必须在运行。随桌面应用打包的 CLI，以及 headless 安装，会在它没在跑时启动它。**后台常驻**让桌面应用的 daemon 在退出后继续提供服务：
 
 ```bash
 cocurdex web [--json]
@@ -528,13 +568,14 @@ cocurdex apps read|call <connection-id> --tool <name> --stdin [--json]
 
 ```bash
 cocurdex daemon status [--json]
+cocurdex daemon stop [--json]
 cocurdex daemon health [--json]
 cocurdex daemon background on|off|status [--json]
 cocurdex diagnostics export [--json]
 cocurdex diagnostics level debug|info [--json]
 ```
 
-`daemon health` 打印进程、内存、正在进行的工作，以及日志位置。`daemon background` 用来打开或关闭**后台常驻**，或打印当前状态。见 [Daemon 与工作区](#daemon-与工作区)。`diagnostics export` 写出和 **设置 → 诊断** 相同的已脱敏打包文件。`diagnostics level` 对应**详细诊断日志**：`debug` 记录更多，`info` 是平常级别。见[诊断](/zh-cn/docs/providers-and-settings/#诊断)。
+`daemon health` 打印进程、内存、正在进行的工作、日志位置，以及一行 `credentials`：`system keyring` 或 `owner-only file in the data directory`。加上 `--json` 时，`credentialStore` 是 `keyring` 或 `file`。`daemon stop` 停掉空闲的 daemon。`daemon background` 用来打开或关闭**后台常驻**，或打印当前状态。见 [Daemon 与工作区](#daemon-与工作区)。`diagnostics export` 写出和 **设置 → 诊断** 相同的已脱敏打包文件。`diagnostics level` 对应**详细诊断日志**：`debug` 记录更多，`info` 是平常级别。见[诊断](/zh-cn/docs/providers-and-settings/#诊断)。
 
 ## Agent 角色
 
@@ -546,7 +587,7 @@ cocurdex role list [--json]
 
 ## CLI 不是什么
 
-- 第二份事实源——本地数据库仍由桌面 daemon 掌管
+- 第二份事实源——本地数据库仍由 daemon 掌管
 - 多面板桌面工作台的完整替代品
 - 云端团队管理工具（那会是独立的 console + API）
 - 打开 `cocurdex.sqlite` 或私有 schema 路径的许可证

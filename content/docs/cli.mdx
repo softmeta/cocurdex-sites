@@ -1,13 +1,13 @@
 ---
 title: CLI
-description: cocurdex CLI reference — open the desktop app, manage notes, issues, memory, assistants, delegated work, applications, routines, and slide decks, sessions, teams, script runs, devices, providers, MCP, and skills.
+description: cocurdex CLI reference — headless daemon install, open the desktop app, manage notes, issues, memory, assistants, delegated work, applications, routines, and slide decks, sessions, teams, script runs, devices, providers, MCP, and skills.
 ---
 
 The **`cocurdex` CLI** is the supported command-line boundary for app-owned product data and daemon operations. External tools and agents should use the CLI rather than reading private database files.
 
-Most data and session commands require the **desktop daemon**. Opening the desktop app starts it. The CLI packaged with the app starts the daemon itself when nothing is listening, so commands keep working with the desktop window closed. If that launcher cannot start one, open the desktop app and retry.
+Most data and session commands need the **daemon**. Opening the desktop app starts it. The CLI packaged with the desktop app, and the CLI from a [headless install](#headless-install), start the daemon when nothing is listening, so commands keep working with the desktop window closed or with no desktop app at all. A development CLI that is not a headless install, and cannot start a daemon, still tells you to open the desktop app: `Cocurdex is not running. Open the Cocurdex desktop app, then retry.`
 
-**Keep running in the background** (**Settings → General → Daemon**) is off until you turn it on. On, the daemon keeps serving the CLI and paired devices after you quit, and it starts when you log in. Off, quitting the desktop app stops the daemon it owns. See [Daemon and workspaces](#daemon-and-workspaces).
+**Keep running in the background** (**Settings → General → Daemon**) is off until you turn it on. On the desktop app, the daemon then keeps serving the CLI and paired devices after you quit, and it starts when you log in. Off, quitting the desktop app stops the daemon it owns. A headless install uses the same command. What it registers, and the status text, are under [Daemon and workspaces](#daemon-and-workspaces).
 
 ## Install
 
@@ -19,6 +19,32 @@ cocurdex --help
 ```
 
 In monorepo development, use the workspace CLI package (`apps/cli`).
+
+### Headless install
+
+A headless install is the CLI and the daemon on a Node runtime bundled in the archive, with no desktop app. On Windows the background daemon opens no console window. The archive also includes the local web client, so `cocurdex web` works once the daemon is up. Install steps, directories, and environment variables are in [Getting started](/docs/getting-started/#headless-install). The commands are:
+
+```bash
+# macOS or Linux
+curl -fsSL https://github.com/softmeta/cocurdex/releases/latest/download/install.sh | sh
+```
+
+```powershell
+# Windows PowerShell
+irm https://github.com/softmeta/cocurdex/releases/latest/download/install.ps1 | iex
+```
+
+Archives are `darwin-arm64`, `darwin-x64`, `linux-x64`, `linux-arm64`, and `win32-x64`. Linux arm64 is this archive only; the desktop app has no Linux arm64 build. After a fresh install, run `cocurdex daemon background on`. The macOS and Linux script says that keeps the daemon running across reboots. The Windows script says it starts the daemon when you sign in.
+
+The CLI from this install starts the daemon when nothing is listening, the same way the CLI packaged with the desktop app does.
+
+Provider credentials:
+
+- The desktop app stores them only in the system keyring.
+- A headless Linux install stores them in an owner-only (`0600`) `credentials.json` in the [data directory](/docs/concepts/workspaces-and-data/#data-directory). A server often has no usable system keyring.
+- Headless macOS and Windows use the system keyring, and that file only when the keyring is unavailable.
+
+`cocurdex daemon health` reports which store is in use. See [Diagnostics](#diagnostics).
 
 ### Finding the desktop binary
 
@@ -276,26 +302,40 @@ cocurdex skills remove --scope project|global [--root <path>] [--json]
 
 ```bash
 cocurdex daemon status
+cocurdex daemon stop [--json]
 cocurdex daemon background on|off|status [--json]
 cocurdex workspace list
 ```
 
-`daemon background` is **Settings → General → Daemon → Keep running in the background**.
+`daemon stop` stops an idle daemon. It prints `Stopped daemon <pid>`. With `--json` it prints `{ "status": "stopped", "pid": <pid> }`. If nothing is running, it prints `Daemon is not running`, or `{ "status": "notRunning" }` with `--json`. If work is still running, the command fails. The message names the agent turns, queued inputs, searches, and active requests, and tells you to retry when the daemon is idle:
 
-- `on` keeps the daemon running after you quit Cocurdex, and registers it to start at login: a LaunchAgent on macOS, a Run key on Windows, or an XDG autostart entry on Linux.
-- `off` removes that login item. Quitting the desktop app then stops the daemon it owns.
+```text
+Daemon is busy (<agent turns> agent turns, <queued inputs> queued inputs, <searches> searches, <requests> requests); retry when it is idle
+```
+
+If the process does not exit, the command fails with `Timed out waiting for daemon <pid> to exit`.
+
+`daemon background` is **Settings → General → Daemon → Keep running in the background** on the desktop app. The desktop app's login item is unchanged: a LaunchAgent on macOS, a Run key on Windows, or an XDG autostart entry on Linux. A headless Linux install registers a systemd user unit instead, and tries to enable lingering so the user services can start at boot. Headless macOS and Windows keep the LaunchAgent and the Run key.
+
+- `on` keeps the daemon running after you quit Cocurdex, and registers that login item.
+- `off` removes it. Quitting the desktop app then stops the daemon it owns.
 - `status` prints one line. After a successful change, `on` and `off` print that line too:
   - Background mode is off: the daemon stops when Cocurdex quits
-  - Background mode is on: the daemon keeps running after Cocurdex quits and starts at login
+  - Background mode is on: the daemon keeps running after Cocurdex quits and starts when this computer boots
+  - Background mode is on: the daemon keeps running after Cocurdex quits and starts when you sign in. To have it running after a restart without signing in, turn on automatic login for this account
+  - Background mode is on: the daemon keeps running after Cocurdex quits and starts when you sign in. To have it running after a restart without signing in, run `sudo loginctl enable-linger <username>`
   - Background mode is on, but the login item is missing; run `cocurdex daemon background on` to restore it
   - Background mode is not available for this daemon (source build). **Settings → General → Daemon** then hides the switch, and `on` or `off` fails with `Background mode is not available for this daemon`
-- `--json` prints `enabled`, `available`, and `registered`.
 
-Only this computer can change the setting. A paired device is refused with `Only this computer can change background mode`. `daemon status` and `daemon health` are also listed under [Diagnostics](#diagnostics).
+The boot line is printed when `startsAt` is `boot`. That is a headless Linux install with lingering on. Everywhere else the status says the daemon starts when you sign in. On macOS and Windows the next step is automatic login for that account. On Linux the next step is the `loginctl` command, with your username filled in. The desktop app on Linux still uses the XDG autostart entry, so its `startsAt` stays `login` and that `loginctl` line is what you see. If a headless Linux install could not enable lingering, you see that same line.
+
+- `--json` prints `enabled`, `available`, `registered`, and `startsAt` (`boot` or `login`). `startsAt` is `boot` when lingering is on, and `login` otherwise.
+
+Only this computer can change the setting. A paired device is refused with `Only this computer can change background mode`. `daemon status`, `daemon stop`, and `daemon health` are also listed under [Diagnostics](#diagnostics).
 
 ## Devices and local web
 
-Print the local web client URL. The daemon must be running. **Keep running in the background** keeps it up after you quit the desktop app, and the packaged CLI starts it when it is down:
+Print the local web client URL. The daemon must be running. The CLI packaged with the desktop app, and a headless install, start it when it is down. **Keep running in the background** keeps the desktop app's daemon up after you quit:
 
 ```bash
 cocurdex web [--json]
@@ -528,13 +568,14 @@ cocurdex apps read|call <connection-id> --tool <name> --stdin [--json]
 
 ```bash
 cocurdex daemon status [--json]
+cocurdex daemon stop [--json]
 cocurdex daemon health [--json]
 cocurdex daemon background on|off|status [--json]
 cocurdex diagnostics export [--json]
 cocurdex diagnostics level debug|info [--json]
 ```
 
-`daemon health` prints the process, memory, active work, and where logs are. `daemon background` turns **Keep running in the background** on or off, or prints its status. See [Daemon and workspaces](#daemon-and-workspaces). `diagnostics export` writes the same sanitized bundle as **Settings → Diagnostics**. `diagnostics level` is **Verbose diagnostics**: `debug` records more, `info` is the normal level. See [Diagnostics](/docs/providers-and-settings/#diagnostics).
+`daemon health` prints the process, memory, active work, where logs are, and a `credentials` line: `system keyring` or `owner-only file in the data directory`. With `--json`, `credentialStore` is `keyring` or `file`. `daemon stop` stops an idle daemon. `daemon background` turns **Keep running in the background** on or off, or prints its status. See [Daemon and workspaces](#daemon-and-workspaces). `diagnostics export` writes the same sanitized bundle as **Settings → Diagnostics**. `diagnostics level` is **Verbose diagnostics**: `debug` records more, `info` is the normal level. See [Diagnostics](/docs/providers-and-settings/#diagnostics).
 
 ## Agent roles
 
@@ -546,7 +587,7 @@ cocurdex role list [--json]
 
 ## What the CLI is not
 
-- A second source of truth — the desktop daemon still owns the local database  
+- A second source of truth — the daemon still owns the local database  
 - A full replacement for the multi-pane desktop workspace  
 - A cloud team admin tool (that will be a separate console + API)  
 - A license to open `cocurdex.sqlite` or private schema paths  

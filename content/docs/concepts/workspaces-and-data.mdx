@@ -33,7 +33,7 @@ Notes, issues, slide decks, views, tags, links, and search indexes live in **app
 
 Important rules:
 
-1. The **desktop daemon** is the only process that opens the local database.  
+1. The **daemon** is the only process that opens the local database. The desktop app starts it, and so does a [headless install](/docs/getting-started/#headless-install).  
 2. The **CLI** is the supported external read/write boundary for automation and agents.  
 3. Markdown import/export is **explicit** — not a second live database.  
 4. Private table schemas and file paths are **not** a public API.  
@@ -51,6 +51,7 @@ Important rules:
 | Managed git worktrees | Created by the daemon under the configured worktree root |
 | Project source files | Your workspace directory on disk |
 | Agent provider auth (e.g. Codex) | That tool’s own config (for example under `~/.codex`) |
+| Provider API keys Cocurdex stores | Desktop app: the system keyring only. Headless Linux: an owner-only (`0600`) `credentials.json` in the data directory. Headless macOS and Windows: the system keyring, or that file when the keyring is unavailable |
 | Product skill files (optional) | Project or global skills directories after install |
 | Long-term memory | The local rsrs store at `~/.rsrs`, after you turn memory on. Optional multi-device sync uses an rsrs account; it stays off until you connect one. See [Memory](/docs/memory/) |
 
@@ -80,7 +81,7 @@ The daemon:
 cocurdex daemon status
 ```
 
-If CLI data commands fail, run `cocurdex daemon status`. The packaged CLI starts the daemon when it can; otherwise open the desktop app and retry. With **Keep running in the background** on, quitting the app leaves the daemon running.
+If CLI data commands fail, run `cocurdex daemon status`. The CLI packaged with the desktop app, and a headless install, start the daemon when they can. A development CLI that cannot start one tells you to open the desktop app. With **Keep running in the background** on, quitting the desktop app leaves its daemon running.
 
 ## Cloud and team later
 

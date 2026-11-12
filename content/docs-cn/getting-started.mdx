@@ -12,6 +12,7 @@ description: 安装 Cocurdex、打开工作区、配置 Agent 运行时，并运
 | **macOS** | Apple silicon 与 Intel |
 | **Windows** | x64（未签名的 NSIS 安装包） |
 | **Linux** | x64 AppImage 或 `.deb` |
+| **Headless daemon 与 CLI** | macOS（Apple silicon 与 Intel）、Windows x64、Linux x64 与 arm64，不需要桌面应用。Linux arm64 只有这份安装包；桌面应用没有 Linux arm64 构建 |
 | **Agent 运行时** | 至少一个你已在使用的受支持 Agent CLI 或 provider（见 [Agent](/zh-cn/docs/agents/)） |
 | **磁盘 / 项目** | 磁盘上的一个项目目录，供 Agent 和编辑器用作工作区根目录 |
 
@@ -23,16 +24,53 @@ description: 安装 Cocurdex、打开工作区、配置 Agent 运行时，并运
 2. 安装并打开 **Cocurdex**。
 3. 首次启动时会显示**欢迎使用 cocurdex**页面，介绍这台机器上的可用功能。点击**打开文件夹**即可开始使用工作区——Agent 会在你选择的文件夹中运行。内置 **Pi** Agent 需要配置服务商；其他 Agent CLI 自带模型。页面还提供**配置模型服务商**、**跳过**和**不再显示**选项。
 
+### Headless 安装
+
+在没有桌面应用的机器上运行 daemon 和 `cocurdex` CLI。安装脚本随 GitHub Release 发布：
+
+```bash
+# macOS 或 Linux
+curl -fsSL https://github.com/softmeta/cocurdex/releases/latest/download/install.sh | sh
+```
+
+```powershell
+# Windows PowerShell
+irm https://github.com/softmeta/cocurdex/releases/latest/download/install.ps1 | iex
+```
+
+脚本会识别这台机器，下载 `cocurdex-headless-<os>-<arch>.tar.gz`（Windows 上是 `.zip`）以及对应的 `.sha256`。校验和不匹配时拒绝继续，提示 `cocurdex install: checksum mismatch for <file>`。macOS 和 Linux 需要 `curl` 或 `wget`，以及 `sha256sum` 或 `shasum`。`install.sh` 接受 `darwin-arm64`、`darwin-x64`、`linux-x64` 和 `linux-arm64`。其他 `uname` 会被拒绝；在 Windows 上，提示会让你改用 `install.ps1`。Windows 脚本只支持 x64。
+
+| 项目 | 默认 |
+| --- | --- |
+| macOS 与 Linux 安装目录 | `$XDG_DATA_HOME/cocurdex`；未设置 `XDG_DATA_HOME` 时为 `~/.local/share/cocurdex` |
+| Windows 安装目录 | `%LOCALAPPDATA%\Programs\cocurdex` |
+| macOS 与 Linux 命令 | 链接到 `$HOME/.local/bin/cocurdex`；设置了 `COCURDEX_BIN_DIR` 时链接到该目录。该目录不在 `PATH` 上时，脚本打印 `Add <dir> to PATH to run cocurdex` |
+| Windows 命令 | 把安装目录下的 `bin` 加到用户 `PATH`，并提示打开一个新终端。`COCURDEX_NO_MODIFY_PATH=1` 则不改 `PATH` |
+
+| 变量 | 作用 |
+| --- | --- |
+| `COCURDEX_VERSION` | 安装指定的 release 标签，有没有前导 `v` 都可以 |
+| `COCURDEX_DOWNLOAD_URL` | 已经放好这些 release 资源的镜像的基地址 |
+| `COCURDEX_INSTALL_DIR` | 安装目录 |
+| `COCURDEX_BIN_DIR` | 仅 macOS 与 Linux。放置 `cocurdex` 链接的目录 |
+| `COCURDEX_NO_MODIFY_PATH` | 仅 Windows。设为 `1` 时不修改用户 `PATH` |
+
+再运行一次脚本会就地升级已有安装。它会先执行 `cocurdex daemon stop --json`。如果 daemon 正忙，脚本失败，提示 `cocurdex install: could not stop the running daemon; retry when it is idle`。输出不符合预期时失败，提示 `cocurdex install: unexpected output from cocurdex daemon stop`。这两种失败都会让现有安装保持原样。如果当时有 daemon 在运行，脚本会换掉安装树再把它启动起来：macOS 和 Linux 上是 `cocurdex daemon status`，Windows 上是无窗口启动 `cocurdex.cmd daemon status`。你会看到 `Stopped the daemon to upgrade it` 或 `No running daemon to stop`，然后是 `Installed <version> to <dir>`；原先在运行时还会看到 `Restarted the daemon`。在 Windows 上，如果重启没有起来，会失败并提示 `` `cocurdex install: could not restart the daemon; run `cocurdex daemon status` to start it` ``。
+
+新安装不会登记登录项。脚本会告诉你下一步运行什么。macOS 和 Linux 上是 `` `Run `cocurdex daemon background on` to keep the daemon running across reboots` ``。Windows 上是 `` `Run `cocurdex daemon background on` to start the daemon when you sign in` ``。
+
+装好的 CLI 会在没有 daemon 监听时自己启动它，`cocurdex web` 会打印本地网页客户端的 URL。开机启动、`daemon stop`，以及 provider 凭据存在哪里，见 [CLI](/zh-cn/docs/cli/#headless-安装)。
+
 ### 把 CLI 放到 PATH 上
 
-安装后，打开 **设置 → 常规 → Shell 命令** 并点击**安装**，让 `cocurdex` 启动器在终端可用。
+桌面版安装后，打开 **设置 → 常规 → Shell 命令** 并点击**安装**，让 `cocurdex` 启动器在终端可用。Headless 安装会按上面的方式自己把 `cocurdex` 链到 `PATH` 上。
 
 ```bash
 cocurdex --version
 cocurdex --help
 ```
 
-如果二进制找不到桌面应用，请先从 Dock/应用程序打开一次 Cocurdex，或将 `COCURDEX_ELECTRON` 设为应用可执行文件。见 [CLI](/zh-cn/docs/cli/)。
+`cocurdex` 和 `cocurdex open` 会打开桌面应用，所以需要先安装桌面版。没有桌面应用的机器上，用 CLI 列出工作区并运行会话。如果桌面启动器找不到应用，请先从 Dock/应用程序打开一次 Cocurdex，或将 `COCURDEX_ELECTRON` 设为应用可执行文件。见 [CLI](/zh-cn/docs/cli/)。
 
 ## 打开工作区
 
@@ -71,7 +109,7 @@ cocurdex workspace list
 
 受支持的 Agent id 与权限模式见 [Agent](/zh-cn/docs/agents/)。
 
-从 CLI 查看 provider 配置（daemon 必须已运行）。打开桌面应用会启动它；随安装包提供的 CLI 也会在它没在跑时启动它：
+从 CLI 查看 provider 配置（daemon 必须已运行）。打开桌面应用会启动它。随安装包提供的 CLI，以及 headless 安装里的 CLI，也会在它没在跑时启动它：
 
 ```bash
 cocurdex provider list
@@ -93,7 +131,7 @@ cocurdex provider models <provider-id>
 
 ## 第一个会话（CLI TUI）
 
-在 daemon 运行时（桌面应用已打开、**后台常驻**已开启，或打包的 CLI 可以启动它）：
+在 daemon 运行时（桌面应用已打开、**后台常驻**已开启，或打包的 CLI 与 headless 安装可以启动它）：
 
 ```bash
 cocurdex session tui \
@@ -150,7 +188,7 @@ cocurdex skills install --scope global
 | --- | --- |
 | 某个 Agent 显示不可用 | 安装并登录它的 CLI，然后查看 **设置 → Agent CLI**(它也会标出需要升级的版本) |
 | Agent 提示需要登录 | 在输入框的模型菜单中选择**登录 …**，然后重新发送 |
-| CLI 数据命令失败 | 运行 `cocurdex daemon status`。打包的 CLI 会在 daemon 没在跑时启动它；如果启动不了，再打开桌面应用。**后台常驻**会在退出后让 daemon 继续运行 |
+| CLI 数据命令失败 | 运行 `cocurdex daemon status`。打包的 CLI 和 headless 安装会在 daemon 没在跑时启动它。开发用的 CLI 如果启动不了，会让你打开桌面应用，原文是 `Cocurdex is not running. Open the Cocurdex desktop app, then retry.`。**后台常驻**会在退出后让桌面应用自己的 daemon 继续运行 |
 | 笔记、Issue 或 Agent 无响应 | **设置 → 常规 → Daemon** 中**重启** daemon |
 | 浏览器要求配对 | 在运行 Cocurdex 的电脑上打开 **设置 → 设备**，生成配对码，然后打开链接或输入配对码。见[设备与本地网页](/zh-cn/docs/devices-and-web/) |
 | 手机上只有电脑、没有会话 | 应用打开时停在**助理**。工作会话在**会话**标签，对应当前工具栏里的那台电脑。助理线程不在那份列表里。见[设备与本地网页](/zh-cn/docs/devices-and-web/#原生应用) |

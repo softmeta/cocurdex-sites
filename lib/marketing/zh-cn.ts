@@ -166,11 +166,11 @@ export const dict: MarketingDict = {
   download: {
     pageTitle: "下载",
     metaDescription:
-      "下载 macOS、Windows、Linux 和 Android 版 Cocurdex 早期 Beta。",
+      "下载 macOS、Windows、Linux 和 Android 版 Cocurdex 早期 Beta，或安装 headless daemon 与 CLI。",
     eyebrow: "早期 Beta",
     heading: "下载 Cocurdex",
     intro:
-      "macOS、Windows、Linux 和 Android 的早期 Beta 构建。各版本之间的 API 与行为可能发生变化。",
+      "macOS、Windows、Linux 和 Android 的早期 Beta 构建，以及一份不需要桌面应用的 headless daemon 与 CLI。各版本之间的 API 与行为可能发生变化。",
     desktopHeading: "桌面端",
     androidHeading: "Android",
     recommended: "推荐用于当前设备",
@@ -227,6 +227,14 @@ export const dict: MarketingDict = {
     devicesNote:
       "本页没有 iOS 安装包。请把 iPhone 或 Android 手机配对到电脑上的 Cocurdex。",
     devicesLink: "设备与本地网页",
+    headlessHeading: "Headless daemon 与 CLI",
+    headlessNote: "不需要桌面应用",
+    headlessUnixLabel: "macOS 或 Linux",
+    headlessWindowsLabel: "Windows PowerShell",
+    headlessBody:
+      "脚本会安装适合这台机器的 cocurdex-headless：macOS（Apple silicon 与 Intel）、Windows x64、Linux x64 和 Linux arm64。Linux arm64 只有这份安装包，桌面应用没有 Linux arm64 构建。macOS 和 Linux 需要 curl 或 wget，以及 sha256sum 或 shasum。脚本会校验安装包，校验不一致就拒绝安装。新安装完成后，运行 cocurdex daemon background on。",
+    headlessDocs: "Headless 安装",
+    headlessDocsPath: "/docs/getting-started/#headless-安装",
     sourceHeading: "从源码运行",
     sourceBody: "需要 Node.js 24 和 pnpm。",
     readDocs: "快速上手指南",
@@ -575,7 +583,7 @@ export const dict: MarketingDict = {
       {
         question: "App 提示连不上我的电脑。",
         answer:
-          "请确认电脑没有休眠、Cocurdex 桌面端正在运行、远程访问已打开，并且两台设备在同一个网络或同一个 Tailscale tailnet 里。",
+          "请确认电脑没有休眠，daemon 正在运行（桌面应用已打开，或 headless 安装正在提供服务），远程访问已打开，并且两台设备在同一个网络或同一个 Tailscale tailnet 里。",
         docPath: "/docs/devices-and-web/",
       },
       {

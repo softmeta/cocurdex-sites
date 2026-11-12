@@ -55,6 +55,8 @@ Provider configs and models are also scriptable: `cocurdex provider add|update|l
 
 External agent CLIs (`claude`, `codex`, `opencode`, and ACP Registry agents such as `cursor-agent` or `grok`) keep their own authentication — Codex account state under `~/.codex`, for example. Provider configs do not replace that; they give Pi and the desktop a shared model catalog.
 
+API keys you save on a provider config stay on this computer. The desktop app stores them only in the system keyring. A headless Linux install stores them in an owner-only (`0600`) `credentials.json` in the [data directory](/docs/concepts/workspaces-and-data/#data-directory). Headless macOS and Windows use the system keyring, and that file only when the keyring is unavailable. `cocurdex daemon health` prints `credentials    system keyring` or `credentials    owner-only file in the data directory`.
+
 A custom, local, or proxy provider with no API key is used the same way for one-shot text as for an agent run. That covers Pi session titles, an assistant's greeting, and a generated commit message.
 
 ## MCP servers
@@ -127,13 +129,13 @@ After an update downloads, an **Update available** card offers **Update and Rest
 
 ## Diagnostics
 
-**Settings → Diagnostics** (or **Help → Export Diagnostics…**) bundles sanitized app logs and runtime info into a file you can attach to a GitHub issue. Turn on **Verbose diagnostics** to record more detail while you reproduce a problem; logs stay sanitized either way. The same actions are `cocurdex diagnostics export` and `cocurdex diagnostics level debug|info`. `cocurdex daemon health` prints the process, memory, and active work.
+**Settings → Diagnostics** (or **Help → Export Diagnostics…**) bundles sanitized app logs and runtime info into a file you can attach to a GitHub issue. Turn on **Verbose diagnostics** to record more detail while you reproduce a problem; logs stay sanitized either way. The same actions are `cocurdex diagnostics export` and `cocurdex diagnostics level debug|info`. `cocurdex daemon health` prints the process, memory, active work, and a `credentials` line (`system keyring` or `owner-only file in the data directory`).
 
 ## Daemon
 
 **Settings → General → Daemon** shows the local daemon (socket, protocol version, start time). **Start** brings it up when it is stopped. **Restart** replaces a running daemon — use it if notes, issues, decks, or agents stop responding. With **Keep running in the background** on, the status line reads **Running (…) in the background; it keeps running after Cocurdex quits.**
 
-**Keep running in the background** is off until you turn it on. On, the daemon keeps serving the CLI and paired devices after you quit the desktop app, and it starts when you log in: a LaunchAgent on macOS, a Run key on Windows, or an XDG autostart entry on Linux. Off, quitting the app stops the daemon it owns. From the terminal, `cocurdex daemon background on|off|status [--json]` is the same switch. See [CLI](/docs/cli/#daemon-and-workspaces).
+**Keep running in the background** is off until you turn it on. On, the daemon keeps serving the CLI and paired devices after you quit the desktop app, and it starts when you log in: a LaunchAgent on macOS, a Run key on Windows, or an XDG autostart entry on Linux. Off, quitting the app stops the daemon it owns. From the terminal, `cocurdex daemon background on|off|status [--json]` is the same switch. Those desktop login items are unchanged. A headless install uses the same command and has no Settings screen. On Linux it registers a systemd user unit instead of the XDG entry and tries to enable lingering; macOS and Windows stay on the LaunchAgent and the Run key. Status text and `daemon stop`: [CLI](/docs/cli/#daemon-and-workspaces).
 
 ## Finding a setting
 
