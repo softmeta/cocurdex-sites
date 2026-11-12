@@ -5,11 +5,11 @@ description: 助理表单——个人助理、概览、委派工作、应用、�
 
 **助理**是桌面侧边栏里的一种表单，与**工作**和**聊天**并列。每个助理是一份保存在内置 **Pi** Agent 上的角色（名称、模型、指令、头像），外加一条长期的主线程。列表可以是空的。不会自己新建，删掉最后一个之后列表仍然是空的。你创建的第一个助理成为默认助理。
 
-从侧边栏的切换器打开这个表单。列表里已经有助理、又没有选中其他内容时，它会打开默认助理，输入框已经在那里。一个都没有时，窗格写着**新建你的第一个助理**：**助理会记住你在意的事，每天早上给你简报，按时提醒你，也能把项目里的活儿交给编程助手。** 这个窗格上有**新建助理**，输入框的占位是**告诉助理你需要什么…** 从这里发出去会创建助理，并把这条消息发出去。
+从侧边栏的切换器打开这个表单。列表里已经有助理、又没有选中其他内容时，它会打开默认助理，输入框已经在那里。一个都没有时，窗格写着**新建你的第一个助理**：**助理会记住你在意的事，每天早上给你简报，按时提醒你，也能把项目里的活儿交给编程助手。** **新建助理**是这个窗格上唯一的操作。
 
 ## 列表
 
-**助理**列表显示每个助理的最新回复；主线程正在运行时显示**工作中**。默认助理始终排在最前。**置顶**让其他助理留在未置顶的那些之上。
+**助理**列表显示每个助理的最新回复；主线程正在运行时显示**工作中**。助理还没回复的汇报不会出现在这一行。默认助理始终排在最前。**置顶**让其他助理留在未置顶的那些之上。
 
 右键一行：
 
@@ -22,7 +22,7 @@ description: 助理表单——个人助理、概览、委派工作、应用、�
 | **复制** | 复制这个助理，名称后加上**副本**，并打开副本 |
 | **删除** | 删除这个助理、它的主线程和例行任务（包括每一次运行的线程）。记忆保留。每个助理都提供，包括默认助理。确认框写着**将删除这个助理和它的对话。记忆仍保留在记忆库中。** |
 
-切换器那一行和空窗格上的**新建助理**是同一个操作。侧边栏收起时也能打开**编辑助理**。草稿名称是一个还没有助理用过的随机名字。已经有默认助理时，模型从它开始。只有保存对话框才会创建助理。不保存就关掉，什么都不会创建。空窗格输入框是另一条路：发出第一条消息时就会创建助理并把消息发出去。
+切换器那一行和空窗格上的**新建助理**是同一个操作。有可用模型时，侧边栏收起也能打开**编辑助理**。草稿名称是一个还没有助理用过的随机名字。模型是默认助理的模型（这个模型仍然可用时），否则是第一个兼容的模型。只有保存对话框才会创建助理。不保存就关掉，什么都不会创建。没有兼容模型时，一条提示写着**请先配置一个模型，再新建助理。** 并打开**设置 → 服务商**。什么都不会创建。
 
 助理的角色和主线程不能单独删除或归档。在 **设置 → 角色** 里删除这个角色会失败，提示 `Delete the personal agent instead of its role`。删除或归档主线程会失败，提示 `A personal agent's home thread cannot be removed`。删除默认助理时，列表里的下一个成为默认助理，并取消它的置顶。一个都不剩时，列表保持为空，直到你再创建一个。`cocurdex persona delete` 同样如此，包括默认助理。
 
@@ -38,7 +38,7 @@ description: 助理表单——个人助理、概览、委派工作、应用、�
 
 一轮进行中时，线程显示助理头像和**思考中**。15 秒后变成**还在想，稍等**，40 秒后变成**这次有点慢，再等等**。正在使用工具时是**正在处理**。它不显示工作模式线程在活动旁边给出的已用时间，也不逐步展开每次工具调用。这些线程不会出现在**工作**的会话列表里。
 
-保存或关闭**编辑助理**之后，空的主线程会让助理用自己的话说一句问候。它用这个助理自己的模型、名称、指令、人设，以及它能做的事来写。消息到达之前，线程显示头像和**工作中**。对话框还开着时不会发出这句问候。模型答不上来时，应用改用你的语言写一句短问候。中文里 `{{name}}` 是助理的名字：`嗨，我是{{name}}！我能记住你在意的事，每天早上给你一份简报，按时提醒你，也能把项目里的活儿交给编程助手去做。想先从哪件事开始？` 在手机上，打开一个助理时也会这样做，前提是主线程还是空的，并且手机有**交互**权限。
+保存或关闭**编辑助理**之后，空的主线程会让助理用自己的话说一句问候。它用这个助理自己的模型、名称、指令、人设，以及它能做的事来写。消息到达之前，线程显示头像和**工作中**。对话框还开着时不会发出这句问候。模型答不上来时，应用改用你的语言写一句短问候。中文里 `{{name}}` 是助理的名字：`嗨，我是{{name}}！我能记住你在意的事，每天早上给你一份简报，按时提醒你，也能把项目里的活儿交给编程助手去做。想先从哪件事开始？` 在手机上，新建一个助理时也会这样做；打开一个主线程还是空的助理时同样如此，前提是手机有**交互**权限。这句问候还在写的时候，手机显示头像和一行闪光的**工作中**，而不是那些建议。
 
 **编辑助理**开在一条空线程上时，会列出三条建议。点一条就会把它发出去：
 
@@ -48,7 +48,7 @@ description: 助理表单——个人助理、概览、委派工作、应用、�
 
 **指令**说明这个助理负责什么、应该怎么做事。**人设**是它对你是谁：语气、性格，以及和你说话的方式（最多 20,000 个字符）。在**编辑助理**里填写，或用 CLI 的 `--instructions` / `--instructions-file` 和 `--soul` / `--soul-file`。两者每一轮都会作为系统提示里的一节带上，所以修改从下一条消息起生效。保存时如果没有带上指令或 skills，已经存下的内容会保留，包括用 CLI 设过的指令。
 
-应用贴进主线程的消息会带一行来源。**今日简报**是每日简报。**来自例行任务**加上任务名称，是一次例行任务的结果；点它打开那次运行的线程。委派出去的会话在完成、失败、取消或中断后，也会同样贴回主线程，助理再接一轮告诉你发生了什么。交给另一台电脑的工作用**来自 &#123;host&#125; 上的 &#123;sender&#125;**。见[委派工作](#委派工作)。问候没有来源行。
+应用贴进主线程的消息会带一行来源。**今日简报**是每日简报。**来自例行任务**加上任务名称，是一次例行任务的结果；点它打开那次运行的线程。委派出去的会话不会把自己的回复贴进这条线程。助理答完一份汇报之后，回复上会写**依据**和工作会话的标题；点标题打开那个会话。见[委派工作](#委派工作)。问候没有来源行。
 
 ## 概览
 
@@ -79,21 +79,23 @@ description: 助理表单——个人助理、概览、委派工作、应用、�
 
 个人助理自己不改仓库。它把这件事交给你某个工作区里的普通工作会话。会话使用这个工作区最近用过的 Agent 和模型，或一份已保存的 [Agent 角色](/zh-cn/docs/agents/#agent-角色)，或带领一份已保存的[团队模板](/zh-cn/docs/teams/#团队模板)。也可以在一棵新的[工作树](/zh-cn/docs/desktop/#工作树)里运行。会话出现在**工作**里，你可以跟进，也可以自己接手。
 
-任务进到那个会话时，会标明来自这个助理。会话每完成一轮，或者这一轮失败、被取消、被中断，结果都会贴回主线程，助理再告诉你发生了什么。你可以从概览打开原来的会话，也可以从那条消息打开。本机上的工作需要批准和提问时，出现在[概览](#概览)的**需要你处理**里，不经过助理。助理只能列出、发消息和停止它自己委派的会话。
+任务进到那个会话时，会标明来自这个助理。主线程里看到的是助理自己的回答，不是工作会话的记录。会话用 `work_report` 结束一轮：`ready`、`dropped`、`needs_you`（带一个问题）、`blocked` 或 `failed`，再加上一段摘要。`dropped` 不会叫醒任何人。其他结果会送来一份简短汇报，助理再用自己的话回答。没有汇报就结束、失败、被取消或被中断的一轮，仍会回来，分别是**已完成**、**失败**、**已取消**或**已中断**。
 
-可以直接让助理做这件事。工具是 `work_catalog`、`work_start`、`work_list`、`work_send` 和 `work_stop`。`work_catalog` 列出工作区（不包括聊天，也不包括助理自己的工作区）、已保存的 Agent 角色和团队模板。这台电脑已经配对了其他电脑时，还会返回 `hosts`：每台电脑的 id、名称和状态。角色和团队模板二选一。都不填时，会话使用这个工作区最近用过的 Agent 和模型。团队模板让这个会话带领那份模板，并用模板里的第一名成员作为它自己的角色。后续消息在这个 Agent 支持插入时会进入当前这一轮，否则等到这一轮结束。例行任务只有在**完全权限**下才能委派。`work_catalog` 和 `work_start` 还可以带 `host`，指向一台已配对的电脑。同样的操作是 `cocurdex persona work`。见[另一台电脑](#另一台电脑)和 [CLI](#cli)。
+助理还没回答时，汇报是一行浅色文字，不会变成气泡：会话标题、**·**、结果，然后是 **· 等待助理处理**。结果写成**已完成**（`ready`，或没有汇报就结束的一轮）、**需要你决定**、**受阻**、**失败**、**已取消**或**已中断**。助理列表不显示这段文字。助理回答之后，这一行收起来。回复上写着**依据**和会话标题；点标题打开这个会话。一条回复可以列出不止一个会话。同一个会话也可以从[概览](#概览)打开。本机上的工作需要批准、提问和计划时，仍出现在那里的**需要你处理**里，并且仍会通知你。委派工作正常结束的一轮，不会自己增加未读收件项，也不会自己发通知；助理的回答会做这两件事。失败的一轮同样不会自己发通知，但仍会作为失败出现在收件箱里。助理只能列出、发消息和停止它自己委派的会话。
+
+可以直接让助理做这件事。工具是 `work_catalog`、`work_start`、`work_list`、`work_send` 和 `work_stop`。`work_catalog` 列出工作区（不包括聊天，也不包括助理自己的工作区）、已保存的 Agent 角色和团队模板。这台电脑已经配对了其他电脑时，还会返回 `hosts`：每台电脑的 id、名称和状态。角色和团队模板二选一。都不填时，会话使用这个工作区最近用过的 Agent 和模型。团队模板让这个会话带领那份模板，并用模板里的第一名成员作为它自己的角色。后续消息在这个 Agent 支持插入时会进入当前这一轮，否则等到这一轮结束。例行任务只有在**完全权限**下才能委派。`work_catalog` 和 `work_start` 还可以带 `host`，指向一台已配对的电脑。`work_start` 还可以带 `issue`，即像 `COC-12` 这样的标识符，或一个 id。会话会作为 **Agent 会话**链到这条事项上。状态类别还不是**进行中**、**已完成**或**已取消**的事项，会改到**进行中**这一类里排在最前的状态。新建的数据库里，**Backlog** 和 **Todo** 会改成 **In Progress**。除了 `dropped`，每一份汇报都会加一条评论：摘要，有问题时再加上问题。没有汇报的一轮，评论用的是回复，超过 6,000 个字符会截短。`issue` 和 `host` 不能一起用。`work_report` 只在这个助理委派出去的会话里提供。同样的操作是 `cocurdex persona work`。见[另一台电脑](#另一台电脑)、[事项](/zh-cn/docs/notes-and-issues/#事项页)和 [CLI](#cli)。
 
 ### 另一台电脑
 
-助理可以把工作交给[其他电脑](/zh-cn/docs/devices-and-web/#其他电脑)里的一台。会话在那台电脑上运行，用它自己的 Agent、文件和权限模式。工作区来自那台电脑的目录。这台电脑的**工作**列出的是这里的会话。远程会话从概览打开，或从主线程的来源行打开。
+助理可以把工作交给[其他电脑](/zh-cn/docs/devices-and-web/#其他电脑)里的一台。会话在那台电脑上运行，用它自己的 Agent、文件和权限模式。工作区来自那台电脑的目录。这台电脑的**工作**列出的是这里的会话。远程会话从概览打开。主线程用**依据**写出它的标题，和本机上的工作一样；会话在这台电脑上时，点标题会打开它。
 
 `work_catalog` 可以带 `host`，即那份列表里的 id 或名称。带上 `host` 时，目录列出那台电脑的工作区和 Agent 角色，团队模板是空的。从这份目录里选工作区。`work_start` 使用同一个 `host`。在那边不能用团队模板，会失败，提示 `Team templates run only on this computer; pick an agent role for a paired computer.` 没有匹配的电脑时提示 `No paired computer matches "<name>". List them with work_catalog.` 多台电脑同名时提示 `Several paired computers are named "<name>"; pass its id.`
 
-在另一台电脑上，任务标为**来自 &#123;host&#125; 上的 &#123;sender&#125;**：这个助理的名称，以及这台电脑的名称（配对时的 `--label`，或这台电脑的主机名）。主线程里的回复用同一行来源。那里的 sender 是工作会话的标题，host 是另一台电脑的名称。在桌面应用里点这一行，会打开另一台电脑的窗口并定位到那个会话。
+在另一台电脑上，任务标为**来自 &#123;host&#125; 上的 &#123;sender&#125;**：这个助理的名称，以及这台电脑的名称（配对时的 `--label`，或这台电脑的主机名）。主线程里的结果和本机上的工作用同一份汇报。点概览里的那一行，会打开那台电脑的窗口并定位到那个会话。
 
 审批、提问和计划在另一台电脑上回答。概览里的一行把那台电脑的名称和工作区写在一起。它在等你、并且那台电脑有应答时，状态是**在 &#123;host&#125; 等你确认**。本机上正在等待的工作写着**等你确认**。那台电脑没有应答时，状态是 **&#123;host&#125; 离线**。点远程的一行会打开那台电脑的窗口。在本地网页客户端里，或在已经显示另一台电脑的窗口里，应用会提示**请在这台电脑的桌面应用中查看 &#123;host&#125; 上的工作。** 本机工作的一行仍然打开本地会话。
 
-这台电脑大约每 15 秒检查这些会话。一轮完成、失败、被取消或被中断后，回复会作为来自那台电脑的消息贴进主线程，助理再接一轮。`work_send` 和 `work_stop` 用会话 id 以同样的方式到达远程会话。电脑离线时，start、send 和 stop 会失败，提示以 `<name> is not reachable right now:` 开头，后面是原因。`work_list` 保留上次已知的状态。`--json` 里 `host.reachable` 为 `false`。
+这台电脑大约每 15 秒检查这些会话。汇报会按本机工作同样的方式贴进主线程，助理再接一轮。`dropped` 的一轮不会贴进来。这份汇报只有在那台电脑自工作开始后还没有重启时才会到达。重启之后，助理改收到会话的回复，那台电脑也会像普通会话一样，在一轮完成或失败时通知你。`work_send` 和 `work_stop` 用会话 id 以同样的方式到达远程会话。电脑离线时，start、send 和 stop 会失败，提示以 `<name> is not reachable right now:` 开头，后面是原因。`work_list` 保留上次已知的状态。`--json` 里 `host.reachable` 为 `false`。
 
 另一台电脑要授予这台电脑**读取**、**交互**和**启动任务**（`read`、`interact` 和 `execute`）。在**其他电脑**里**移除**之后，这里不再跟踪那边的工作。
 
@@ -217,14 +219,14 @@ cocurdex persona send <persona> <message> [--wait] [--timeout <seconds>]
 cocurdex persona thread <persona> [--limit <n>]
 cocurdex persona work catalog [--host <paired computer>] [--json]
 cocurdex persona work list <persona> [--json]
-cocurdex persona work start <persona> --workspace <id|name> --prompt <text>|--prompt-file <path> [--title <title>] [--role <role>|--team <template>] [--worktree] [--host <paired computer>] [--json]
+cocurdex persona work start <persona> --workspace <id|name> --prompt <text>|--prompt-file <path> [--title <title>] [--role <role>|--team <template>] [--worktree] [--host <paired computer>] [--issue <COC-12|id>] [--json]
 cocurdex persona work send <persona> <session-id> <message> [--json]
 cocurdex persona work stop <persona> <session-id> [--json]
 ```
 
-`--provider` 和 `--model` 要一起给出。没有 `--agent` 参数。`persona send` 发到主线程。`--wait` 在这一轮结束时打印回复（默认等待 600 秒）。`persona thread` 打印最近的消息（默认 20 条）。`--mute` 停止这个助理的桌面和手机通知。它的线程里需要你处理的事项仍会出现在助理概览里，也可以用 `cocurdex inbox` 查看。`persona delete` 会删除那个助理，包括默认助理：列表里的下一个成为默认助理；一个都不剩时列表保持为空。
+`--provider` 和 `--model` 要一起给出。两个都省略时，创建会使用默认助理的模型（这个模型仍然可用时），否则用第一个兼容的模型。没有 `--agent` 参数。`persona send` 发到主线程。`--wait` 在这一轮结束时打印回复（默认等待 600 秒）。`persona thread` 打印最近的消息（默认 20 条）。`--mute` 停止这个助理的桌面和手机通知。它的线程里需要你处理的事项仍会出现在助理概览里，也可以用 `cocurdex inbox` 查看。`persona delete` 会删除那个助理，包括默认助理：列表里的下一个成为默认助理；一个都不剩时列表保持为空。
 
-`persona work catalog` 列出工作区、已保存的 Agent 角色和团队模板。已经配对了其他电脑时，还会列出 `hosts`。`--host` 改为列出那台电脑的工作区和 Agent 角色；那边的团队模板是空的。`list` 打印 `sessionId`、`title`、`host`、`workspaceName`、`agentType`、`state` 和 `waitingFor`。`host` 是已配对电脑的名称，本机上的工作这一列为空。`waitingFor` 是 `permission`、`question`、`plan`，或为空。`--json` 包含 `host.reachable`。`--workspace` 是 `--host` 所指电脑上的 id 或名称。名称匹配到不止一个工作区时失败，提示 `Several workspaces are named "<name>"; pass its id.` 没有匹配时提示 `No workspace matches "<name>". List the workspaces first.` `--role` 和 `--team` 二选一；两个都给会失败，提示 `Pass either an agent role or a team template, not both.` `--team` 和 `--host` 一起给会失败，提示 `Team templates run only on this computer; pick an agent role for a paired computer.` 找不到这台电脑时提示 `No paired computer matches "<name>". List them with work_catalog.` 多台电脑同名时提示 `Several paired computers are named "<name>"; pass its id.` 任务是空的会失败，提示 `Describe the task to delegate.` 那台电脑离线时，`start`、`send` 和 `stop` 会失败，提示以 `<name> is not reachable right now:` 开头。`send` 和 `stop` 只接受这个助理委派过的会话。其他会话会失败，提示 `No work session you delegated has this id.`
+`persona work catalog` 列出工作区、已保存的 Agent 角色和团队模板。已经配对了其他电脑时，还会列出 `hosts`。`--host` 改为列出那台电脑的工作区和 Agent 角色；那边的团队模板是空的。`list` 打印 `sessionId`、`title`、`host`、`workspaceName`、`agentType`、`state` 和 `waitingFor`。`host` 是已配对电脑的名称，本机上的工作这一列为空。`waitingFor` 是 `permission`、`question`、`plan`，或为空。`--json` 包含 `host.reachable`。`--workspace` 是 `--host` 所指电脑上的 id 或名称。名称匹配到不止一个工作区时失败，提示 `Several workspaces are named "<name>"; pass its id.` 没有匹配时提示 `No workspace matches "<name>". List the workspaces first.` `--role` 和 `--team` 二选一；两个都给会失败，提示 `Pass either an agent role or a team template, not both.` `--team` 和 `--host` 一起给会失败，提示 `Team templates run only on this computer; pick an agent role for a paired computer.` 找不到这台电脑时提示 `No paired computer matches "<name>". List them with work_catalog.` 多台电脑同名时提示 `Several paired computers are named "<name>"; pass its id.` 任务是空的会失败，提示 `Describe the task to delegate.` `--issue` 是像 `COC-12` 这样的标识符，或一个 id。它把会话链到这条事项上，把状态类别还不是**进行中**、**已完成**或**已取消**的事项改到**进行中**这一类里排在最前的状态，并把除无可汇报的一轮之外的每份汇报加为评论。和 `--host` 一起用会失败，提示 `Issues track work on this computer only; leave out the issue for a paired computer.` 没有匹配时提示 `No issue matches "<ref>".` 那台电脑离线时，`start`、`send` 和 `stop` 会失败，提示以 `<name> is not reachable right now:` 开头。`send` 和 `stop` 只接受这个助理委派过的会话。其他会话会失败，提示 `No work session you delegated has this id.`
 
 ```bash
 cocurdex routine list [--persona <persona>]
@@ -246,7 +248,7 @@ cocurdex inbox brief [--tz <zone>]
 cocurdex inbox brief post [--tz <zone>] [--locale en-US|zh-CN]
 ```
 
-`inbox` 列出需要你处理的事项，也包括已完成的会话和例行任务结果：助理线程、助理委派的工作，以及例行任务。你自己在**工作**和**聊天**里开始的会话不会出现在里面。`inbox read` 把该项的线程标为已访问，从而把它从列表里清掉。`inbox brief` 打印今日简报；没有内容时打印 `Nothing to brief today.` `inbox brief post` 把这份简报按你传入的语言贴进默认助理的主线程。`--locale` 为 `en-US` 或 `zh-CN`；省略则沿用上次发布所用的语言。没有新内容可发布时打印 `Nothing new to post.`
+`inbox` 列出需要你处理的事项，也包括已完成的助理线程和例行任务结果。助理委派的工作在正常结束后不会单独出现；未读项是助理的回答。失败的委派会话仍作为失败出现，它的审批、提问和计划也仍会出现。你自己在**工作**和**聊天**里开始的会话不会出现在里面。`inbox read` 把该项的线程标为已访问，从而把它从列表里清掉。`inbox brief` 打印今日简报；没有内容时打印 `Nothing to brief today.` `inbox brief post` 把这份简报按你传入的语言贴进默认助理的主线程。`--locale` 为 `en-US` 或 `zh-CN`；省略则沿用上次发布所用的语言。没有新内容可发布时打印 `Nothing new to post.`
 
 ```bash
 cocurdex apps catalog|list [--json]

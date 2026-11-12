@@ -205,6 +205,8 @@ cocurdex search "release" --kind issue --workspace <workspace-id>
 
 Give an agent an issue or note directly from the composer: **+ → Issue** or **+ → Note** attaches it as a pill, and the agent receives the full title and body in its prompt. Clicking the pill in the transcript opens the record.
 
+An assistant can also tie delegated work to an issue. `cocurdex persona work start --issue` links the session under **Agent sessions**, moves an issue that is not already started, completed, or canceled to the first status in the started category, and adds each report except a turn with nothing to report as a comment. See [Delegated work](/docs/assistants/#delegated-work).
+
 Product skills (`/cocurdex-note`, `/cocurdex-issue`, …) call the same CLI surface so agents do not open SQLite. See [Skills](/docs/skills/).
 
 Recommended loop for product work:
