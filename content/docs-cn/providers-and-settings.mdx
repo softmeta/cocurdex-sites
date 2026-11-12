@@ -31,6 +31,8 @@ cocurdex agent login <agent>
 
 **设置 → 服务商** 管理 **Provider 配置**:一组带凭据和模型目录的命名服务端点。这些配置是内置 **Pi** 的模型列表，包括 Pi 会话里的模型菜单。Claude Agent、Codex、OpenCode 和 ACP Registry Agent 显示的是该 Agent 自己的目录。见 [Agent](/zh-cn/docs/agents/#provider-与模型)。
 
+窗格较宽时，服务商列表和详情并排。窗格较窄时只显示列表。选中一行后，详情占满窗格。**返回列表**回到列表。
+
 一个 Provider 配置包含：
 
 | 字段 | 含义 |
@@ -64,6 +66,8 @@ Provider 配置与模型同样可以脚本化：`cocurdex provider add|update|lo
 ## MCP 服务器
 
 **设置 → 连接**里的 **MCP** 页，是 Cocurdex 提供给你的 Agent 的工具服务器。页面标题是**连接**。另外两个页是**应用**和 **Skills**。新会话会用上改动；正在运行的会话保留它已经有的工具。
+
+窗格较宽时，服务器列表和详情并排。窗格较窄时只显示列表。选中一行后，详情占满窗格。**返回列表**回到列表。
 
 - **表单**（名称、本地命令或远程 URL、参数、环境变量或请求头）和原始 **JSON**。JSON 结构是标准的 `mcpServers` 对象。
 - 服务器名称只能包含字母、数字、`_` 和 `-`。
@@ -140,6 +144,8 @@ cocurdex mcp import --from codex
 **后台常驻**默认关闭。打开后，退出桌面应用时 daemon 继续为 CLI 和已配对设备服务，并在登录时启动：macOS 使用 LaunchAgent，Windows 使用 Run 键，Linux 使用 XDG autostart。关闭后，退出应用会停掉它自己管理的 daemon。终端里的同一开关是 `cocurdex daemon background on|off|status [--json]`。这些桌面登录项没有变。Headless 安装使用同一条命令，没有设置界面。在 Linux 上它登记的是 systemd 用户单元，而不是 XDG 条目，并尝试开启 lingering；macOS 和 Windows 仍使用 LaunchAgent 和 Run 键。状态行和 `daemon stop` 见 [CLI](/zh-cn/docs/cli/#daemon-与工作区)。
 
 ## 查找设置
+
+设置侧边栏只有在窗口仍能让设置内容留在旁边时才会停靠。窗口更窄时，侧边栏不再停靠。标题栏里的按钮没有文字，指针停在上面会显示**切换侧边栏**。它从左侧以浮层打开侧边栏，浮层打开时按钮仍留在标题栏原处。选中一个分区、按 Escape，或在浮层外点击，都会关闭浮层。如果**搜索设置**里有文字并且焦点在这个框里，Escape 仍会先清空搜索。
 
 设置侧边栏顶部有一个**搜索设置**框。框里有文字时，**清空搜索**会把它清掉。没有匹配项时，列表显示**没有匹配的设置**。
 
