@@ -205,6 +205,8 @@ cocurdex search "release" --kind issue --workspace <workspace-id>
 
 直接在输入框里把 Issue 或笔记交给 Agent:**+ → Issue** 或 **+ → 笔记** 会把它作为标签附加上去，Agent 在提示词里就能拿到完整的标题和正文。在对话记录里点击该标签即可打开对应记录。
 
+助理也可以把委派工作系到一条事项上。`cocurdex persona work start --issue` 会把会话列在 **Agent 会话**里，把状态类别还不是**进行中**、**已完成**或**已取消**的事项改到**进行中**这一类里排在最前的状态，并把除无可汇报的一轮之外的每份汇报加为评论。见[委派工作](/zh-cn/docs/assistants/#委派工作)。
+
 产品 Skills(`/cocurdex-note`、`/cocurdex-issue` 等)调用同一套 CLI,因此 Agent 不需要打开 SQLite。见 [Skills](/zh-cn/docs/skills/)。
 
 产品工作的推荐循环：
